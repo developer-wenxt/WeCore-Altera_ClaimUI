@@ -1,0 +1,635 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+:root {
+  /* Typography */
+  --font-family-base: 'Inter', 'Roboto', sans-serif;
+
+  /* ─── Professional Blue Palette ─────────────────────────────── */
+  --color-primary:       #1e3a5f;          /* deep navy - headings, text */
+  --color-primary-rgb:   30, 58, 95;
+  --color-primary-mid:   #2563eb;          /* medium blue - interactive */
+  --color-primary-light: #eff6ff;          /* pale blue - tinted backgrounds */
+  --color-accent:        #3b82f6;          /* vivid blue - icons, highlights */
+  --color-accent-light:  #dbeafe;          /* soft blue - badges, chips */
+
+  --header-bg-blue:      #2563eb;          /* table header & form section bg */
+  --header-bg-dark:      #1e40af;          /* darker variant for gradients */
+
+  /* Text Colors */
+  --text-main:      #1e3a5f;
+  --text-secondary: #334155;
+  --text-muted:     #64748b;
+  --text-lighter:   #94a3b8;
+
+  /* Background Colors */
+  --bg-page:         #f0f4f8;
+  --bg-surface:      #ffffff;
+  --bg-hover:        #f1f5f9;
+  --bg-icon-default: #e8f0fe;
+
+  /* Borders */
+  --border-light:        #dde5ef;
+  --border-focus:        #2563eb;
+  --border-hover-accent: #3b82f6;
+
+  /* Box Shadows */
+  --shadow-card:     0 4px 16px rgba(37, 99, 235, 0.10);
+  --shadow-elevated: 0 8px 28px rgba(30, 58, 95, 0.12);
+}
+
+/* ─── Base ──────────────────────────────────────────────────── */
+body {
+  font-family: var(--font-family-base);
+  color: var(--text-main);
+  background-color: var(--bg-page);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Global Card ───────────────────────────────────────────── */
+.global-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.22s ease;
+}
+
+.global-card:hover {
+  border-color: var(--border-hover-accent);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+}
+
+/* ─── Page Level ────────────────────────────────────────────── */
+.form-page {
+  padding: 24px 32px;
+  background: var(--bg-page);
+  min-height: 100%;
+}
+
+@media (max-width: 768px) {
+  .form-page {
+    padding: 16px 12px;
+  }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-left h2, .page-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────── */
+.back-btn {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-light) !important;
+  color: var(--text-main) !important;
+  border-radius: 20px !important;
+  padding: 8px 18px !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+
+.back-btn:hover {
+  border-color: var(--color-primary-mid) !important;
+  color: var(--color-primary-mid) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+}
+
+.primary-btn, .submit-btn, .add-row-btn {
+  background: var(--color-primary-mid) !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 8px 22px !important;
+  font-weight: 600 !important;
+  color: white !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.primary-btn:hover, .submit-btn:hover, .add-row-btn:hover {
+  background: var(--header-bg-dark) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.submit-btn {
+  display: flex;
+  margin: 28px auto 0;
+  width: 200px;
+  padding: 10px 22px !important;
+}
+
+.icon-btn, .view-btn {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-light) !important;
+  color: var(--color-primary-mid) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0 !important;
+  transition: all 0.18s ease;
+}
+
+.icon-btn:hover, .view-btn:hover {
+  border-color: var(--color-primary-mid) !important;
+  background: var(--color-primary-light) !important;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.12);
+}
+
+.more-btn {
+  background: transparent !important;
+  border: none !important;
+  color: var(--color-primary-mid) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 4px 8px !important;
+  cursor: pointer;
+}
+
+/* ─── Cards & Layout ────────────────────────────────────────── */
+.table-card {
+  background: var(--bg-surface);
+  border-radius: 14px;
+  border: 1px solid var(--border-light);
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(30, 58, 95, 0.05);
+}
+
+.info-chips {
+  display: flex;
+  gap: 12px;
+background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%);  
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.chip-label {
+  font-size: 10px;
+  font-weight: 700;
+   color: #cbd5e1; 
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.chip-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+   background: #ffffff;  
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.chip.highlight .chip-value {
+background: var(--color-accent-light); 
+  color: var(--color-primary-mid);
+}
+
+/* ─── Forms & Grids ─────────────────────────────────────────── */
+.dynamic-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px 24px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-field .required {
+  color: #dc2626;
+}
+
+.form-field input, .search-box input, .risk-grid input, .search-wrap input {
+  border: 1px solid var(--border-light);
+  background: var(--bg-page);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  outline: none;
+  color: var(--text-secondary);
+  transition: all 0.18s ease;
+  width: 100%;
+}
+
+.form-field input:focus, .search-box input:focus, .risk-grid input:focus, .search-wrap input:focus {
+  background: var(--bg-surface);
+  border-color: var(--color-primary-mid);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.checkbox-field {
+  flex-direction: row;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary-mid);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--color-primary-mid);
+}
+
+/* ─── Toolbars & Search ─────────────────────────────────────── */
+.claim-toolbar, .table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-wrap i {
+  position: absolute;
+  left: 14px;
+  color: var(--text-lighter);
+  font-size: 13px;
+}
+
+.search-wrap input {
+  padding-left: 36px;
+  border-radius: 22px;
+  max-width: 260px;
+}
+
+.search-box {
+  margin-bottom: 16px;
+}
+.search-box input {
+  max-width: 320px;
+}
+
+/* ─── p-select Dropdown ─────────────────────────────────────── */
+.p-select {
+  border-radius: 22px !important;
+  border: 1px solid var(--border-light) !important;
+  background: var(--bg-surface) !important;
+}
+
+.p-select .p-select-label {
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  color: var(--text-secondary);
+}
+
+/* ─── Table Styling (.risk-grid) — Blue Headers ─────────────── */
+.risk-grid, ::ng-deep .risk-grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.risk-grid th, ::ng-deep .risk-grid .p-datatable-thead > tr > th {
+  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
+  color: #ffffff !important;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 2px solid var(--header-bg-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* First & last header cell rounded corners */
+.risk-grid th:first-child, ::ng-deep .risk-grid .p-datatable-thead > tr > th:first-child {
+  border-radius: 8px 0 0 0;
+}
+.risk-grid th:last-child, ::ng-deep .risk-grid .p-datatable-thead > tr > th:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+.risk-grid td, ::ng-deep .risk-grid .p-datatable-tbody > tr > td {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 0;
+}
+
+/* Let the actions column auto-size and not clip */
+.risk-grid td:last-child, ::ng-deep .risk-grid .p-datatable-tbody > tr > td:last-child,
+.risk-grid th:last-child, ::ng-deep .risk-grid .p-datatable-thead > tr > th:last-child {
+  white-space: nowrap;
+  overflow: visible;
+  max-width: none;
+  width: 80px;
+}
+
+.risk-grid tbody tr:hover, ::ng-deep .risk-grid .p-datatable-tbody > tr:hover {
+  background: var(--color-primary-light);
+}
+
+/* Alternating row stripes */
+.risk-grid tbody tr:nth-child(even), ::ng-deep .risk-grid .p-datatable-tbody > tr:nth-child(even) {
+  background: #f8fafc;
+}
+.risk-grid tbody tr:nth-child(even):hover, ::ng-deep .risk-grid .p-datatable-tbody > tr:nth-child(even):hover {
+  background: var(--color-primary-light);
+}
+
+::ng-deep .risk-grid .p-paginator {
+  border: none;
+  padding-top: 16px;
+}
+
+/* Dialog Table Specific */
+::ng-deep .p-dialog .risk-grid th, ::ng-deep .p-dialog .risk-grid td {
+  padding: 8px 12px;
+}
+
+/* ─── Action Buttons (eye + pencil) ─────────────────────────── */
+.view-btn, .edit-btn {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  border-radius: 50% !important;
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-light) !important;
+  color: var(--color-primary-mid) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-right: 4px;
+  transition: all 0.18s ease;
+}
+
+.view-btn:hover, .edit-btn:hover {
+  background: var(--color-primary-light) !important;
+  border-color: var(--color-primary-mid) !important;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+}
+
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ─── Badges & States ───────────────────────────────────────── */
+.state-msg {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+
+
+.settlement-header {
+  position: relative;
+}
+
+
+.submit-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.settlement-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+.status-J { background: #fee2e2; color: #b91c1c; }
+.status-A { background: #dbeafe; color: #1d4ed8; }
+.status-C { background: #f1f5f9; color: #64748b; }
+.status-O { background: #fef3c7; color: #92400e; }
+.status-R { background: #dcfce7; color: #15803d; }
+
+/* ─── PrimeNG Global Overrides — Blue Theme ─────────────────── */
+::ng-deep .p-button {
+  background: var(--color-primary-mid) !important;
+  border-color: var(--color-primary-mid) !important;
+  transition: all 0.18s ease;
+}
+::ng-deep .p-button:hover {
+  background: var(--header-bg-dark) !important;
+  border-color: var(--header-bg-dark) !important;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 10px 12px;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  border-color: var(--border-light) !important;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background: var(--color-primary-light) !important;
+}
+
+::ng-deep .p-dialog .p-dialog-header {
+  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
+  color: #ffffff !important;
+  border-radius: 12px 12px 0 0;
+}
+::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+::ng-deep .p-dialog .p-dialog-header-close {
+  color: #ffffff !important;
+}
+
+::ng-deep .risk-grid {
+  --p-datatable-header-cell-background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
+  --p-datatable-header-cell-color: #ffffff !important;
+  --p-datatable-header-background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
+  --p-datatable-header-color: #ffffff !important;
+  --p-datatable-header-border-color: var(--header-bg-dark) !important;
+}
+
+::ng-deep .p-datatable {
+  --p-datatable-header-cell-background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
+  --p-datatable-header-cell-color: #ffffff !important;
+}
+
+
+
+/* ─── Responsive Utilities ──────────────────────────────────── */
+@media (max-width: 1300px) {
+  .dynamic-form-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .dynamic-form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .info-chips {
+    gap: 8px;
+    padding: 12px 14px;
+  }
+  .chip {
+    min-width: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-page {
+    padding: 16px 12px;
+  }
+  .table-card {
+    padding: 14px;
+    border-radius: 10px;
+  }
+  .claim-toolbar, .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .search-wrap input {
+    max-width: 100%;
+    width: 100%;
+  }
+  .filter-group {
+    flex-wrap: wrap;
+  }
+  .info-chips {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .dynamic-form-grid {
+    grid-template-columns: 1fr;
+    gap: 14px 0;
+  }
+  .header-left h2, .page-header h2 {
+    font-size: 18px;
+  }
+  .submit-btn {
+    width: 100%;
+    display: flex;
+    justify-content:center ;
+    align-items: center;
+  }
+  .table-footer {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}

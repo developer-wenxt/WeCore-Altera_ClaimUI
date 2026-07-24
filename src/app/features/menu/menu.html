@@ -1,0 +1,71 @@
+<div class="menu-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Class of business</span>
+      <span class="sidebar-subtitle">Select a line of business</span>
+    </div>
+
+    <div *ngIf="loading()" class="state-msg">Loading...</div>
+
+    <nav class="category-list" *ngIf="!loading()">
+      <ng-container *ngFor="let cat of categories">
+        <button class="category-item" [class.active]="selectedCategory() === cat.code" (click)="onCategoryClick(cat)">
+          <span class="category-icon"><i [class]="getCategoryIcon(cat.desc)"></i></span>
+          <span class="category-name">{{ cat.desc }}
+            <small class="category-code">({{ cat.code }})</small>
+          </span>
+          <span class="category-count">{{ cat.count }}</span>
+        </button>
+
+        <div class="category-actions" *ngIf="expandedCategoryCode() === cat.code">
+          <button pButton label="Claim Notification" icon="pi pi-bell" (click)="onNotificationClick(cat)"></button>
+          <button pButton label="Claim Registration" icon="pi pi-file-edit" (click)="onRegistrationClick(cat)"></button>
+        </div>
+      </ng-container>
+    </nav>
+  </aside>
+
+  <main class="main-content" [class.no-pad]="activeView() === 'claim-list'">
+
+    <div *ngIf="activeView() === 'empty'" class="state-msg">Select an action...</div>
+
+    <ng-container *ngIf="activeView() === 'products'">
+      <div class="content-header">
+        <div class="breadcrumb">
+          <span>{{ filteredItems[0]?.CLASS_DESC || 'Products' }}</span>
+          <span class="sep">&gt;</span>
+          <span>Class Code: {{ selectedCategory() }}</span> <!-- ADD -->
+          <span class="sep">&gt;</span>
+          <span>{{ filteredItems.length }} Products available</span>
+        </div>
+        <h1>{{ filteredItems[0]?.CLASS_DESC || 'Products' }} Insurance</h1>
+
+        <div class="search-wrap">
+          <i class="pi pi-search"></i>
+          <input type="text" [placeholder]="'Search in ' + (filteredItems[0]?.CLASS_DESC || 'products') + '...'"
+            [(ngModel)]="searchTerm" />
+        </div>
+      </div>
+
+      <div *ngIf="error()" class="state-msg error">Failed to load menu list.</div>
+
+      <div class="product-grid"> <!-- ADD -->
+        <div class="product-card" *ngFor="let item of filteredItems"
+          [class.active]="selectedItem?.MENU_ID === item.MENU_ID" (click)="onProductSelect(item)">
+          <div class="product-icon"><i [class]="getMenuIcon(item.CLM_INTM_MENU_NAME)"></i></div>
+          <div class="product-name">{{ item.CLM_INTM_MENU_NAME }}</div>
+        </div>
+      </div> <!-- ADD -->
+    </ng-container>
+
+    <app-claim-notification-list *ngIf="activeView() === 'claim-notification-list'" [menuItem]="selectedItem"
+      (back)="backToProducts()">
+    </app-claim-notification-list>
+
+    <app-claim-list *ngIf="activeView() === 'claim-list'" [classCode]="activeClassCode" [instCode]="activeInstCode"
+      (back)="backToProducts()">
+    </app-claim-list>
+
+
+  </main>
+</div>

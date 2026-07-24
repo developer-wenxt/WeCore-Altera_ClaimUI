@@ -1,0 +1,48 @@
+.actions-col {
+    position: relative;
+    width: 40px;
+    text-align: center;
+}
+
+.kebab-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    padding: 0.4rem;
+    border-radius: 6px;
+    transition: all 0.18s ease;
+
+    &:hover {
+        background: var(--color-primary-light);
+        color: var(--color-primary-mid);
+    }
+}
+
+.row-action-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: var(--shadow-elevated);
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 0.35rem;
+    min-width: 160px;
+
+    .back-btn {
+        width: 100%;
+        text-align: left;
+        justify-content: flex-start;
+
+        &:hover {
+            background: var(--color-primary-light) !important;
+            color: var(--color-primary-mid) !important;
+        }
+    }
+}

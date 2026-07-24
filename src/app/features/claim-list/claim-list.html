@@ -1,0 +1,86 @@
+<div class="form-page">
+  <div class="page-header claims-header">                   
+    <div class="header-left">
+      <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
+    </div>
+    <h2 class="claims-title">Claims</h2>                      
+    <div class="header-actions">
+      <button pButton label="+ Add Registration" (click)="onAddRegistration()" class="primary-btn"></button>
+    </div>
+  </div>
+
+  <div class="table-card">
+
+    <div class="claim-toolbar">
+      <div class="filter-group">
+        <span class="search-wrap">
+          <i class="pi pi-search"></i>
+          <input type="text" placeholder="Search assured name, claim no, or policy no..." [(ngModel)]="searchTerm" />
+        </span>
+
+        <p-select [options]="statusOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value" placeholder="All Statuses"></p-select>
+      </div>
+    </div>
+
+    <div *ngIf="loading()" class="state-msg">Loading claims...</div>
+
+    <p-table
+  *ngIf="!loading()"
+  [value]="filteredClaims"
+  [paginator]="true"
+  [rows]="10"
+  [rowsPerPageOptions]="[10,20,50]"
+  styleClass="risk-grid">
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th>System ID</th>
+      <th>Claim No</th>
+      <th>Policy No</th>
+      <th>Assured Name</th>
+      <th>Intimation No</th>
+      <th>Product Code</th>
+      <th>Loss Date</th>
+      <th>Intimation Date</th>
+      <th>Created Date</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-claim>
+    <tr>
+      <td>{{ claim.CLM_SYS_ID }}</td>
+      <td>{{ claim.CLM_NO }}</td>
+      <td>{{ claim.CLM_POL_NO }}</td>
+      <td>{{ claim.CLM_ASSR_NAME }}</td>
+      <td>{{ claim.CLM_INTM_NO }}</td>
+      <td>{{ claim.CLM_PROD_CODE }}</td>
+
+      <td>{{ claim.CLM_LOSS_DT | date:'dd/MM/yyyy' }}</td>
+      <td>{{ claim.CLM_INTM_DT | date:'dd/MM/yyyy' }}</td>
+      <td>{{ claim.CLM_CR_DT | date:'dd/MM/yyyy' }}</td>
+
+      <td>
+      <span class="status-badge" [ngClass]="'status-' + claim.CLM_STS">
+  {{ getStatusLabel(claim.CLM_STS) }}
+</span>
+</td>
+<td>
+      <button pButton icon="pi pi-eye" class="view-btn" (click)="onViewClaimRegistration(claim)"></button>
+      <button pButton icon="pi pi-pencil" class="edit-btn" (click)="onEditClaimRegistration(claim)"></button>
+    </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="11" class="state-msg">
+        No claims found.
+      </td>
+    </tr>
+  </ng-template>
+
+</p-table>
+  </div>
+</div>
