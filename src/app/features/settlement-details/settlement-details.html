@@ -16,28 +16,24 @@
         <span class="required" *ngIf="f.MANDATORY === 1">*</span>
       </span>
 
-      <!-- Text input -->
       <input *ngIf="f.INPUT_TYPE === 'text'"
         type="text"
         [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
         [name]="f.COLUMN_NAME"
         class="chip-input" />
 
-      <!-- Date input -->
       <input *ngIf="f.INPUT_TYPE === 'date'"
         type="date"
         [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
         [name]="f.COLUMN_NAME"
         class="chip-input" />
 
-      <!-- Checkbox input -->
       <label *ngIf="f.INPUT_TYPE === 'checkbox'" class="chip-checkbox-label">
         <input type="checkbox"
           [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
           [name]="f.COLUMN_NAME" />
       </label>
 
-      <!-- Default (read-only display, e.g. from backend fields) -->
       <span *ngIf="!f.INPUT_TYPE" class="chip-value">
         {{ claimHeaderData()[f.COLUMN_NAME] }}
       </span>
@@ -61,16 +57,22 @@
       <tbody>
         <tr *ngFor="let row of riskGridRows(); let i = index">
           <td>{{ i + 1 }}</td>
-          <td *ngFor="let col of riskTableColumns()">
-            <input type="text" [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly
-              disabled />
-          </td>
+         <td *ngFor="let col of riskTableColumns()">
+  <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+    <input *ngSwitchCase="'checkbox'" type="checkbox"
+      [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" disabled />
+    <input *ngSwitchCase="'date'" type="date"
+      [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
+    <input *ngSwitchDefault type="text"
+      [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
+  </ng-container>
+</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="page-header settlement-header">
+  <div class="page-header settlement-header1">
   <h2 class="settlement-title">Settlement Details</h2>
   <div class="header-actions">
     <button pButton label="+ Add Row" (click)="addRow()" class="add-row-btn"></button>
@@ -91,12 +93,23 @@
       <tbody>
         <tr *ngFor="let row of gridRows(); let i = index">
           <td>{{ i + 1 }}</td>
+
+          <!-- REPLACED: was <input type="text"> -->
           <td *ngFor="let col of visibleColumns">
-            <input type="text" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
+            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+              <input *ngSwitchCase="'checkbox'" type="checkbox"
+                [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
+              <input *ngSwitchCase="'date'" type="date"
+                [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
+              <input *ngSwitchDefault type="text"
+                [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
+            </ng-container>
           </td>
+          <!-- END REPLACEMENT -->
+
           <td *ngIf="extraColumns.length > 0">
-            <button pButton label="More" icon="pi pi-external-link" (click)="openMoreDialog(i)"
-              class="more-btn"></button>
+            <button pButton icon="pi pi-save" class="p-button-text p-button-rounded" (click)="saveRow(i)"></button>
+            <button pButton label="More" icon="pi pi-external-link" (click)="openMoreDialog(i)" class="more-btn"></button>
           </td>
         </tr>
       </tbody>
@@ -114,10 +127,18 @@
     </thead>
     <tbody>
       <tr>
+        <!-- REPLACED: was <input type="text"> -->
         <td *ngFor="let col of extraColumns">
-          <input type="text" [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]"
-            [name]="'extra_' + col.COLUMN_NAME" />
+          <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+            <input *ngSwitchCase="'checkbox'" type="checkbox"
+              [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />
+            <input *ngSwitchCase="'date'" type="date"
+              [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />
+            <input *ngSwitchDefault type="text"
+              [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />
+          </ng-container>
         </td>
+        <!-- END REPLACEMENT -->
       </tr>
     </tbody>
   </table>

@@ -32,12 +32,26 @@
   <tbody>
     <tr *ngFor="let row of gridRows(); let i = index">
       <td>{{ i + 1 }}</td>
-      <td *ngFor="let col of tableColumns()">
-        <input type="text"
+       <td *ngFor="let col of tableColumns()">
+      <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+        <input *ngSwitchCase="'checkbox'" type="checkbox"
           [(ngModel)]="row[col.COLUMN_NAME]"
           [name]="col.COLUMN_NAME + i"
           [disabled]="!isFieldEditable(col)" />
-      </td>
+        <input *ngSwitchCase="'date'" type="date"
+          [(ngModel)]="row[col.COLUMN_NAME]"
+          [name]="col.COLUMN_NAME + i"
+          [disabled]="!isFieldEditable(col)" />
+        <input *ngSwitchCase="'number'" type="number"
+          [(ngModel)]="row[col.COLUMN_NAME]"
+          [name]="col.COLUMN_NAME + i"
+          [disabled]="!isFieldEditable(col)" />
+        <input *ngSwitchDefault type="text"
+          [(ngModel)]="row[col.COLUMN_NAME]"
+          [name]="col.COLUMN_NAME + i"
+          [disabled]="!isFieldEditable(col)" />
+      </ng-container>
+    </td>
 
       <td class="actions-col">
          <button type="button" pButton icon="pi pi-save" class="p-button-text p-button-rounded"

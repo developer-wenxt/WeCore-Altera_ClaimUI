@@ -37,6 +37,23 @@
   /* Box Shadows */
   --shadow-card:     0 4px 16px rgba(37, 99, 235, 0.10);
   --shadow-elevated: 0 8px 28px rgba(30, 58, 95, 0.12);
+  --shadow-focus:    0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* ─── Animations ────────────────────────────────────────────── */
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(10); opacity: 0; }
 }
 
 /* ─── Base ──────────────────────────────────────────────────── */
@@ -66,9 +83,10 @@ body {
 
 /* ─── Page Level ────────────────────────────────────────────── */
 .form-page {
-  padding: 24px 32px;
+  padding: 32px 40px;
   background: var(--bg-page);
   min-height: 100%;
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
 @media (max-width: 768px) {
@@ -128,20 +146,29 @@ body {
 .primary-btn, .submit-btn, .add-row-btn {
   background: var(--color-primary-mid) !important;
   border: none !important;
-  border-radius: 20px !important;
-  padding: 8px 22px !important;
+  border-radius: 24px !important;
+  padding: 10px 24px !important;
   font-weight: 600 !important;
   color: white !important;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
 .primary-btn:hover, .submit-btn:hover, .add-row-btn:hover {
   background: var(--header-bg-dark) !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+  transform: translateY(-2px);
+}
+
+.primary-btn:active, .submit-btn:active, .add-row-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 
 .submit-btn {
@@ -185,10 +212,16 @@ body {
 /* ─── Cards & Layout ────────────────────────────────────────── */
 .table-card {
   background: var(--bg-surface);
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1px solid var(--border-light);
-  padding: 24px;
-  box-shadow: 0 1px 4px rgba(30, 58, 95, 0.05);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+  animation: slideInUp 0.5s ease-out forwards;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.table-card:hover {
+  box-shadow: var(--shadow-elevated);
 }
 
 .info-chips {
@@ -235,41 +268,56 @@ background: var(--color-accent-light);
 .dynamic-form-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px 24px;
+  gap: 28px 32px;
+  margin-top: 16px;
+  animation: slideInUp 0.5s ease-out forwards;
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  position: relative;
 }
 
 .form-field label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-main);
+  transition: color 0.3s ease;
+}
+
+.form-field:focus-within label {
+  color: var(--color-primary-mid);
 }
 
 .form-field .required {
   color: #dc2626;
+  margin-left: 4px;
 }
 
-.form-field input, .search-box input, .risk-grid input, .search-wrap input {
-  border: 1px solid var(--border-light);
-  background: var(--bg-page);
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 13px;
+.form-field input, .search-box input, .risk-grid input, .search-wrap input, select, textarea {
+  border: 2px solid var(--border-light);
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
   outline: none;
   color: var(--text-secondary);
-  transition: all 0.18s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
 }
 
-.form-field input:focus, .search-box input:focus, .risk-grid input:focus, .search-wrap input:focus {
+.form-field input:hover, .search-box input:hover, .search-wrap input:hover {
+  background: var(--bg-surface);
+  border-color: #cbd5e1;
+}
+
+.form-field input:focus, .search-box input:focus, .risk-grid input:focus, .search-wrap input:focus, select:focus, textarea:focus {
   background: var(--bg-surface);
   border-color: var(--color-primary-mid);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: var(--shadow-focus);
+  transform: translateY(-1px);
 }
 
 .checkbox-field {
@@ -353,37 +401,42 @@ background: var(--color-accent-light);
 /* ─── Table Styling (.risk-grid) — Blue Headers ─────────────── */
 .risk-grid, ::ng-deep .risk-grid {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
+  animation: fadeIn 0.6s ease-out forwards;
 }
 
 .risk-grid th, ::ng-deep .risk-grid .p-datatable-thead > tr > th {
   background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
   color: #ffffff !important;
   text-align: left;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
-  padding: 10px 12px;
+  letter-spacing: 0.8px;
+  padding: 16px 20px;
   border: none;
-  border-bottom: 2px solid var(--header-bg-dark);
+  border-bottom: 3px solid var(--header-bg-dark);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 /* First & last header cell rounded corners */
 .risk-grid th:first-child, ::ng-deep .risk-grid .p-datatable-thead > tr > th:first-child {
-  border-radius: 8px 0 0 0;
+  border-radius: 12px 0 0 0;
 }
 .risk-grid th:last-child, ::ng-deep .risk-grid .p-datatable-thead > tr > th:last-child {
-  border-radius: 0 8px 0 0;
+  border-radius: 0 12px 0 0;
 }
 
 .risk-grid td, ::ng-deep .risk-grid .p-datatable-tbody > tr > td {
-  padding: 10px 12px;
-  font-size: 12px;
+  padding: 18px 20px;
+  font-size: 13px;
   color: var(--text-secondary);
   border: none;
   border-bottom: 1px solid var(--border-light);
@@ -391,6 +444,7 @@ background: var(--color-accent-light);
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 0;
+  transition: background-color 0.2s ease, padding 0.2s ease;
 }
 
 /* Let the actions column auto-size and not clip */
@@ -399,11 +453,18 @@ background: var(--color-accent-light);
   white-space: nowrap;
   overflow: visible;
   max-width: none;
-  width: 80px;
+  width: 100px;
+  text-align: center;
+}
+
+.risk-grid tbody tr, ::ng-deep .risk-grid .p-datatable-tbody > tr {
+  transition: all 0.2s ease;
 }
 
 .risk-grid tbody tr:hover, ::ng-deep .risk-grid .p-datatable-tbody > tr:hover {
   background: var(--color-primary-light);
+  transform: scale(1.002);
+  box-shadow: inset 4px 0 0 var(--color-primary-mid);
 }
 
 /* Alternating row stripes */

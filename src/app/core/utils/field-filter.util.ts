@@ -14,6 +14,8 @@ export function getInputType(dataType: string): string {
   }
 }
 
+
+
 export function getVisibleFieldsSorted(fields: FieldConfig[]): FieldConfig[] {
   return fields
     .filter(f => f.HIDE_FIELD_YES === 2)

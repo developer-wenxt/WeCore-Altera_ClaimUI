@@ -11,6 +11,7 @@ import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { Select } from 'primeng/select';
 import { MenuModule } from 'primeng/menu';
+import { DatePicker } from 'primeng/datepicker';
 
 // Single source of truth for all shared imports across the app
 export const SHARED_IMPORTS = [
@@ -25,5 +26,6 @@ export const SHARED_IMPORTS = [
   CardModule,
   DialogModule,
    Select ,
-   MenuModule
+   MenuModule,
+   DatePicker
 ];

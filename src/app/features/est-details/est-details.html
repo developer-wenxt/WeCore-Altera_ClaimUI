@@ -1,14 +1,13 @@
 <div class="form-page">
-  <div class="page-header est-header">                     <!-- CHANGED -->
+  <div class="page-header est-header">
     <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
-    <h2 class="est-title">Estimation Details</h2>            <!-- CHANGED — added class -->
-    <div class="header-actions">                             <!-- ADD -->
-      <button pButton label="+ Add Row" (click)="addRow()" class="add-row-btn"></button>   <!-- MOVED here -->
+    <h2 class="est-title">Estimation Details</h2>
+    <div class="header-actions">
+      <button pButton label="+ Add Row" (click)="addRow()" class="add-row-btn"></button>
     </div>
   </div>
 
   <div class="table-card">
-   
 
     <div *ngIf="loading()" class="state-msg">Loading table...</div>
 
@@ -23,9 +22,20 @@
       <tbody>
         <tr *ngFor="let row of gridRows(); let i = index">
           <td>{{ i + 1 }}</td>
+
+          <!-- REPLACED: was <input type="text"> -->
           <td *ngFor="let col of visibleColumns">
-            <input type="text" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
+            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+              <input *ngSwitchCase="'checkbox'" type="checkbox"
+                [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
+              <input *ngSwitchCase="'date'" type="date"
+                [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
+              <input *ngSwitchDefault type="text"
+                [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
+            </ng-container>
           </td>
+          <!-- END REPLACEMENT -->
+
           <td *ngIf="extraColumns.length > 0">
             <button pButton icon="pi pi-save" class="p-button-text p-button-rounded" (click)="saveRow(i)"></button>
             <button pButton label="More" icon="pi pi-external-link" (click)="openMoreDialog(i)" class="more-btn"></button>
@@ -45,9 +55,18 @@
     </thead>
     <tbody>
       <tr>
+        <!-- REPLACED: was <input type="text"> -->
         <td *ngFor="let col of extraColumns">
-          <input type="text" [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
+          <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+            <input *ngSwitchCase="'checkbox'" type="checkbox"
+              [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
+            <input *ngSwitchCase="'date'" type="date"
+              [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
+            <input *ngSwitchDefault type="text"
+              [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
+          </ng-container>
         </td>
+        <!-- END REPLACEMENT -->
       </tr>
     </tbody>
   </table>

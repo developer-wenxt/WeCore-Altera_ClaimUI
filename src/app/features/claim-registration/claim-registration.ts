@@ -9,11 +9,12 @@ import {  getInputType ,getVisibleFieldsSorted,isFieldEditable } from '../../cor
 
 
 import { Router } from '@angular/router';
+import { DatePicker } from "primeng/datepicker";
 
 @Component({
   selector: 'app-claim-registration',
   standalone: true,
-  imports: [...SHARED_IMPORTS],
+  imports: [...SHARED_IMPORTS, DatePicker],
   templateUrl: './claim-registration.html',
   styleUrls: ['./claim-registration.scss'],
   providers: [UnSubscriber]
@@ -58,7 +59,7 @@ ngOnInit(): void {
         next: (record) => {
           sessionStorage.setItem('claimHeaderData', JSON.stringify({
         CLM_NO: record.CLM_NO,
-        CLM_LOSS_DT: record.CLM_LOSS_DT ? record.CLM_LOSS_DT.slice(0, 10) : '',
+        CLM_LOSS_DT: record.CLM_LOSS_DT ?new Date ( record.CLM_LOSS_DT) : '',
         CLM_POL_NO: record.CLM_POL_NO,
         CLM_PROD_CODE: record.CLM_PROD_CODE,
         CLM_RECOVERY_YN: record.CLM_RECOVERY_YN,
@@ -177,18 +178,26 @@ private mapRecordToFormData(record: any, fields: FieldConfig[]): any {
 }
 
 onSubmit(): void {
+  const now = new Date();
+
   const payload = {
-    CI_LOSS_DT: this.formData.CLM_LOSS_DT,
-    CI_INTM_DT: this.formData.CLM_INTM_DT,
-    CI_ADDR_01: this.formData.CLM_ADDR_01 || 'NA',   // required, provide fallback if not in this form
-    CI_CR_DT: new Date().toISOString(),
-    CI_CR_UID: 'ADMIN',
-    CI_DS_TYPE: this.formData.CLM_DS_TYPE,
-    CI_DS_CODE: this.formData.CLM_DS_CODE,
-    CI_LOSS_REMARKS: this.formData.CLM_LOSS_REMARKS || 'NA',
-    CI_COMP_CODE: this.formData.CLM_COMP_CODE,
-    CI_DIVN_CODE: this.formData.CLM_DIVN_CODE,
-    CI_DEPT_CODE: this.formData.CLM_DEPT_CODE
+    CLM_INTM_NO: null,
+    CLM_YEAR: now.getFullYear(),
+    CLM_RECOVERY_YN: this.formData.CLM_RECOVERY_YN ? '1' : '0',
+    CLM_SALVAGE_YN: this.formData.CLM_SALVAGE_YN ? '1' : '0',
+    CLM_INTER_DIVN_YN: this.formData.CLM_INTER_DIVN_YN ? '1' : '0',
+    CLM_DIVN_CODE: '101',                                    // HARDCODED (login pending)
+    CLM_PROD_CODE: this.formData.CLM_PROD_CODE,
+    CLM_STS: 'A',
+    CLM_INTM_DT: new Date(this.formData.CLM_INTM_DT),
+    CLM_CR_DT: now.toISOString(),
+    CLM_CR_UID: 'TSHEPANDG',                                 // HARDCODED (login pending)
+    CLM_COMP_CODE: '003',                                    // HARDCODED (login pending)
+    CLM_DEPT_CODE: '10',                                     // HARDCODED (login pending)
+    CLM_DS_TYPE: 4,
+    CLM_DS_CODE: this.formData.CLM_DS_CODE,
+    CLM_CLASS_CODE: sessionStorage.getItem('claimClassCode'),
+    CLM_LOSS_DT: this.formData.CLM_LOSS_DT ? new Date(this.formData.CLM_LOSS_DT).toISOString() : null
   };
 
   this.menuService.saveClaimRegistration(payload)
