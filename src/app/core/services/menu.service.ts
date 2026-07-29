@@ -115,30 +115,27 @@ export class MenuService {
 
 
   updateRiskDetail(row: any) {
-    return this.http.put(`/api/pgitClmApplPolicy/${row.CLMAP_SYS_ID}`, row);
+    return this.http.put(`${this.baseUrl}/pgitClmApplPolicy/${row.CLMAP_SYS_ID}`, row);
   }
 
   updateEstDetail(row: any) {
-    return this.http.put(`/api/pgitClmEst/${row.CE_SYS_ID}`, row);
+    return this.http.put(`${this.baseUrl}/pgitClmEst/${row.CE_SYS_ID}`, row);
   }
 
   createEstDetail(row: any) {
-    return this.http.post(`/api/pgitClmEst`, row);
+    return this.http.post(`${this.baseUrl}/pgitClmEst`, row);
   }
 
   createSettlementDetail(row: any) {
-    return this.http.post(`/api/pgitClmSetl`, row);
+    return this.http.post(`${this.baseUrl}/pgitClmSetl`, row);
   }
 
-
   getSettlementDetailsByClaim(clmapSysId: number) {
-    return this.http.get(
-      `/api/pgitClmSetl/${clmapSysId}`
-    );
+    return this.http.get(`${this.baseUrl}/pgitClmSetl/${clmapSysId}`);
   }
 
   createRiskDetail(row: any) {
-    return this.http.post(`/api/pgitClmApplPolicy`, row);
+    return this.http.post(`${this.baseUrl}/pgitClmApplPolicy`, row);
   }
 
 }

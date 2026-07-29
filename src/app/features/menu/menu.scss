@@ -2,7 +2,7 @@
 .menu-layout {
     display: flex;
     gap: 0;
-    min-height: calc(100vh - 60px);
+    min-height: 100vh;
     margin: 0;
 }
 
@@ -165,8 +165,10 @@
 // ── Main content area ─────────────────────────────────────────────────────
 .main-content {
     flex: 1;
-    padding: 2rem 2.5rem;
+    padding: 1rem;
     background: var(--bg-page);
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
 
     &.no-pad {
@@ -294,8 +296,8 @@ app-claim-list {
 // ── Product grid ──────────────────────────────────────────────────────────
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
 
     @media (max-width: 1300px) {
         grid-template-columns: repeat(4, 1fr);

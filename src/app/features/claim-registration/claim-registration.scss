@@ -1,1 +1,52 @@
+.dynamic-form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 24px;
+    font-size: 16px; // increased base font size
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        label {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        input,
+        .p-inputtext,
+        .p-select,
+        .p-datepicker input {
+            font-size: 15px;
+            height: 40px; // slightly taller to match bigger font
+        }
+
+        &.checkbox-field {
+            flex-direction: row;
+            align-items: center;
+
+            .checkbox-label {
+                font-size: 15px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+    }
+}
+
+// Responsive fallback so 4 columns don't break on smaller screens
+@media (max-width: 1200px) {
+    .dynamic-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .dynamic-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Layout and styles moved to global styles.css for consistency and responsiveness */

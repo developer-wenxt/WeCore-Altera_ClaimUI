@@ -4,48 +4,46 @@
     <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
   </div>
 
-  <div class="page-header settlement-header">
-    <h2>Claim Settlement</h2>
-  </div>
-
   <div class="table-card">
-  <div class="info-chips plain-chips">
-    <div *ngFor="let f of claimHeaderFields()" class="chip">
-      <span class="chip-label">
-        {{ f.FIELD_PROMPT }}
-        <span class="required" *ngIf="f.MANDATORY === 1">*</span>
-      </span>
-
-      <input *ngIf="f.INPUT_TYPE === 'text'"
-        type="text"
-        [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
-        [name]="f.COLUMN_NAME"
-        class="chip-input" />
-
-      <input *ngIf="f.INPUT_TYPE === 'date'"
-        type="date"
-        [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
-        [name]="f.COLUMN_NAME"
-        class="chip-input" />
-
-      <label *ngIf="f.INPUT_TYPE === 'checkbox'" class="chip-checkbox-label">
-        <input type="checkbox"
-          [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
-          [name]="f.COLUMN_NAME" />
-      </label>
-
-      <span *ngIf="!f.INPUT_TYPE" class="chip-value">
-        {{ claimHeaderData()[f.COLUMN_NAME] }}
-      </span>
+    <div class="page-header settlement-header">
+      <h2>Claim Settlement</h2>
     </div>
-  </div>
-</div>
+    <div class="info-chips plain-chips">
+      <div *ngFor="let f of claimHeaderFields()" class="chip">
+        <span class="chip-label">
+          {{ f.FIELD_PROMPT }}
+          <span class="required" *ngIf="f.MANDATORY === 1">*</span>
+        </span>
 
-  <div class="page-header settlement-header">
-    <h2>Risk Details</h2>
+        <input *ngIf="f.INPUT_TYPE === 'text'"
+          type="text"
+          [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
+          [name]="f.COLUMN_NAME"
+          class="chip-input" />
+
+        <input *ngIf="f.INPUT_TYPE === 'date'"
+          type="date"
+          [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
+          [name]="f.COLUMN_NAME"
+          class="chip-input" />
+
+        <label *ngIf="f.INPUT_TYPE === 'checkbox'" class="chip-checkbox-label">
+          <input type="checkbox"
+            [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
+            [name]="f.COLUMN_NAME" />
+        </label>
+
+        <span *ngIf="!f.INPUT_TYPE" class="chip-value">
+          {{ claimHeaderData()[f.COLUMN_NAME] }}
+        </span>
+      </div>
+    </div>
   </div>
 
   <div class="table-card risk-table-card">
+    <div class="page-header settlement-header">
+      <h2>Risk Details</h2>
+    </div>
     <div *ngIf="riskLoading()" class="state-msg">Loading risk table...</div>
     <table *ngIf="!riskLoading()" class="risk-grid">
       <thead>
@@ -57,29 +55,28 @@
       <tbody>
         <tr *ngFor="let row of riskGridRows(); let i = index">
           <td>{{ i + 1 }}</td>
-         <td *ngFor="let col of riskTableColumns()">
-  <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
-    <input *ngSwitchCase="'checkbox'" type="checkbox"
-      [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" disabled />
-    <input *ngSwitchCase="'date'" type="date"
-      [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
-    <input *ngSwitchDefault type="text"
-      [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
-  </ng-container>
-</td>
+          <td *ngFor="let col of riskTableColumns()">
+            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+              <input *ngSwitchCase="'checkbox'" type="checkbox"
+                [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" disabled />
+              <input *ngSwitchCase="'date'" type="date"
+                [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
+              <input *ngSwitchDefault type="text"
+                [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
+            </ng-container>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="page-header settlement-header1">
-  <h2 class="settlement-title">Settlement Details</h2>
-  <div class="header-actions">
-    <button pButton label="+ Add Row" (click)="addRow()" class="add-row-btn"></button>
-  </div>
-</div>
-
   <div class="table-card">
+    <div class="page-header settlement-header1">
+      <h2 class="settlement-title">Settlement Details</h2>
+      <div class="header-actions">
+        <button pButton label="+ Add Row" (click)="addRow()" class="add-row-btn"></button>
+      </div>
+    </div>
     <div *ngIf="loading()" class="state-msg">Loading table...</div>
 
     <table *ngIf="!loading()" class="risk-grid">

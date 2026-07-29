@@ -1,24 +1,23 @@
 <div class="form-page">
-   <div class="page-header claim-notif-header">        
-    <div class="header-left">
-      <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
-    </div>
-    <h2 class="claim-notif-title">Claim Notification</h2>   
-  </div>
-
-  <div class="info-chips">
-    <div class="chip">
-      <span class="chip-label">Product</span>
-      <span class="chip-value">2001</span>
-    </div>
-
-    <div class="chip highlight">
-      <span class="chip-label">Type</span>
-      <span class="chip-value">Intimation</span>
-    </div>
-  </div>
-
   <div class="table-card">
+    <div class="page-header claim-notif-header">        
+      <div class="header-left">
+        <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
+      </div>
+      <h2 class="claim-notif-title">Claim Notification</h2>   
+    </div>
+
+    <div class="info-chips">
+      <div class="chip">
+        <span class="chip-label">Product</span>
+        <span class="chip-value">2001</span>
+      </div>
+
+      <div class="chip highlight">
+        <span class="chip-label">Type</span>
+        <span class="chip-value">Intimation</span>
+      </div>
+    </div>
 
     <div *ngIf="loading()" class="state-msg">
       Loading form...

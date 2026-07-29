@@ -1,23 +1,20 @@
 <div class="form-page">
-  <div class="page-header">
-    <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
-    <h2>Claim Registration</h2>
-    <div class="header-actions">
-      <button *ngIf="isReadOnly" pButton label="Next" icon="pi pi-arrow-right" iconPos="right" (click)="onNextClick()"
-        class="primary-btn"></button> <!-- ADD -->
-
-    </div>
-  </div>
-
-
-  <div class="info-chips">
-    <div class="chip"><span class="chip-label">Product</span><span class="chip-value">2001</span></div>
-    <div class="chip"><span class="chip-label">Policy No</span><span class="chip-value">P-MBA-2023-20-2001-000021</span>
-    </div>
-    <div class="chip highlight"><span class="chip-label">Type</span><span class="chip-value">Direct</span></div>
-  </div>
-
   <div class="table-card">
+    <div class="page-header">
+      <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
+      <h2>Claim Registration</h2>
+      <div class="header-actions">
+        <button *ngIf="isReadOnly" pButton label="Next" icon="pi pi-arrow-right" iconPos="right" (click)="onNextClick()"
+          class="primary-btn"></button>
+      </div>
+    </div>
+
+    <div class="info-chips">
+      <div class="chip"><span class="chip-label">Product</span><span class="chip-value">2001</span></div>
+      <div class="chip"><span class="chip-label">Policy No</span><span class="chip-value">P-MBA-2023-20-2001-000021</span>
+      </div>
+      <div class="chip highlight"><span class="chip-label">Type</span><span class="chip-value">Direct</span></div>
+    </div>
     <div *ngIf="loading()" class="state-msg">Loading form...</div>
 
     <form *ngIf="!loading()" class="dynamic-form-grid">

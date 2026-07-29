@@ -1,15 +1,14 @@
 <div class="form-page">
-  <div class="page-header claims-header">
-    <div class="header-left">
-      <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
-    </div>
-    <h2 class="claims-title">Claims</h2>
-    <div class="header-actions">
-      <button pButton label="+ Add Registration" (click)="onAddRegistration()" class="primary-btn"></button>
-    </div>
-  </div>
-
   <div class="table-card">
+    <div class="page-header claims-header">
+      <div class="header-left">
+        <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
+      </div>
+      <h2 class="claims-title">Claims Registration</h2>
+      <div class="header-actions">
+        <button pButton label="+ Add Registration" (click)="onAddRegistration()" class="primary-btn"></button>
+      </div>
+    </div>
 
     <div class="claim-toolbar">
       <div class="filter-group">
@@ -30,7 +29,7 @@
 
       <ng-template pTemplate="header">
         <tr>
-          <th>System ID</th>
+
           <th>Claim No</th>
           <th>Policy No</th>
           <th>Assured Name</th>
@@ -46,7 +45,7 @@
 
       <ng-template pTemplate="body" let-claim>
         <tr>
-          <td>{{ claim.CLM_SYS_ID }}</td>
+
           <td>{{ claim.CLM_NO }}</td>
           <td>{{ claim.CLM_POL_NO }}</td>
           <td>{{ claim.CLM_ASSR_NAME }}</td>
