@@ -25,11 +25,12 @@
 
           <!-- REPLACED: was <input type="text"> -->
           <td *ngFor="let col of visibleColumns">
-            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
               <input *ngSwitchCase="'checkbox'" type="checkbox"
                 [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
-              <input *ngSwitchCase="'date'" type="date"
-                [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
+              <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
+                dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
+                [disabled]="!isFieldEditable(col)"></p-datepicker>
               <input *ngSwitchDefault type="text"
                 [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
             </ng-container>
@@ -57,11 +58,12 @@
       <tr>
         <!-- REPLACED: was <input type="text"> -->
         <td *ngFor="let col of extraColumns">
-          <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+          <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
             <input *ngSwitchCase="'checkbox'" type="checkbox"
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
-            <input *ngSwitchCase="'date'" type="date"
-              [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
+            <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME"
+              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
+              [disabled]="!isFieldEditable(col)"></p-datepicker>
             <input *ngSwitchDefault type="text"
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
           </ng-container>

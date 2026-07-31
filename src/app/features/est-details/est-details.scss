@@ -1,1 +1,98 @@
-/* Layout and styles moved to global styles.css for consistency and responsiveness */
+/* Layout and styles moved to global styles.css for consistency and responsiveness *//* ─── Header: flat, left-aligned like the screenshot ────────── */
+/* ─── Header: back left, title centered, add-row right ──────── */
+.est-header {
+  justify-content: space-between;
+  position: relative;
+}
+
+.est-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* ─── Flatten the card — no shadow, no hover lift ────────────── */
+.table-card {
+  box-shadow: none;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  transform: none !important;
+}
+
+.table-card:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+/* ─── Flat white table header (no blue gradient) ─────────────── */
+.risk-grid th {
+  background: var(--bg-surface) !important;
+  color: var(--text-muted) !important;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 14px 16px;
+  border: none;
+  border-bottom: 1px solid var(--border-light) !important;
+  box-shadow: none;
+  position: static;
+}
+
+.risk-grid th:first-child,
+.risk-grid th:last-child {
+  border-radius: 0;
+}
+
+/* ─── Rows: flat, no slide/shadow hover ──────────────────────── */
+.risk-grid td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.risk-grid tbody tr:hover {
+  background: var(--bg-hover);
+  transform: none;
+  box-shadow: none;
+}
+
+.risk-grid tbody tr:nth-child(even) {
+  background: transparent;
+}
+
+/* ─── Pill-style inputs — light blue, no border, rounded ─────── */
+.risk-grid input {
+  background: var(--color-accent-light) !important;
+  border: none !important;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-main);
+  width: 100%;
+}
+
+.risk-grid input:disabled {
+  opacity: 1;
+  color: var(--text-secondary);
+}
+
+.risk-grid input:focus {
+  box-shadow: 0 0 0 2px var(--color-primary-mid);
+  transform: none;
+  background: var(--color-accent-light) !important;
+}
+
+/* actions column — muted dash-like look for empty state */
+.risk-grid td:last-child {
+  text-align: center;
+  color: var(--text-lighter);
+}
+
+.more-btn,
+.p-button-text {
+  color: var(--text-muted) !important;
+}

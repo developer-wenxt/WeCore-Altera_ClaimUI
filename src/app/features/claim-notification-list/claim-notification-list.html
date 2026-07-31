@@ -23,7 +23,7 @@
     <div *ngIf="loading()" class="state-msg">Loading claim notifications...</div>
 
     <p-table *ngIf="!loading()" [value]="filteredRecords" [paginator]="true" [rows]="5"
-      [rowsPerPageOptions]="[5,10,20,50]" styleClass="risk-grid">
+      [rowsPerPageOptions]="[5,10,20,50]" [scrollable]="true" scrollHeight="400px" styleClass="risk-grid">
       <ng-template pTemplate="header">
         <tr>
           <th>Class Code</th>

@@ -68,10 +68,9 @@ export class ClaimNotificationListComponent extends UnSubscriber implements OnIn
   }
 
 onViewRecord(record: any): void {
-  console.log('Clicked Record:', record);
   this.router.navigate(
     ['/claim-notification', record.CI_INTM_NO],
-    { queryParams: { mode: 'view', sysId: record.CI_SYS_ID } }
+    { queryParams: { mode: 'view', intmNo: record.CI_INTM_NO } }
   );
 }
 
@@ -87,12 +86,9 @@ onViewRecord(record: any): void {
 onEditRecord(record: any): void {
   sessionStorage.setItem('claimClassCode', this.menuItem?.CLASS_CODE || record.CLASS_CODE || '');
   this.router.navigate(['/claim-notification', record.CI_INTM_NO], {
-    queryParams: { mode: 'edit', sysId: record.CI_SYS_ID } 
+    queryParams: { mode: 'edit', intmNo: record.CI_INTM_NO }
   });
 }
-
-
-
 
  goBack(): void {
   this.router.navigate(['/']);

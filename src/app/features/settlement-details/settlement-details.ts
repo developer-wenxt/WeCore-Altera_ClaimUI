@@ -169,7 +169,7 @@ private loadSettlementRows(): void {
 
         const rows: any[] = [];
         sortedKeys.forEach(key => {
-          dataObj[key].forEach((entry: any) => rows.push(entry));
+          dataObj[key].forEach((entry: any) => rows.push(this.normalizeSettlementRow(entry)));
         });
 
         this.gridRows.set(rows.length ? rows : [{}]);
@@ -228,8 +228,23 @@ claimHeaderData = signal<any>(
 private normalizeRiskRow(entry: any): any {
   const row = { ...entry };
   this.riskTableColumns().forEach(col => {
-    if (this.getInputType(col.SOURCE_DESIGN_TYPE) === 'checkbox') {
+    const inputType = this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE);
+    if (inputType === 'checkbox') {
       row[col.COLUMN_NAME] = row[col.COLUMN_NAME] === '1' || row[col.COLUMN_NAME] === 1;
+    } else if (inputType === 'date' && row[col.COLUMN_NAME]) {
+      row[col.COLUMN_NAME] = new Date(row[col.COLUMN_NAME]);
+    }
+  });
+  return row;
+}
+
+// ADD
+private normalizeSettlementRow(entry: any): any {
+  const row = { ...entry };
+  this.tableColumns().forEach(col => {
+    const inputType = this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE);
+    if (inputType === 'date' && row[col.COLUMN_NAME]) {
+      row[col.COLUMN_NAME] = new Date(row[col.COLUMN_NAME]);
     }
   });
   return row;

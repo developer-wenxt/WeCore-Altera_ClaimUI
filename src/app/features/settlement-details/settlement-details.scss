@@ -130,6 +130,81 @@
     /* prevents squished columns on small viewports */
 }
 
+
+/* ─── Flatten table-card — no shadow, no hover lift ──────────── */
+.table-card {
+  box-shadow: none;
+  transform: none !important;
+}
+
+.table-card:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+/* ─── Flat white table header (no blue gradient) ─────────────── */
+::ng-deep .risk-grid th {
+  background: var(--bg-surface) !important;
+  color: var(--text-muted) !important;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 14px 16px;
+  border: none;
+  border-bottom: 1px solid var(--border-light) !important;
+  box-shadow: none;
+  position: static;
+}
+
+::ng-deep .risk-grid th:first-child,
+::ng-deep .risk-grid th:last-child {
+  border-radius: 0;
+}
+
+/* ─── Rows: flat, no slide/shadow hover ──────────────────────── */
+::ng-deep .risk-grid td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+::ng-deep .risk-grid tbody tr:hover {
+  background: var(--bg-hover);
+  transform: none;
+  box-shadow: none;
+}
+
+::ng-deep .risk-grid tbody tr:nth-child(even) {
+  background: transparent;
+}
+
+/* ─── Pill-style inputs — light blue, no border, rounded ─────── */
+::ng-deep .risk-grid input {
+  background: var(--color-accent-light) !important;
+  border: none !important;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-main);
+  width: 100%;
+}
+
+::ng-deep .risk-grid input:disabled {
+  opacity: 1;
+  color: var(--text-secondary);
+}
+
+::ng-deep .risk-grid input:focus {
+  box-shadow: 0 0 0 2px var(--color-primary-mid);
+  transform: none;
+  background: var(--color-accent-light) !important;
+}
+
+::ng-deep .more-btn,
+::ng-deep .p-button-text {
+  color: var(--text-muted) !important;
+}
+
 /* ─── Responsive tweaks ──────────────────────────────────────── */
 @media (max-width: 768px) {
     .page-header {

@@ -6,12 +6,16 @@ export function getVisibleFields(fields: FieldConfig[]): FieldConfig[] {
   
    .sort((a, b) => a.DISPLAY_ORDER_NO - b.DISPLAY_ORDER_NO);;
 }
-export function getInputType(dataType: string): string {
-  switch (dataType) {
-    case 'C': return 'checkbox';
-    case 'D': return 'date';
-    default: return 'text';
+export function getInputType(sourceDesignType: string, dataType: string): string {
+  if (sourceDesignType === 'C') {
+    return 'checkbox';
   }
+
+  if (sourceDesignType === 'T'  && dataType === 'D') {
+    return 'date';
+  }
+
+  return 'text';
 }
 
 

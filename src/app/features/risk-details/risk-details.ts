@@ -71,7 +71,26 @@ export class RiskDetailsComponent extends UnSubscriber implements OnInit {
 
   openRowMenu(event: Event, menu: any, index: number): void {
     this.activeRowIndex = index;
+
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const zoomFactor = 0.85; // matches your CSS zoom
+
+    // Correct for the zoom distortion in position calculations
+    const top = (rect.bottom / zoomFactor);
+    const left = (rect.left / zoomFactor);
+
     menu.toggle(event);
+
+    // Wait a tick for the menu to render, then override its position
+    setTimeout(() => {
+      const menuEl = document.querySelector('.p-menu-overlay') as HTMLElement;
+      if (menuEl) {
+        menuEl.style.position = 'fixed';
+        menuEl.style.top = `${top}px`;
+        menuEl.style.left = `${left}px`;
+      }
+    });
   }
 
   goBack(): void {
@@ -108,12 +127,15 @@ export class RiskDetailsComponent extends UnSubscriber implements OnInit {
       });
   }
 
-  // ADD — convert '1'/'0' checkbox columns to real booleans for ngModel binding
+  // ADD — convert '1'/'0' checkbox columns to real booleans, and date strings to Date objects
   private normalizeRow(entry: any): any {
     const row = { ...entry };
     this.tableColumns().forEach(col => {
-      if (this.getInputType(col.SOURCE_DESIGN_TYPE) === 'checkbox') {
+      const inputType = this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE);
+      if (inputType === 'checkbox') {
         row[col.COLUMN_NAME] = row[col.COLUMN_NAME] === '1' || row[col.COLUMN_NAME] === 1;
+      } else if (inputType === 'date' && row[col.COLUMN_NAME]) {
+        row[col.COLUMN_NAME] = new Date(row[col.COLUMN_NAME]);
       }
     });
     return row;
@@ -135,7 +157,7 @@ export class RiskDetailsComponent extends UnSubscriber implements OnInit {
   saveRow(index: number): void {
     const row = { ...this.gridRows()[index] };
     this.tableColumns().forEach(col => {
-      if (this.getInputType(col.SOURCE_DESIGN_TYPE) === 'checkbox') {
+      if (this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) === 'checkbox') {
         row[col.COLUMN_NAME] = row[col.COLUMN_NAME] ? '1' : '0';
       }
     });

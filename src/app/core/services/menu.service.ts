@@ -47,7 +47,7 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
-  updateClaimIntimation(id: number, payload: any): Observable<any> {
+  updateClaimIntimation(id: string, payload: any): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/pgitClmIntimation/${id}`, payload);
   }
 
@@ -113,6 +113,12 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
+
+  getClaimIntimationById(intmNo: string): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/pgitClmIntimation/byId`, {
+    params: { CI_INTM_NO: intmNo }
+  }).pipe(map(response => response.data.data));
+}
 
   updateRiskDetail(row: any) {
     return this.http.put(`${this.baseUrl}/pgitClmApplPolicy/${row.CLMAP_SYS_ID}`, row);

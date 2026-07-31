@@ -47,6 +47,10 @@
   --shadow-focus: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
+html {
+  zoom: 85%;
+}
+
 /* ─── Animations ────────────────────────────────────────────── */
 @keyframes slideInUp {
   from {
@@ -715,6 +719,8 @@ textarea:focus {
 
 
 
+
+
 /* ─── Responsive Utilities ──────────────────────────────────── */
 @media (max-width: 1300px) {
   .dynamic-form-grid {
@@ -771,6 +777,11 @@ textarea:focus {
 
   .filter-group {
     flex-wrap: wrap;
+  }
+
+
+  ::ng-deep .risk-grid .p-datatable-scrollable-body {
+    overflow-y: auto;
   }
 
   .info-chips {

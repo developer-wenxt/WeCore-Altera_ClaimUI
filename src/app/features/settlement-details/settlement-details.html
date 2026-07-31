@@ -21,11 +21,11 @@
           [name]="f.COLUMN_NAME"
           class="chip-input" />
 
-        <input *ngIf="f.INPUT_TYPE === 'date'"
-          type="date"
+        <p-datepicker *ngIf="f.INPUT_TYPE === 'date'"
           [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
           [name]="f.COLUMN_NAME"
-          class="chip-input" />
+          dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
+          styleClass="chip-input"></p-datepicker>
 
         <label *ngIf="f.INPUT_TYPE === 'checkbox'" class="chip-checkbox-label">
           <input type="checkbox"
@@ -56,11 +56,12 @@
         <tr *ngFor="let row of riskGridRows(); let i = index">
           <td>{{ i + 1 }}</td>
           <td *ngFor="let col of riskTableColumns()">
-            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
               <input *ngSwitchCase="'checkbox'" type="checkbox"
                 [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" disabled />
-              <input *ngSwitchCase="'date'" type="date"
-                [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
+              <p-datepicker *ngSwitchCase="'date'" [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i"
+                dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
+                [disabled]="true"></p-datepicker>
               <input *ngSwitchDefault type="text"
                 [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
             </ng-container>
@@ -93,11 +94,11 @@
 
           <!-- REPLACED: was <input type="text"> -->
           <td *ngFor="let col of visibleColumns">
-            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
               <input *ngSwitchCase="'checkbox'" type="checkbox"
                 [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
-              <input *ngSwitchCase="'date'" type="date"
-                [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
+              <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
+                dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"></p-datepicker>
               <input *ngSwitchDefault type="text"
                 [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
             </ng-container>
@@ -126,11 +127,11 @@
       <tr>
         <!-- REPLACED: was <input type="text"> -->
         <td *ngFor="let col of extraColumns">
-          <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE)">
+          <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
             <input *ngSwitchCase="'checkbox'" type="checkbox"
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />
-            <input *ngSwitchCase="'date'" type="date"
-              [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />
+            <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME"
+              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"></p-datepicker>
             <input *ngSwitchDefault type="text"
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />
           </ng-container>

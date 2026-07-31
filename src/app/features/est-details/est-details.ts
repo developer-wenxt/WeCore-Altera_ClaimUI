@@ -70,7 +70,7 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
 
           const rows: any[] = [];
           sortedKeys.forEach(key => {
-            dataObj[key].forEach((entry: any) => rows.push(entry));
+            dataObj[key].forEach((entry: any) => rows.push(this.normalizeRow(entry)));
           });
 
           this.gridRows.set(rows.length ? rows : [{}]);
@@ -85,6 +85,17 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
 
   addRow(): void {
     this.gridRows.update(rows => [...rows, { CE_CLMAP_SYS_ID: this.clmapSysId }]);
+  }
+
+  private normalizeRow(entry: any): any {
+    const row = { ...entry };
+    this.tableColumns().forEach(col => {
+      const inputType = this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE);
+      if (inputType === 'date' && row[col.COLUMN_NAME]) {
+        row[col.COLUMN_NAME] = new Date(row[col.COLUMN_NAME]);
+      }
+    });
+    return row;
   }
 
 

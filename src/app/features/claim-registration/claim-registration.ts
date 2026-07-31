@@ -169,9 +169,9 @@ private mapRecordToFormData(record: any, fields: FieldConfig[]): any {
   const updated: any = {};
   fields.forEach(f => {
     let value = record[f.COLUMN_NAME] ?? '';
-    if (this.getInputType(f.SOURCE_DESIGN_TYPE) === 'date' && value) {
-      value = new Date(value).toISOString().slice(0, 10);
-    }
+    if (this.getInputType(f.SOURCE_DESIGN_TYPE, f.DATA_TYPE) === 'date' && value) {
+  value = new Date(value);
+}
     updated[f.COLUMN_NAME] = value;
   });
   return updated;
