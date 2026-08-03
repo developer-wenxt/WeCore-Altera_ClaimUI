@@ -25,9 +25,12 @@
     <table *ngIf="!loading()" class="risk-grid">
       <thead>
         <tr>
-          <th>#</th>
-          <th *ngFor="let col of tableColumns()">{{ col.FIELD_PROMPT }}</th>
-          <th class="actions-col"></th>
+        <th>#</th>
+<th *ngFor="let col of tableColumns()">
+  {{ col.FIELD_PROMPT }}
+  <span class="required" *ngIf="col.MANDATORY === 1">*</span>
+</th>
+<th class="actions-col"></th>
         </tr>
       </thead>
       <tbody>

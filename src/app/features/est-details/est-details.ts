@@ -122,16 +122,26 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   saveRow(index: number): void {
     const row = { ...this.gridRows()[index], CE_CLMAP_SYS_ID: this.clmapSysId };
 
+    const missing = this.tableColumns()
+      .filter(col => col.MANDATORY === 1)
+      .filter(col => {
+        const v = row[col.COLUMN_NAME];
+        return v === null || v === undefined || v === '';
+      });
+
+    if (missing.length > 0) {
+      alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
+      return;
+    }
+
     const request = row.CE_SYS_ID
       ? this.menuService.updateEstDetail(row)
       : this.menuService.createEstDetail(row);
 
-    request
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => console.log('Row saved successfully'),
-        error: (err) => console.error('Error saving estimation row', err)
-      });
+    request.pipe(takeUntil(this.destroy$)).subscribe({
+      next: () => console.log('Row saved successfully'),
+      error: (err) => console.error('Error saving estimation row', err)
+    });
   }
 
   goBack(): void {

@@ -178,36 +178,46 @@ private mapRecordToFormData(record: any, fields: FieldConfig[]): any {
 }
 
 onSubmit(): void {
-  const now = new Date();
+  const missing = this.fields()
+    .filter(f => f.MANDATORY === 1)
+    .filter(f => {
+      const v = this.formData[f.COLUMN_NAME];
+      return v === null || v === undefined || v === '';
+    });
 
-  const payload = {
-    CLM_INTM_NO: null,
-    CLM_YEAR: now.getFullYear(),
-    CLM_RECOVERY_YN: this.formData.CLM_RECOVERY_YN ? '1' : '0',
-    CLM_SALVAGE_YN: this.formData.CLM_SALVAGE_YN ? '1' : '0',
-    CLM_INTER_DIVN_YN: this.formData.CLM_INTER_DIVN_YN ? '1' : '0',
-    CLM_DIVN_CODE: '101',                                    // HARDCODED (login pending)
-    CLM_PROD_CODE: this.formData.CLM_PROD_CODE,
-    CLM_STS: 'A',
-    CLM_INTM_DT: new Date(this.formData.CLM_INTM_DT),
-    CLM_CR_DT: now.toISOString(),
-    CLM_CR_UID: 'TSHEPANDG',                                 // HARDCODED (login pending)
-    CLM_COMP_CODE: '003',                                    // HARDCODED (login pending)
-    CLM_DEPT_CODE: '10',                                     // HARDCODED (login pending)
-    CLM_DS_TYPE: 4,
-    CLM_DS_CODE: this.formData.CLM_DS_CODE,
-    CLM_CLASS_CODE: sessionStorage.getItem('claimClassCode'),
-    CLM_LOSS_DT: this.formData.CLM_LOSS_DT ? new Date(this.formData.CLM_LOSS_DT).toISOString() : null
-  };
+  if (missing.length > 0) {
+    alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
+    return;
+  }
+
+  const now = new Date();
+  const payload: any = {};
+
+  this.fields().forEach(f => {
+    let v = this.formData[f.COLUMN_NAME];
+    if (v instanceof Date) v = v.toISOString();
+    payload[f.COLUMN_NAME] = v;
+  });
+
+  // system-generated / fixed values that override form input
+  payload.CLM_INTM_NO = null;
+  payload.CLM_YEAR = now.getFullYear();
+  payload.CLM_RECOVERY_YN = this.formData.CLM_RECOVERY_YN ? '1' : '0';
+  payload.CLM_SALVAGE_YN = this.formData.CLM_SALVAGE_YN ? '1' : '0';
+  payload.CLM_INTER_DIVN_YN = this.formData.CLM_INTER_DIVN_YN ? '1' : '0';
+  payload.CLM_DIVN_CODE = '101';
+  payload.CLM_STS = 'A';
+  payload.CLM_CR_DT = now.toISOString();
+  payload.CLM_CR_UID = 'TSHEPANDG';
+  payload.CLM_COMP_CODE = '003';
+  payload.CLM_DEPT_CODE = '10';
+  payload.CLM_DS_TYPE = 4;
+  payload.CLM_CLASS_CODE = sessionStorage.getItem('claimClassCode');
 
   this.menuService.saveClaimRegistration(payload)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: () => {
-        this.router.navigate(['/risk-details'], {
-          queryParams: { sysId: this.sysId }
-        });
-      },
+      next: () => this.router.navigate(['/risk-details'], { queryParams: { sysId: this.sysId } }),
       error: (err) => console.error('Error saving claim registration', err)
     });
 }

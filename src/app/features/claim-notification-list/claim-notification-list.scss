@@ -1,1 +1,13 @@
-/* Layout and styles moved to global styles.css for consistency and responsiveness */
+input:disabled,
+input[readonly],
+::ng-deep .p-select.p-disabled,
+::ng-deep .p-inputtext:disabled,
+::ng-deep .p-select-label.p-disabled,
+::ng-deep .p-datepicker.p-disabled input,
+::ng-deep .p-datepicker input:disabled {
+  background: #d1d5db !important;
+  color: #4b5563 !important;
+  border-color: #9ca3af !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+}

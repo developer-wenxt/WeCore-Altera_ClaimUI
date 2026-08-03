@@ -31,8 +31,8 @@
     <form *ngIf="!loading()" class="dynamic-form-grid">
 
       <ng-container *ngFor="let field of fields()">
-        <div *ngIf="field.COLUMN_NAME !== 'CI_INTM_NO'" class="form-field"
-          [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'">
+        <div *ngIf="field.COLUMN_NAME !== 'CI_INTM_NO' && field.COLUMN_NAME !== 'CI_COUNTY'" class="form-field"
+    [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'">
 
           <label *ngIf="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) !== 'checkbox'">
             {{ field.FIELD_PROMPT }}
@@ -50,9 +50,10 @@
 
             <!-- Date -->
             <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
-              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
-              [disabled]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{ standalone: true }">
-            </p-datepicker>
+  dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true"
+  [readonlyInput]="isReadOnly || !isFieldEditable(field)"
+  [disabled]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{ standalone: true }">
+</p-datepicker>
 
             <!-- Number -->
             <input *ngSwitchCase="'number'" pInputText type="number" [attr.placeholder]="field.TOOL_TIP"

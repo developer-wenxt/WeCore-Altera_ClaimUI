@@ -48,6 +48,28 @@
   border-radius: 0;
 }
 
+
+input:disabled,
+input[readonly],
+::ng-deep .p-select.p-disabled,
+::ng-deep .p-select.p-disabled .p-select-label,
+::ng-deep .p-inputtext:disabled,
+::ng-deep .p-inputtext[readonly],
+::ng-deep .p-datepicker.p-disabled input,
+::ng-deep .p-datepicker input:disabled {
+  background: #d1d5db !important;
+  color: #4b5563 !important;
+  border-color: #9ca3af !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+}
+
+.checkbox-label input[type="checkbox"]:disabled {
+  cursor: not-allowed !important;
+  accent-color: #9ca3af !important;
+  opacity: 0.6;
+}
+
 /* ─── Rows: flat, no slide/shadow hover ──────────────────────── */
 .risk-grid td {
   padding: 14px 16px;

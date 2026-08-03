@@ -65,7 +65,7 @@ export class MenuService {
   getDropdownValues(progCode: string, blockName: string, fieldName: string): Observable<any[]> {
     return this.http.get<any>(
       `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`
-    ).pipe(map(response => response.data.data.data.data));   // fixed nesting
+    ).pipe(map(response => response.data.data.data)); 
   }
 
   getRiskDetailsByClaim(clmSysId: number) {

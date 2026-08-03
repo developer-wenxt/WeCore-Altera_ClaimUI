@@ -75,12 +75,16 @@ onViewRecord(record: any): void {
 }
 
  onAddNotification(): void {
-  if (!this.menuItem?.MENU_ID) {
+  const menuId = this.menuItem?.MENU_ID || sessionStorage.getItem('claimMenuId');
+
+  if (!menuId) {
     console.error('MENU_ID missing from menuItem');
     return;
   }
-   sessionStorage.setItem('claimClassCode', this.menuItem?.CLASS_CODE || ''); 
-  this.router.navigate(['/claim-notification', this.menuItem.MENU_ID]);
+
+  const classCode = this.menuItem?.CLASS_CODE || sessionStorage.getItem('claimClassCode') || '';
+  sessionStorage.setItem('claimClassCode', classCode);
+  this.router.navigate(['/claim-notification', menuId]);
 }
 
 onEditRecord(record: any): void {

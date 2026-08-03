@@ -157,6 +157,9 @@ export class MenuComponent extends UnSubscriber implements OnInit {
       return;
     }
 
+      sessionStorage.setItem('claimMenuId', String(this.selectedItem.MENU_ID));
+  sessionStorage.setItem('claimClassCode', this.selectedItem.CLASS_CODE || '');
+
     this.switchView('claim-notification-list');
   }
 

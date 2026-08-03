@@ -156,6 +156,21 @@ export class RiskDetailsComponent extends UnSubscriber implements OnInit {
 
   saveRow(index: number): void {
     const row = { ...this.gridRows()[index] };
+
+    // ---- NEW: mandatory field validation for this row ----
+    const missing = this.tableColumns()
+      .filter(col => col.MANDATORY === 1)
+      .filter(col => {
+        const v = row[col.COLUMN_NAME];
+        return v === null || v === undefined || v === '';
+      });
+
+    if (missing.length > 0) {
+      alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
+      return;
+    }
+    // ---- END NEW ----
+
     this.tableColumns().forEach(col => {
       if (this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) === 'checkbox') {
         row[col.COLUMN_NAME] = row[col.COLUMN_NAME] ? '1' : '0';
@@ -170,7 +185,7 @@ export class RiskDetailsComponent extends UnSubscriber implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => console.log('Row saved successfully'),
-        error: (err: any) => console.error('Error saving risk detail row', err)   // CHANGED
+        error: (err: any) => console.error('Error saving risk detail row', err)
       });
   }
 

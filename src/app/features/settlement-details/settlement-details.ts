@@ -140,7 +140,19 @@ export class SettlementDetailsComponent extends UnSubscriber implements OnInit {
 
 saveRow(index: number): void {
   const row = { ...this.gridRows()[index] };
-  row.CS_CLMAP_SYS_ID = this.clmapSysId;   // ensure key is always set, even if row was edited
+  row.CS_CLMAP_SYS_ID = this.clmapSysId;
+
+  const missing = this.tableColumns()
+    .filter(col => col.MANDATORY === 1)
+    .filter(col => {
+      const v = row[col.COLUMN_NAME];
+      return v === null || v === undefined || v === '';
+    });
+
+  if (missing.length > 0) {
+    alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
+    return;
+  }
 
   this.menuService.saveSettlementDetail(row)
     .pipe(takeUntil(this.destroy$))

@@ -15,7 +15,10 @@
       <thead>
         <tr>
           <th>#</th>
-          <th *ngFor="let col of visibleColumns">{{ col.FIELD_PROMPT }}</th>
+          <th *ngFor="let col of visibleColumns">
+            {{ col.FIELD_PROMPT }}
+            <span class="required" *ngIf="col.MANDATORY === 1">*</span>
+          </th>
           <th *ngIf="extraColumns.length > 0"></th>
         </tr>
       </thead>
@@ -23,7 +26,6 @@
         <tr *ngFor="let row of gridRows(); let i = index">
           <td>{{ i + 1 }}</td>
 
-          <!-- REPLACED: was <input type="text"> -->
           <td *ngFor="let col of visibleColumns">
             <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
               <input *ngSwitchCase="'checkbox'" type="checkbox"
@@ -35,7 +37,6 @@
                 [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
             </ng-container>
           </td>
-          <!-- END REPLACEMENT -->
 
           <td *ngIf="extraColumns.length > 0">
             <button pButton icon="pi pi-save" class="p-button-text p-button-rounded" (click)="saveRow(i)"></button>
@@ -51,12 +52,14 @@
   <table class="risk-grid" *ngIf="activeRowIndex() !== null">
     <thead>
       <tr>
-        <th *ngFor="let col of extraColumns">{{ col.FIELD_PROMPT }}</th>
+        <th *ngFor="let col of extraColumns">
+          {{ col.FIELD_PROMPT }}
+          <span class="required" *ngIf="col.MANDATORY === 1">*</span>
+        </th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <!-- REPLACED: was <input type="text"> -->
         <td *ngFor="let col of extraColumns">
           <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
             <input *ngSwitchCase="'checkbox'" type="checkbox"
@@ -68,7 +71,6 @@
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
           </ng-container>
         </td>
-        <!-- END REPLACEMENT -->
       </tr>
     </tbody>
   </table>

@@ -15,6 +15,10 @@ export function getInputType(sourceDesignType: string, dataType: string): string
     return 'date';
   }
 
+   if (sourceDesignType === 'T' && dataType === 'N') {
+    return 'number';
+  }
+
   return 'text';
 }
 
@@ -45,5 +49,5 @@ export function getSettlementColumns(fields: FieldConfig[]): FieldConfig[] {
 }
 
 export function isFieldEditable(field: FieldConfig): boolean {
-  return field.UPDATE_YN === 1;
+  return field.UPDATE_YN === 1 || field.ENTERABLE === 1;
 }

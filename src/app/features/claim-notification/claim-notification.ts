@@ -25,6 +25,8 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
   isEdit = false;
   intmNo: string | null = null;
 
+  
+
   lovMap = signal<{ [fieldName: string]: any }>({});
   dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
 
@@ -109,20 +111,30 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
       });
   }
 
+
   saveClaim(): void {
-    const payload = {
-      CI_LOSS_DT: this.formData.CI_LOSS_DT,
-      CI_INTM_DT: this.formData.CI_INTM_DT,
-      CI_ADDR_01: this.formData.CI_ADDR_01,
-      CI_CR_DT: new Date().toISOString(),
-      CI_CR_UID: 'ADMIN',
-      CI_DS_TYPE: this.formData.CI_DS_TYPE,
-      CI_DS_CODE: this.formData.CI_DS_CODE,
-      CI_LOSS_REMARKS: this.formData.CI_LOSS_REMARKS,
-      CI_COMP_CODE: this.formData.CI_COMP_CODE,
-      CI_DIVN_CODE: this.formData.CI_DIVN_CODE,
-      CI_DEPT_CODE: this.formData.CI_DEPT_CODE
-    };
+    const missing = this.fields()
+      .filter(f => f.MANDATORY === 1)
+      .filter(f => {
+        const v = this.formData[f.COLUMN_NAME];
+        return v === null || v === undefined || v === '';
+      });
+
+    if (missing.length > 0) {
+      alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
+      return;
+    }
+
+    // ---- dynamic payload instead of hardcoded keys ----
+    const payload: any = {};
+    this.fields().forEach(f => {
+      payload[f.COLUMN_NAME] = this.formData[f.COLUMN_NAME];
+    });
+
+    // keep any fields your backend always needs but aren't in the dynamic field list
+    payload.CI_CR_DT = new Date().toISOString();
+    payload.CI_CR_UID = 'ADMIN';
+    // ---- end dynamic payload ----
 
     const request$ = this.isEdit && this.intmNo
       ? this.menuService.updateClaimIntimation(this.intmNo as any, payload)
