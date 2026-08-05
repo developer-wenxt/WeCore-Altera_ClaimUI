@@ -8,6 +8,7 @@ import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';   // ADD
 import { authInterceptor } from './core/interceptor/authinterceptor';
 import { globalErrorInterceptor } from './core/interceptor/global-error.interceptor';
+import { loadingInterceptor } from './core/interceptor/loading.interceptor';
 import { MessageService } from 'primeng/api';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
@@ -44,7 +45,7 @@ const MyPreset = definePreset(Aura, {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptors([authInterceptor, globalErrorInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor, globalErrorInterceptor])),
     MessageService,
     providePrimeNG({
       theme: {
