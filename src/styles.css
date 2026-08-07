@@ -113,13 +113,13 @@ body {
 
 /* ─── Page Level ────────────────────────────────────────────── */
 .form-page {
-  padding: 8px;
+  padding: 16px 24px;
   background: var(--bg-page);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  animation: fadeIn 0.4s ease-out forwards;
+  gap: 16px;
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @media (max-width: 768px) {
@@ -256,9 +256,9 @@ body {
   background: var(--bg-surface);
   border-radius: 12px;
   border: 1px solid var(--border-light);
-  padding: 20px;
+  padding: 24px;
   box-shadow: var(--shadow-card);
-  animation: slideInUp 0.5s ease-out forwards;
+  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   flex: 1;
   display: flex;
@@ -312,10 +312,10 @@ body {
 /* ─── Forms & Grids ─────────────────────────────────────────── */
 .dynamic-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px 24px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px 20px;
   margin-top: 16px;
-  animation: slideInUp 0.5s ease-out forwards;
+  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .form-field {
@@ -361,12 +361,29 @@ textarea {
   border: 2px solid var(--border-light);
   background: #f8fafc;
   border-radius: 10px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   font-size: 14px;
   outline: none;
   color: var(--text-secondary);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
+}
+
+/* Ensure readonly inputs (like datepickers) that are still meant to be interacted with via popup don't look disabled */
+::ng-deep p-datepicker input[readonly] {
+  background: #f8fafc !important;
+  cursor: pointer;
+}
+
+::ng-deep p-datepicker input[readonly]:hover {
+  background: var(--bg-surface) !important;
+  border-color: #cbd5e1;
+}
+
+::ng-deep p-datepicker input[readonly]:focus {
+  background: var(--bg-surface) !important;
+  border-color: var(--color-primary-mid) !important;
+  box-shadow: var(--shadow-focus) !important;
 }
 
 .form-field input:hover,
@@ -483,11 +500,11 @@ textarea:focus {
   background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
   color: #ffffff !important;
   text-align: left;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  padding: 16px 20px;
+  padding: 12px 16px;
   border: none;
   border-bottom: 3px solid var(--header-bg-dark);
   white-space: nowrap;
@@ -511,7 +528,7 @@ textarea:focus {
 
 .risk-grid td,
 ::ng-deep .risk-grid .p-datatable-tbody>tr>td {
-  padding: 18px 20px;
+  padding: 12px 16px;
   font-size: 13px;
   color: var(--text-secondary);
   border: none;
@@ -520,7 +537,7 @@ textarea:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 0;
-  transition: background-color 0.2s ease, padding 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Let the actions column auto-size and not clip */
@@ -535,9 +552,15 @@ textarea:focus {
   text-align: center;
 }
 
+@keyframes rowFadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .risk-grid tbody tr,
 ::ng-deep .risk-grid .p-datatable-tbody>tr {
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: rowFadeInUp 0.4s ease-out forwards;
 }
 
 .risk-grid tbody tr:hover,
@@ -578,7 +601,6 @@ textarea:focus {
   border-radius: 50% !important;
   background: var(--bg-surface) !important;
   border: 1px solid var(--border-light) !important;
-  color: var(--color-primary-mid) !important;
   padding: 0 !important;
   display: inline-flex !important;
   align-items: center;
@@ -589,11 +611,22 @@ textarea:focus {
   transition: all 0.18s ease;
 }
 
-.view-btn:hover,
+.view-btn {
+  color: #3b82f6 !important; /* Blue for view */
+}
+.view-btn:hover {
+  background: #eff6ff !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.15);
+}
+
+.edit-btn {
+  color: #10b981 !important; /* Green for edit */
+}
 .edit-btn:hover {
-  background: var(--color-primary-light) !important;
-  border-color: var(--color-primary-mid) !important;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+  background: #ecfdf5 !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
 }
 
 .table-footer {
@@ -736,7 +769,7 @@ textarea:focus {
 /* ─── Responsive Utilities ──────────────────────────────────── */
 @media (max-width: 1300px) {
   .dynamic-form-grid {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
 }
 

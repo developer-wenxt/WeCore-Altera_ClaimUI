@@ -25,8 +25,11 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
   isEdit = false;
   intmNo: string | null = null;
 
-  
+  classCode: string = '';
+  classDesc: string = '';
 
+  
+ private readonly forceTextFields = ['CI_POL_NO'];
   lovMap = signal<{ [fieldName: string]: any }>({});
   dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
 
@@ -44,6 +47,8 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
 
   ngOnInit(): void {
     const menuId = this.route.snapshot.paramMap.get('menuId');
+    this.classCode = sessionStorage.getItem('claimClassCode') || '';
+     this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
     this.isReadOnly = this.route.snapshot.queryParamMap.get('mode') === 'view';
     this.isEdit = this.route.snapshot.queryParamMap.get('mode') === 'edit';
     this.intmNo = this.route.snapshot.queryParamMap.get('intmNo');
@@ -155,8 +160,9 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
 
 
   isLovField(columnName: string): boolean {
-    return !!this.lovMap()[columnName];
-  }
+  if (this.forceTextFields.includes(columnName)) return false;
+  return !!this.lovMap()[columnName];
+}
 
 
   getDropdownOptions(columnName: string): any[] {

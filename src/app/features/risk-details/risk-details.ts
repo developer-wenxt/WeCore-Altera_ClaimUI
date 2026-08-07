@@ -25,6 +25,10 @@ export class RiskDetailsComponent extends UnSubscriber implements OnInit {
   activeRowIndex: number | null = null;
   clmSysId: number | null = null;
 
+  prodCode: string = '';
+polNo: string = '';
+classDesc: string = '';
+
   getInputType = getInputType;
 
 
@@ -39,6 +43,15 @@ export class RiskDetailsComponent extends UnSubscriber implements OnInit {
 
     this.clmSysId = Number(this.route.snapshot.queryParamMap.get('sysId')) ||
       Number(sessionStorage.getItem('claimSysId')) || null;
+
+
+      const headerData = sessionStorage.getItem('claimHeaderData');   // ADD
+  if (headerData) {                                                // ADD
+    const parsed = JSON.parse(headerData);                         // ADD
+    this.prodCode = parsed.CLM_PROD_CODE || '';                     // ADD
+    this.polNo = parsed.CLM_POL_NO || '';                           // ADD
+  }  
+  this.classDesc = sessionStorage.getItem('claimClassDesc') || ''; 
     this.menuService.getRiskDetailFields()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -70,28 +83,38 @@ export class RiskDetailsComponent extends UnSubscriber implements OnInit {
 
 
   openRowMenu(event: Event, menu: any, index: number): void {
-    this.activeRowIndex = index;
+  this.activeRowIndex = index;
 
-    const target = event.currentTarget as HTMLElement;
-    const rect = target.getBoundingClientRect();
-    const zoomFactor = 0.85; // matches your CSS zoom
+  menu.toggle(event);
 
-    // Correct for the zoom distortion in position calculations
-    const top = (rect.bottom / zoomFactor);
-    const left = (rect.left / zoomFactor);
+  setTimeout(() => {
+    const menuEl = document.querySelector('.p-menu-overlay') as HTMLElement;
+    if (menuEl) {
+      const rect = menuEl.getBoundingClientRect();   // CHANGED — read actual rendered position, zoom already applied by browser
 
-    menu.toggle(event);
+      let deltaX = 0;
+      let deltaY = 0;
 
-    // Wait a tick for the menu to render, then override its position
-    setTimeout(() => {
-      const menuEl = document.querySelector('.p-menu-overlay') as HTMLElement;
-      if (menuEl) {
-        menuEl.style.position = 'fixed';
-        menuEl.style.top = `${top}px`;
-        menuEl.style.left = `${left}px`;
+      // CHANGED — only nudge if it's actually overflowing, using the real rendered rect
+      if (rect.right > window.innerWidth) {
+        deltaX = window.innerWidth - rect.right - 12;
       }
-    });
-  }
+      if (rect.bottom > window.innerHeight) {
+        deltaY = window.innerHeight - rect.bottom - 12;
+      }
+
+      if (deltaX !== 0 || deltaY !== 0) {
+        const currentLeft = rect.left;
+        const currentTop = rect.top;
+        menuEl.style.position = 'fixed';
+        menuEl.style.left = `${currentLeft + deltaX}px`;
+        menuEl.style.top = `${currentTop + deltaY}px`;
+      }
+
+      menuEl.classList.add('menu-visible');
+    }
+  });
+}
 
   goBack(): void {
     this.router.navigate(['/claim-registration'], {

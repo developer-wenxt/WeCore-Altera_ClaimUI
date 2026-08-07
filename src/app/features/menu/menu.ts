@@ -141,6 +141,9 @@ export class MenuComponent extends UnSubscriber implements OnInit {
     const match = this.menuItems().find(i => i.CLASS_CODE === cat.code);
     this.activeInstCode = match ? match.CLM_INTM_INST_CODE : '';
 
+     sessionStorage.setItem('claimClassCode', cat.code);
+     sessionStorage.setItem('claimClassDesc', cat.desc || ''); 
+
     this.switchView('claim-list');
   }
 
@@ -159,6 +162,7 @@ export class MenuComponent extends UnSubscriber implements OnInit {
 
       sessionStorage.setItem('claimMenuId', String(this.selectedItem.MENU_ID));
   sessionStorage.setItem('claimClassCode', this.selectedItem.CLASS_CODE || '');
+  sessionStorage.setItem('claimClassDesc', this.selectedItem.CLASS_DESC || '');
 
     this.switchView('claim-notification-list');
   }

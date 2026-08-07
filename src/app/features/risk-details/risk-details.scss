@@ -166,3 +166,38 @@ input[readonly],
   accent-color: #9ca3af !important;
   opacity: 0.6;
 }
+
+
+::ng-deep .p-menu-overlay {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.97);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  transform-origin: top left;
+
+  &.menu-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.actions-col {
+  position: relative;   // already there, keep it
+}
+
+::ng-deep .actions-col .p-menu-overlay {
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  left: auto !important;
+  bottom: auto !important;
+  margin-top: 6px;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.97);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  transform-origin: top right;
+}
+
+::ng-deep .actions-col .p-menu-overlay.p-connected-overlay-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}

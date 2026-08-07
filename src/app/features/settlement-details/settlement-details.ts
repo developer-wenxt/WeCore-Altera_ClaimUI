@@ -85,11 +85,26 @@ export class SettlementDetailsComponent extends UnSubscriber implements OnInit {
 
   // Risk Details logic
   riskTableColumns = signal<FieldConfig[]>([]);
+  
+
+
+
+  claimHeaderFields = signal<any[]>([
+  ...CLAIM_HEADER_FIELDS
+    .filter(f => ['CLM_NO', 'CLM_LOSS_DT', 'CLM_PROD_CODE', 'CLM_RECOVERY_YN'].includes(f.COLUMN_NAME))   // CHANGED — removed CLM_POL_NO
+    .map(f => f.COLUMN_NAME === 'CLM_RECOVERY_YN' ? { ...f, INPUT_TYPE: 'checkbox' } : f),
+  ...HARDCODED_HEADER_FIELDS   
+]);
+
   riskGridRows = signal<any[]>([{}]);
   riskLoading = signal(true);
   clmSysId: number | null = null;
 
   clmapSysId: number | null = null;
+
+  prodCode: string = '';
+polNo: string = '';
+classDesc: string = '';
 
 
 
@@ -103,6 +118,13 @@ export class SettlementDetailsComponent extends UnSubscriber implements OnInit {
   }
 
  ngOnInit(): void {
+  const headerData = sessionStorage.getItem('claimHeaderData');
+  if (headerData) {
+    const parsed = JSON.parse(headerData);
+    this.prodCode = parsed.CLM_PROD_CODE || '';
+    this.polNo = parsed.CLM_POL_NO || '';
+  }
+  this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
   this.menuService.getSettlementFields()
     .pipe(takeUntil(this.destroy$))
     .subscribe({
@@ -121,6 +143,23 @@ export class SettlementDetailsComponent extends UnSubscriber implements OnInit {
     Number(sessionStorage.getItem('claimSysId')) || null;
 
   this.clmapSysId = Number(this.route.snapshot.queryParamMap.get('clmapSysId')) || null;   // ADD
+
+
+  if (this.clmSysId) {
+  this.menuService.getClaimRegById(this.clmSysId)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (record) => {
+        this.claimHeaderData.set({
+          ...record,
+          CLM_DOC_SUBMISSION_DT: record.CLM_DOC_SUBMISSION_DT ? new Date(record.CLM_DOC_SUBMISSION_DT) : '',
+          CLM_SALVAGE_YN: record.CLM_SALVAGE_YN === '1',
+          CLM_RECOVERY_YN: record.CLM_RECOVERY_YN === '1'
+        });
+      },
+      error: (err) => console.error('Error loading claim record for header', err)
+    });
+}
 
   this.menuService.getRiskDetailFields()
     .pipe(takeUntil(this.destroy$))
@@ -193,13 +232,6 @@ private loadSettlementRows(): void {
       }
     });
 }
-
-claimHeaderFields = signal<any[]>([
-  ...CLAIM_HEADER_FIELDS.filter(f =>
-    ['CLM_POL_NO', 'CLM_NO', 'CLM_LOSS_DT', 'CLM_PROD_CODE', 'CLM_RECOVERY_YN'].includes(f.COLUMN_NAME)
-  ),
-  ...HARDCODED_HEADER_FIELDS   
-]);
 
  
 claimHeaderData = signal<any>(

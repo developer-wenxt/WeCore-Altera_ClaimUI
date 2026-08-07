@@ -27,6 +27,10 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   clmapSysId: number | null = null;
   clmSysId: number | null = null;
 
+  prodCode: string = '';
+polNo: string = '';
+classDesc: string = '';
+
   constructor(private menuService: MenuService,
     private router: Router,
     private route: ActivatedRoute
@@ -39,6 +43,13 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
 
     this.clmapSysId = Number(this.route.snapshot.queryParamMap.get('clmapSysId')) || null;
     this.clmSysId = Number(this.route.snapshot.queryParamMap.get('sysId')) || null;
+      const headerData = sessionStorage.getItem('claimHeaderData');   // ADD
+  if (headerData) {                                                // ADD
+    const parsed = JSON.parse(headerData);                         // ADD
+    this.prodCode = parsed.CLM_PROD_CODE || '';                     // ADD
+    this.polNo = parsed.CLM_POL_NO || '';                           // ADD
+  }                                                                 // ADD
+  this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
     this.menuService.getEstDetailFields()
       .pipe(takeUntil(this.destroy$))
       .subscribe({

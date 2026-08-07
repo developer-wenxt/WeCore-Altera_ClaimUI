@@ -4,6 +4,16 @@
     <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
   </div>
 
+
+  <div class="info-chips">
+  <div class="chip">
+  <span class="chip-label">Product</span>
+  <span class="chip-value">{{ prodCode || 'null' }} - {{ classDesc || 'null' }}</span>
+</div>
+  <div class="chip"><span class="chip-label">Policy No</span><span class="chip-value">{{ polNo || 'null' }}</span>
+  </div>
+  
+</div>
   <div class="table-card">
     <div class="page-header settlement-header">
       <h2>Claim Settlement</h2>

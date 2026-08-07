@@ -9,19 +9,16 @@
 
     <div class="info-chips">
       <div class="chip">
-        <span class="chip-label">Product</span>
-        <span class="chip-value">2001</span>
-      </div>
+  <span class="chip-label">Class</span>
+  <span class="chip-value">{{ classCode || 'null' }} - {{ classDesc || 'null' }}</span>
+</div>
 
       <div class="chip highlight">
         <span class="chip-label">Notification No</span>
         <span class="chip-value">{{ formData['CI_INTM_NO'] }}</span>
       </div>
 
-      <div class="chip highlight">
-        <span class="chip-label">Type</span>
-        <span class="chip-value">Intimation</span>
-      </div>
+      
     </div>
 
     <div *ngIf="loading()" class="state-msg">

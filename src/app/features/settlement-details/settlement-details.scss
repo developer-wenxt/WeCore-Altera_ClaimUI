@@ -226,6 +226,26 @@ input[readonly],
   opacity: 0.6;
 }
 
+/* ─── Flat white table header (no blue gradient) ─────────────── */
+::ng-deep .risk-grid th {
+  background: var(--bg-surface) !important;
+  color: var(--text-muted) !important;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 14px 16px;
+  border: none;
+  border-bottom: 1px solid var(--border-light) !important;
+  box-shadow: none;
+  position: static;
+}
+
+::ng-deep .risk-grid th:first-child,
+::ng-deep .risk-grid th:last-child {
+  border-radius: 0;
+}
+
 /* ─── Responsive tweaks ──────────────────────────────────────── */
 @media (max-width: 768px) {
     .page-header {
@@ -269,3 +289,19 @@ input[readonly],
         font-size: 14px;
     }
 }
+
+/* Make header chip fields (Settle Type, Doc Submission Dt, etc.) white instead of grey */
+.plain-chips .chip-value {
+  background: #ffffff !important;
+}
+
+.plain-chips ::ng-deep .p-datepicker input,
+.plain-chips ::ng-deep .p-datepicker.p-disabled input,
+.plain-chips ::ng-deep input:disabled,
+.plain-chips ::ng-deep input[readonly] {
+  background: #ffffff !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-light) !important;
+}
+
+
