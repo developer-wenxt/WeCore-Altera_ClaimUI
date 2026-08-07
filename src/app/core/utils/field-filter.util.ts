@@ -50,4 +50,8 @@ export function getSettlementColumns(fields: FieldConfig[]): FieldConfig[] {
 
 export function isFieldEditable(field: FieldConfig): boolean {
   return field.UPDATE_YN === 1 || field.ENTERABLE === 1;
-}
+}  
+
+export function isFieldEditableIntimation(field: FieldConfig): boolean {
+  return field.UPDATE_YN === 2 ;
+}  

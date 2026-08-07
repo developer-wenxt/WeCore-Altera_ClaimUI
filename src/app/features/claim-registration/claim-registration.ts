@@ -106,6 +106,8 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
       this.loading.set(false);
       return;
     }
+   
+    this.formData['CLM_INTM_DT'] = new Date();
 
     this.menuService.getClaimRegFields(storedInstCode)
       .pipe(takeUntil(this.destroy$))
@@ -156,17 +158,19 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
   return !!this.lovMap()[columnName];
 }
 
-  // ADD
   getDropdownOptions(columnName: string): any[] {
-    const raw = this.dropdownOptionsMap()[columnName] || [];
-    return raw.map((row: any) => {
-      const keys = Object.keys(row);
-      return {
-        value: row['PC_CODE'] ?? row[keys[0]],
-        label: row[keys[1]] ?? row['PC_CODE']
-      };
-    });
-  }
+  const raw = this.dropdownOptionsMap()[columnName] || [];
+  return raw.map((row: any) => {
+    const keys = Object.keys(row);
+   
+    const valueKey = columnName === 'CLM_ASSR_CODE' ? keys[1] : (row['PC_CODE'] !== undefined ? 'PC_CODE' : keys[0]);
+    const labelKey = columnName === 'CLM_ASSR_CODE' ? keys[2] : keys[1];
+    return {
+      value: row[valueKey],
+      label: row[labelKey] ?? row[valueKey]
+    };
+  });
+}
 
   private mapRecordToFormData(record: any, fields: FieldConfig[]): any {
     const updated: any = {};
@@ -209,7 +213,7 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
       payload[f.COLUMN_NAME] = v;
     });
 
-    // system-generated / fixed values that override form input
+    
     payload.CLM_INTM_NO = null;
     payload.CLM_YEAR = now.getFullYear();
     payload.CLM_RECOVERY_YN = this.formData.CLM_RECOVERY_YN ? '1' : '0';
@@ -231,6 +235,30 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
         error: (err) => console.error('Error saving claim registration', err)
       });
   }
+
+
+ onPolicyNoBlur(): void {
+  const polNo = this.formData['CLM_POL_NO'];
+  if (!polNo) return;
+
+  this.menuService.getPolicyData(polNo)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (res) => {
+        const policy = res?.[0];
+        if (policy) {
+          this.formData['CLM_CURR_CODE'] = policy.POL_PREM_CURR_CODE;
+          this.formData['CLM_PROD_CODE'] = policy.POL_PROD_CODE;
+
+          // ADD THIS — match the dropdown option's value type/format
+          const options = this.getDropdownOptions('CLM_ASSR_CODE');
+          const match = options.find(o => String(o.value) === String(policy.POL_ASSR_CODE));
+          this.formData['CLM_ASSR_CODE'] = match ? match.value : policy.POL_ASSR_CODE;
+        }
+      },
+      error: (err) => console.error('Error fetching policy data', err)
+    });
+}
 
   onEstDetailsClick(): void {
     this.router.navigate(['/est-details']);

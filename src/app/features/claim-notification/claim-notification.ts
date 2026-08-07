@@ -6,7 +6,7 @@ import { UnSubscriber } from '../../core/un-subscriber';
 import { MenuService } from '../../core/services/menu.service';
 import { FieldConfig } from '../../core/models/model';
 import { SHARED_IMPORTS } from '../../core/shared/shared';
-import { getVisibleFields, getInputType, isFieldEditable } from '../../core/utils/field-filter.util';
+import { getVisibleFields, getInputType } from '../../core/utils/field-filter.util';
 
 @Component({
   selector: 'app-claim-notification',
@@ -34,7 +34,7 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
   dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
 
   getInputType = getInputType;
-  isFieldEditable = isFieldEditable;
+ 
 
   constructor(
     private menuService: MenuService,
@@ -132,14 +132,28 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
 
     // ---- dynamic payload instead of hardcoded keys ----
     const payload: any = {};
-    this.fields().forEach(f => {
-      payload[f.COLUMN_NAME] = this.formData[f.COLUMN_NAME];
-    });
+   this.fields().forEach(f => {
+  payload[f.COLUMN_NAME] = this.formData[f.COLUMN_NAME];
+});
 
-    // keep any fields your backend always needs but aren't in the dynamic field list
-    payload.CI_CR_DT = new Date().toISOString();
-    payload.CI_CR_UID = 'ADMIN';
-    // ---- end dynamic payload ----
+// checked = '1', unchecked = '0'
+if ('CI_DOC_DESP_YN' in payload) {
+  payload['CI_DOC_DESP_YN'] = this.formData['CI_DOC_DESP_YN'] ? '0' : '1';
+}
+if ('CI_CLM_REGD_YN' in payload) {
+  payload['CI_CLM_REGD_YN'] = this.formData['CI_CLM_REGD_YN'] ? '0' : '1';
+}
+
+// hardcoded values
+payload.CI_CR_UID = 'TSHEPANDG';
+payload.CI_COMP_CODE = '003';
+payload.CI_DEPT_CODE = '10';
+payload.CI_DIVN_CODE = '101';
+payload.CI_DS_CODE = '10-IN-01-001';
+payload.CI_DS_TYPE= 10;
+payload.CI_ADDR_01 = 'null';
+
+payload.CI_CR_DT = new Date().toISOString();
 
     const request$ = this.isEdit && this.intmNo
       ? this.menuService.updateClaimIntimation(this.intmNo as any, payload)
@@ -148,10 +162,16 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
     request$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res) => {
-          console.log('Saved Successfully', res);
-          alert('Claim Notification Saved Successfully');
-        },
+       next: (res) => {
+  
+  const intmNo = res?.data?.data?.data?.CI_INTM_NO;
+ 
+  if (intmNo) {
+    this.formData['CI_INTM_NO'] = intmNo;
+    this.cdr.detectChanges();
+  }
+  alert('Claim Notification Saved Successfully');
+},
         error: (err) => {
           console.error('Save Failed', err);
         }

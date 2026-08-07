@@ -20,6 +20,11 @@ export class MenuService {
       );
   }
 
+  getPolicyData(polNo: string): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/policyData?POLNO=${polNo}`)
+    .pipe(map(response => response.data.data));
+}
+
   getFields(): Observable<FieldConfig[]> {
     return this.http.get<any>(`${this.baseUrl}/claimIntField`)
       .pipe(map(response => response.data.data));

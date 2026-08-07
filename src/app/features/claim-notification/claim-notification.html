@@ -41,21 +41,21 @@
             <!-- Checkbox -->
             <label *ngSwitchCase="'checkbox'" class="checkbox-label">
               <input type="checkbox" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
-                [disabled]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{standalone: true}" />
+                [disabled]="isReadOnly " [ngModelOptions]="{standalone: true}" />
               <span>{{ field.FIELD_PROMPT }}</span>
             </label>
 
             <!-- Date -->
             <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
   dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true"
-  [readonlyInput]="isReadOnly || !isFieldEditable(field)"
-  [disabled]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{ standalone: true }">
+  [readonlyInput]="isReadOnly "
+  [disabled]="isReadOnly " [ngModelOptions]="{ standalone: true }">
 </p-datepicker>
 
             <!-- Number -->
             <input *ngSwitchCase="'number'" pInputText type="number" [attr.placeholder]="field.TOOL_TIP"
               [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
-              [readonly]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{standalone: true}" />
+              [readonly]="isReadOnly" [ngModelOptions]="{standalone: true}" />
 
             <!-- Text / LOV dropdown -->
             <ng-container *ngSwitchDefault>
@@ -63,14 +63,14 @@
               <p-select *ngIf="isLovField(field.COLUMN_NAME); else textInput"
                 [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
                 optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME"
-                [disabled]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{standalone: true}"
+                [disabled]="isReadOnly " [ngModelOptions]="{standalone: true}"
                 placeholder="-- Select --">
               </p-select>
 
               <ng-template #textInput>
                 <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"
                   [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
-                  [readonly]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{standalone: true}" />
+                  [readonly]="isReadOnly " [ngModelOptions]="{standalone: true}" />
               </ng-template>
 
             </ng-container>

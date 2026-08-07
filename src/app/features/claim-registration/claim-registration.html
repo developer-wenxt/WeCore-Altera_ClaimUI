@@ -62,7 +62,8 @@
           <ng-template #textInput>
             <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"
               [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
-              [readonly]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{standalone: true}" />
+              [readonly]="isReadOnly || !isFieldEditable(field)" [ngModelOptions]="{standalone: true}"
+              (blur)="field.COLUMN_NAME === 'CLM_POL_NO' && onPolicyNoBlur()" />
           </ng-template>
         </ng-container>
 
