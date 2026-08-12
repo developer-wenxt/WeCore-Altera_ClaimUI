@@ -5,8 +5,7 @@ import { UnSubscriber } from '../../core/un-subscriber';
 import { MenuService } from '../../core/services/menu.service';
 import { FieldConfig } from '../../core/models/model';
 import { SHARED_IMPORTS } from '../../core/shared/shared';
-import { getInputType, getVisibleFieldsSorted, isFieldEditable } from '../../core/utils/field-filter.util';
-
+import { getInputType, getVisibleFieldsSorted, isFieldEditable, isFieldEditableIntimation } from '../../core/utils/field-filter.util';
 
 import { Router } from '@angular/router';
 import { DatePicker } from "primeng/datepicker";
@@ -73,25 +72,31 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
             const instCode = storedInstCode || record.CLM_INST_CODE;   // CHANGED: fallback to record's own inst code
 
             if (instCode) {
-              this.menuService.getClaimRegFields(instCode)
-                .pipe(takeUntil(this.destroy$))
-                .subscribe({
-                  next: (fields) => {
-                    const visibleFields = getVisibleFieldsSorted(fields);
-                    this.fields.set(visibleFields);
-                    this.formData = this.mapRecordToFormData(record, visibleFields);
-                    this.loading.set(false);
-                    this.loadLovAndDropdowns(fields);
-                  },
-                  error: (err) => {
-                    console.error('Error loading claim registration fields:', err);
-                    this.loading.set(false);
-                  }
-                });
-            } else {
-              this.formData = record;
-              this.loading.set(false);
-            }
+  this.menuService.getClaimRegFields(instCode)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (fields) => {
+        // ADD THIS — same fix as your ADD flow, needed here too
+        const dataLossField = fields.find(f => f.COLUMN_NAME === 'CLM_LOSS_DT');
+        if (dataLossField) {
+          dataLossField.DATA_TYPE = 'D';
+        }
+
+        const visibleFields = getVisibleFieldsSorted(fields);
+        this.fields.set(visibleFields);
+        this.formData = this.mapRecordToFormData(record, visibleFields);
+        this.loading.set(false);
+        this.loadLovAndDropdowns(fields);
+      },
+      error: (err) => {
+        console.error('Error loading claim registration fields:', err);
+        this.loading.set(false);
+      }
+    });
+} else {
+  this.formData = record;
+  this.loading.set(false);
+}
           },
           error: (err) => {
             console.error('Error loading claim reg by id', err);
@@ -113,6 +118,11 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (fields) => {
+          const dataLossFields = fields.find(f => f.COLUMN_NAME === 'CLM_LOSS_DT');
+
+          if (dataLossFields) {
+            dataLossFields.DATA_TYPE = 'D';
+          }
           this.fields.set(getVisibleFieldsSorted(fields));
           this.loading.set(false);
           this.loadLovAndDropdowns(fields);
@@ -122,6 +132,14 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
           this.loading.set(false);
         }
       });
+  }
+
+
+   canEditField(field: FieldConfig): boolean {
+    if (this.isReadOnly) return false;
+    return this.isEdit
+      ? isFieldEditableIntimation(field)  // UPDATE_YN === 2
+      : isFieldEditable(field);           // ENTERABLE === 1
   }
 
   private loadLovAndDropdowns(fields: FieldConfig[]): void {
@@ -158,13 +176,20 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
   return !!this.lovMap()[columnName];
 }
 
-  getDropdownOptions(columnName: string): any[] {
+ getDropdownOptions(columnName: string): any[] {
   const raw = this.dropdownOptionsMap()[columnName] || [];
   return raw.map((row: any) => {
+    if (columnName === 'CLM_ASSR_CODE') {
+      const keys = Object.keys(row);
+      return {
+        value: row['ASSR_CODE'],
+        label: row[keys[1]]   // the DECODE(...) assured name column
+      };
+    }
+
     const keys = Object.keys(row);
-   
-    const valueKey = columnName === 'CLM_ASSR_CODE' ? keys[1] : (row['PC_CODE'] !== undefined ? 'PC_CODE' : keys[0]);
-    const labelKey = columnName === 'CLM_ASSR_CODE' ? keys[2] : keys[1];
+    const valueKey = row['PC_CODE'] !== undefined ? 'PC_CODE' : keys[0];
+    const labelKey = keys[1];
     return {
       value: row[valueKey],
       label: row[labelKey] ?? row[valueKey]
@@ -237,7 +262,7 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
   }
 
 
- onPolicyNoBlur(): void {
+onPolicyNoBlur(): void {
   const polNo = this.formData['CLM_POL_NO'];
   if (!polNo) return;
 
@@ -246,14 +271,41 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
     .subscribe({
       next: (res) => {
         const policy = res?.[0];
-        if (policy) {
-          this.formData['CLM_CURR_CODE'] = policy.POL_PREM_CURR_CODE;
-          this.formData['CLM_PROD_CODE'] = policy.POL_PROD_CODE;
+        if (!policy) return;
 
-          // ADD THIS — match the dropdown option's value type/format
-          const options = this.getDropdownOptions('CLM_ASSR_CODE');
-          const match = options.find(o => String(o.value) === String(policy.POL_ASSR_CODE));
-          this.formData['CLM_ASSR_CODE'] = match ? match.value : policy.POL_ASSR_CODE;
+        this.formData['CLM_CURR_CODE'] = policy.POL_PREM_CURR_CODE;
+        this.formData['CLM_PROD_CODE'] = policy.POL_PROD_CODE;
+
+        const targetAssrCode = String(policy.POL_ASSR_CODE);
+
+        const applyAssrCode = (options: any[]) => {
+          const match = options.find(o => String(o.value) === targetAssrCode);
+          // always store the STRING form so it matches option.value type
+          this.formData['CLM_ASSR_CODE'] = match ? match.value : targetAssrCode;
+        };
+
+        const existingOptions = this.getDropdownOptions('CLM_ASSR_CODE');
+        if (existingOptions.length) {
+          applyAssrCode(existingOptions);
+          return;
+        }
+
+        const lov = this.lovMap()['CLM_ASSR_CODE'];
+        if (lov) {
+          this.menuService.getDropdownValues(lov.PLD_PROG_CODE, lov.PLD_BLOCK_NAME, lov.PLD_FIELD_NAME)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (values) => {
+                const current = this.dropdownOptionsMap();
+                this.dropdownOptionsMap.set({ ...current, CLM_ASSR_CODE: values });
+                applyAssrCode(this.getDropdownOptions('CLM_ASSR_CODE'));
+              },
+              error: (err) => console.error('Error loading assured code options', err)
+            });
+        } else {
+          // lovMap not ready yet — poll/retry once it loads
+          const sub = this.menuService.getClaimRegFields; // no-op placeholder
+          this.formData['CLM_ASSR_CODE'] = targetAssrCode; // temp fallback
         }
       },
       error: (err) => console.error('Error fetching policy data', err)

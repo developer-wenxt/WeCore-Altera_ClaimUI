@@ -6,7 +6,7 @@ import { UnSubscriber } from '../../core/un-subscriber';
 import { MenuService } from '../../core/services/menu.service';
 import { FieldConfig } from '../../core/models/model';
 import { SHARED_IMPORTS } from '../../core/shared/shared';
-import { getVisibleFields, getInputType } from '../../core/utils/field-filter.util';
+import { getVisibleFields, getInputType, isFieldEditable, isFieldEditableIntimation } from '../../core/utils/field-filter.util';
 
 @Component({
   selector: 'app-claim-notification',
@@ -116,6 +116,14 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
       });
   }
 
+
+
+  canEditField(field: FieldConfig): boolean {
+  if (this.isReadOnly) return false;
+  return this.isEdit
+    ? isFieldEditableIntimation(field)  // UPDATE_YN === 2
+    : isFieldEditable(field);           // ENTERABLE === 1
+}
 
   saveClaim(): void {
     const missing = this.fields()

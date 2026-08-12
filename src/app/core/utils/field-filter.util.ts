@@ -6,7 +6,15 @@ export function getVisibleFields(fields: FieldConfig[]): FieldConfig[] {
   
    .sort((a, b) => a.DISPLAY_ORDER_NO - b.DISPLAY_ORDER_NO);;
 }
-export function getInputType(sourceDesignType: string, dataType: string): string {
+
+
+export function getInputType(sourceDesignType: string, dataType: string, columnName?: string): string {
+
+  
+  if (columnName === 'CLM_LOSS_DT') {
+    return 'date';
+  }
+
   if (sourceDesignType === 'C') {
     return 'checkbox';
   }
@@ -21,7 +29,6 @@ export function getInputType(sourceDesignType: string, dataType: string): string
 
   return 'text';
 }
-
 
 
 export function getVisibleFieldsSorted(fields: FieldConfig[]): FieldConfig[] {
@@ -49,9 +56,11 @@ export function getSettlementColumns(fields: FieldConfig[]): FieldConfig[] {
 }
 
 export function isFieldEditable(field: FieldConfig): boolean {
-  return field.UPDATE_YN === 1 || field.ENTERABLE === 1;
+  return  field.ENTERABLE === 1;
 }  
 
 export function isFieldEditableIntimation(field: FieldConfig): boolean {
   return field.UPDATE_YN === 2 ;
 }  
+
+
