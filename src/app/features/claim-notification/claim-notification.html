@@ -1,6 +1,6 @@
 <div class="form-page">
   <div class="table-card">
-        <div *ngIf="dateError" class="date-error-popup">{{ dateError }}</div>   <!-- placed here -->
+    <div *ngIf="dateError" class="date-error-popup">{{ dateError }}</div>
 
     <div class="page-header claim-notif-header">
       <div class="header-left">
@@ -9,7 +9,7 @@
       <h2 class="claim-notif-title">Claim Notification</h2>
     </div>
 
-   <div class="info-chips">
+    <div class="info-chips">
       <div class="chip">
         <span class="chip-label">Class</span>
         <span class="chip-value">{{ classCode || 'null' }} - {{ classDesc || 'null' }}</span>
@@ -21,11 +21,6 @@
       </div>
     </div>
 
-<div *ngIf="dateError" class="date-error-popup">{{ dateError }}</div>   <!-- CHANGED class -->
-    <div *ngIf="loading()" class="state-msg">
-      Loading form...
-    </div>
-
     <div *ngIf="loading()" class="state-msg">
       Loading form...
     </div>
@@ -34,7 +29,8 @@
 
       <ng-container *ngFor="let field of fields()">
         <div *ngIf="field.COLUMN_NAME !== 'CI_INTM_NO' && field.COLUMN_NAME !== 'CI_COUNTY'" class="form-field"
-    [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'">
+          [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'"
+          [class.field-disabled]="!canEditField(field)">
 
           <label *ngIf="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) !== 'checkbox'">
             {{ field.FIELD_PROMPT }}
@@ -52,11 +48,11 @@
 
             <!-- Date -->
             <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
-  dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true"
-  [readonlyInput]="!canEditField(field)"
-  [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }"
-  (ngModelChange)="checkDateValidity()">
-</p-datepicker>
+              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true"
+              [readonlyInput]="!canEditField(field)"
+              [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="checkDateValidity()">
+            </p-datepicker>
 
             <!-- Number -->
             <input *ngSwitchCase="'number'" pInputText type="number" [attr.placeholder]="field.TOOL_TIP"
@@ -67,12 +63,12 @@
             <ng-container *ngSwitchDefault>
 
               <p-select *ngIf="isLovField(field.COLUMN_NAME); else textInput"
-  [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
-  optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME"
-  [disabled]="!canEditField(field)" [ngModelOptions]="{standalone: true}"
-  (onShow)="field.COLUMN_NAME === 'CI_POL_NO' && onPolicyDropdownOpen()"
-  placeholder="-- Select --">
-</p-select>
+                [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
+                optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME"
+                [disabled]="!canEditField(field)" [ngModelOptions]="{standalone: true}"
+                (onShow)="field.COLUMN_NAME === 'CI_POL_NO' && onPolicyDropdownOpen()"
+                placeholder="-- Select --">
+              </p-select>
 
               <ng-template #textInput>
                 <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"

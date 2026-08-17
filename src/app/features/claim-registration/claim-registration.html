@@ -8,11 +8,11 @@
     <div class="info-chips">
       <div class="chip">
         <span class="chip-label">Product</span>
-        <span class="chip-value">{{ formData.CLM_PROD_CODE || 'null' }}</span>
+        <span class="chip-value">{{ formData.CLM_PROD_CODE  }}</span>
       </div>
       <div class="chip">
         <span class="chip-label">Claim No</span>
-        <span class="chip-value">{{ formData.CLM_NO || 'null' }}</span>
+        <span class="chip-value">{{ formData.CLM_NO  }}</span>
       </div>
 
     </div>
@@ -21,7 +21,8 @@
     <form *ngIf="!loading()" class="dynamic-form-grid">
       <ng-container *ngFor="let field of fields()">
         <div *ngIf="!isHeaderField(field.COLUMN_NAME)" class="form-field"
-          [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'">
+  [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'"
+  [class.field-disabled]="!canEditField(field)">
 
           <label *ngIf="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) !== 'checkbox'">
             {{ field.FIELD_PROMPT }} <span class="required" *ngIf="field.MANDATORY === 1">*</span>
@@ -79,14 +80,19 @@
     </div>
   </div>
 
-  <div class="table-card" *ngIf="sysId" style="margin-top: 1rem;">
-    <div class="page-header">
-      <h2>Risk Details</h2>
-      <div class="header-actions">
-        <button pButton label="+ Add Row" (click)="addRiskRow()" class="add-row-btn"></button>
-      </div>
+ <div class="table-card" style="margin-top: 1rem;">
+  <div class="page-header">
+    <h2>Risk Details</h2>
+    <div class="header-actions">
+      <button pButton label="+ Add Row" (click)="addRiskRow()" class="add-row-btn" [disabled]="!sysId"></button>
     </div>
+  </div>
 
+  <div *ngIf="!sysId" class="state-msg">
+    Please save the Claim Registration first to add risk details.
+  </div>
+
+  <ng-container *ngIf="sysId">
     <div class="search-box">
       <input type="text" placeholder="Search details..." />
     </div>
@@ -107,17 +113,17 @@
       <tbody>
         <tr *ngFor="let row of riskGridRows(); let i = index">
           <td>{{ i + 1 }}</td>
-          <td *ngFor="let col of riskTableColumns()">
+          <td *ngFor="let col of riskTableColumns()" [class.field-disabled]="!canEditRiskField(col)">
             <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
               <input *ngSwitchCase="'checkbox'" type="checkbox" [(ngModel)]="row[col.COLUMN_NAME]"
-                [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
+                [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" />
               <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
                 dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
-                [disabled]="!isFieldEditable(col)"></p-datepicker>
+                [disabled]="!canEditRiskField(col)"></p-datepicker>
               <input *ngSwitchCase="'number'" type="number" [(ngModel)]="row[col.COLUMN_NAME]"
-                [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
+                [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" />
               <input *ngSwitchDefault type="text" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
-                [disabled]="!isFieldEditable(col)" />
+                [disabled]="!canEditRiskField(col)" />
             </ng-container>
           </td>
 
@@ -136,5 +142,6 @@
     <div class="table-footer">
       <span>Showing {{ riskGridRows().length }} record(s)</span>
     </div>
-  </div>
+  </ng-container>
+</div>
 </div>

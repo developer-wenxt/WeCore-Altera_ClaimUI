@@ -48,36 +48,39 @@
     gap: 20px 24px;
     font-size: 16px; // increased base font size
 
-    .form-field {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-
-        label {
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        input,
-        .p-inputtext,
-        .p-select,
-        .p-datepicker input {
-            font-size: 15px;
-            height: 40px; // slightly taller to match bigger font
-        }
-
-        &.checkbox-field {
-            flex-direction: row;
-            align-items: center;
-
-            .checkbox-label {
-                font-size: 15px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-        }
+    .form-field.field-disabled {
+    input,
+    .p-inputtext,
+    textarea {
+      background-color: #f0f0f0 !important;
+      color: #888 !important;
+      cursor: not-allowed;
+      opacity: 1;
     }
+
+    ::ng-deep .p-select {
+      background-color: #f0f0f0 !important;
+      opacity: 1 !important;
+
+      .p-select-label {
+        color: #888 !important;
+      }
+    }
+
+    ::ng-deep .p-datepicker input {
+      background-color: #f0f0f0 !important;
+      color: #888 !important;
+      cursor: not-allowed;
+    }
+
+    &.checkbox-field .checkbox-label span {
+      color: #888;
+    }
+
+    label {
+      color: #999; // optionally grey the field label too
+    }
+  }
 }
 
 

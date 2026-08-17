@@ -167,11 +167,18 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
   }
 
 
-  canEditField(field: FieldConfig): boolean {
-    if (this.isReadOnly) return false;
-    if (this.isEdit) return isFieldEditableIntimation(field); // UPDATE_YN === 2, unchanged for edit
-    return true; // ADD mode — all fields editable, no ENTERABLE check
-  }
+ canEditField(field: FieldConfig): boolean {
+  if (this.isReadOnly) return false;
+  if (this.isEdit) return isFieldEditableIntimation(field); // UPDATE_YN === 2
+  return true;
+}
+
+// Risk grid — edit mode checks ENTERABLE
+canEditRiskField(col: FieldConfig): boolean {
+  if (this.isReadOnly) return false;
+  if (this.isEdit) return isFieldEditable(col); // ENTERABLE === 1
+  return true;
+}
 
   private loadLovAndDropdowns(fields: FieldConfig[]): void {
     if (!fields.length) return;
@@ -524,6 +531,19 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
         error: (err: any) => console.error('Error saving risk detail row', err)
       });
   }
+
+
+  // ADDED — explicit mode-based class helper
+getFieldStateClass(field: FieldConfig): string {
+  if (this.isReadOnly) return 'field-disabled field-view-mode';
+  if (this.isEdit) return !this.isFieldEditable2(field) ? 'field-disabled field-edit-mode' : '';
+  return ''; // ADD mode — always full white, no grey
+}
+
+// helper alias so template doesn't need to import isFieldEditableIntimation separately
+private isFieldEditable2(field: FieldConfig): boolean {
+  return field.UPDATE_YN === 2;
+}
 
 
   isHeaderField(columnName: string): boolean {

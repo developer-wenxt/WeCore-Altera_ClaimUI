@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px 24px;
-    font-size: 16px; // increased base font size
+    font-size: 16px;
 
     .form-field {
         display: flex;
@@ -19,7 +19,7 @@
         .p-select,
         .p-datepicker input {
             font-size: 15px;
-            height: 40px; // slightly taller to match bigger font
+            height: 40px;
         }
 
         &.checkbox-field {
@@ -33,10 +33,87 @@
                 gap: 8px;
             }
         }
+
+        // ADDED — grey styling for non-editable / view-mode fields
+        &.field-disabled {
+            input,
+            .p-inputtext,
+            textarea {
+                background-color: #f0f0f0 !important;
+                color: #888 !important;
+                cursor: not-allowed;
+                opacity: 1;
+            }
+
+            ::ng-deep .p-select {
+                background-color: #f0f0f0 !important;
+                opacity: 1 !important;
+
+                .p-select-label {
+                    color: #888 !important;
+                }
+            }
+
+            ::ng-deep .p-datepicker input {
+                background-color: #f0f0f0 !important;
+                color: #888 !important;
+                cursor: not-allowed;
+            }
+
+            &.checkbox-field .checkbox-label span {
+                color: #888;
+            }
+
+            label {
+                color: #999;
+            }
+        }
     }
 }
 
+.info-chips {
+  .chip {
+    min-width: 220px; // whole chip won't shrink even if value is blank
+    
+    .chip-value {
+      display: inline-block;
+      min-width: 160px;
+      min-height: 36px;
+      line-height: 36px;
+    }
+  }
+}
 
+
+
+.risk-grid {
+  td.field-disabled {
+    input[type="text"],
+    input[type="number"],
+    .p-inputtext {
+      background-color: #f0f0f0 !important;
+      color: #888 !important;
+      cursor: not-allowed;
+      opacity: 1;
+    }
+
+    input[type="checkbox"] {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    ::ng-deep .p-datepicker input {
+      background-color: #f0f0f0 !important;
+      color: #888 !important;
+      cursor: not-allowed;
+    }
+
+    ::ng-deep .p-datepicker .p-datepicker-trigger {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
 
 // Responsive fallback so 4 columns don't break on smaller screens
 @media (max-width: 1200px) {
@@ -50,5 +127,3 @@
         grid-template-columns: 1fr;
     }
 }
-
-/* Layout and styles moved to global styles.css for consistency and responsiveness */
