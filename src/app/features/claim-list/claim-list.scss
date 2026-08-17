@@ -1,1 +1,5 @@
 /* Layout and styles moved to global styles.css for consistency and responsiveness */
+::ng-deep .risk-grid .p-datatable-thead > tr > th {
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%) !important;
+  border-bottom-color: #7c3aed !important;
+}

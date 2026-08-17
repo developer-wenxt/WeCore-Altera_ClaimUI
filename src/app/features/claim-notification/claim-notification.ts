@@ -25,16 +25,18 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
   isEdit = false;
   intmNo: string | null = null;
 
+  dateError: string = '';
+
   classCode: string = '';
   classDesc: string = '';
 
-  
- private readonly forceTextFields = ['CI_POL_NO'];
+
+  private readonly forceTextFields: string[] = [];
   lovMap = signal<{ [fieldName: string]: any }>({});
   dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
 
   getInputType = getInputType;
- 
+
 
   constructor(
     private menuService: MenuService,
@@ -48,10 +50,15 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
   ngOnInit(): void {
     const menuId = this.route.snapshot.paramMap.get('menuId');
     this.classCode = sessionStorage.getItem('claimClassCode') || '';
-     this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
+    this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
     this.isReadOnly = this.route.snapshot.queryParamMap.get('mode') === 'view';
     this.isEdit = this.route.snapshot.queryParamMap.get('mode') === 'edit';
     this.intmNo = this.route.snapshot.queryParamMap.get('intmNo');
+
+    if (!this.isEdit && !this.isReadOnly) {
+      this.formData['CI_DOC_DESP_YN'] = false;
+      this.formData['CI_CLM_REGD_YN'] = false;
+    }
 
     this.menuService.getLovFields('PGIT0007', 'PGIT_CLM_INTIMATION')
       .pipe(takeUntil(this.destroy$))
@@ -82,6 +89,7 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
         next: (res) => {
           const visible = getVisibleFields(res);
           this.fields.set(visible);
+          console.log('DATE FIELDS:', this.fields().filter(f => this.getInputType(f.SOURCE_DESIGN_TYPE, f.DATA_TYPE) === 'date').map(f => f.COLUMN_NAME));
           this.loading.set(false);
           console.log('FIELDS:', this.fields());
 
@@ -119,15 +127,59 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
 
 
   canEditField(field: FieldConfig): boolean {
-  if (this.isReadOnly) return false;
-  return this.isEdit
-    ? isFieldEditableIntimation(field)  // UPDATE_YN === 2
-    : isFieldEditable(field);           // ENTERABLE === 1
-}
+    if (this.isReadOnly) return false;
+
+    if (field.COLUMN_NAME === 'CI_POL_NO' && !this.formData['CI_LOSS_DT']) {
+      return false;
+    }
+
+    return this.isEdit
+      ? isFieldEditableIntimation(field)  // UPDATE_YN === 2
+      : isFieldEditable(field);           // ENTERABLE === 1
+  }
+
+
+  checkDateValidity(): void {
+    const lossDate = this.formData['CI_LOSS_DT'];   // CHANGED
+    const intmDate = this.formData['CI_INTM_DT'];   // CHANGED
+    if (lossDate && intmDate && new Date(lossDate) > new Date(intmDate)) {
+      this.dateError = 'Loss Date cannot be greater than Notification Date';
+    } else {
+      this.dateError = '';
+    }
+  }
+
+
+  onPolicyDropdownOpen(): void {   // ADDED
+    const lov = this.lovMap()['CI_POL_NO'];
+    if (!lov) return;
+
+    const lossDate = this.formData['CI_LOSS_DT'];
+    const formattedDate = lossDate ? this.formatDate(lossDate) : '';   // CHANGED
+    this.menuService.getDropdownValues(lov.PLD_PROG_CODE, lov.PLD_BLOCK_NAME, lov.PLD_FIELD_NAME, formattedDate)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (values) => {
+          const current = this.dropdownOptionsMap();
+          this.dropdownOptionsMap.set({ ...current, CI_POL_NO: values });
+        },
+        error: (err) => console.error('Error loading policy options', err)
+      });
+  }
+
+
+  private formatDate(date: any): string {   // ADDED
+    const d = new Date(date);
+    const day = d.getDate();
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    return `${month}/${day}/${year}`;   // e.g. 26/3/26
+  }
 
   saveClaim(): void {
     const missing = this.fields()
       .filter(f => f.MANDATORY === 1)
+      .filter(f => f.COLUMN_NAME !== 'CI_DOC_DESP_YN' && f.COLUMN_NAME !== 'CI_CLM_REGD_YN')
       .filter(f => {
         const v = this.formData[f.COLUMN_NAME];
         return v === null || v === undefined || v === '';
@@ -138,30 +190,35 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
       return;
     }
 
+
+    if (this.dateError) {
+      alert(this.dateError);
+      return;
+    }
+
     // ---- dynamic payload instead of hardcoded keys ----
     const payload: any = {};
-   this.fields().forEach(f => {
-  payload[f.COLUMN_NAME] = this.formData[f.COLUMN_NAME];
-});
+    this.fields().forEach(f => {
+      payload[f.COLUMN_NAME] = this.formData[f.COLUMN_NAME];
+    });
 
-// checked = '1', unchecked = '0'
-if ('CI_DOC_DESP_YN' in payload) {
-  payload['CI_DOC_DESP_YN'] = this.formData['CI_DOC_DESP_YN'] ? '0' : '1';
-}
-if ('CI_CLM_REGD_YN' in payload) {
-  payload['CI_CLM_REGD_YN'] = this.formData['CI_CLM_REGD_YN'] ? '0' : '1';
-}
+    // checked = '1', unchecked = '0'
+    if ('CI_DOC_DESP_YN' in payload) {
+      payload['CI_DOC_DESP_YN'] = this.formData['CI_DOC_DESP_YN'] ? '1' : '0';
+    }
+    if ('CI_CLM_REGD_YN' in payload) {
+      payload['CI_CLM_REGD_YN'] = this.formData['CI_CLM_REGD_YN'] ? '1' : '0';
+    }
 
-// hardcoded values
-payload.CI_CR_UID = 'TSHEPANDG';
-payload.CI_COMP_CODE = '003';
-payload.CI_DEPT_CODE = '10';
-payload.CI_DIVN_CODE = '101';
-payload.CI_DS_CODE = '10-IN-01-001';
-payload.CI_DS_TYPE= 10;
-payload.CI_ADDR_01 = 'null';
-
-payload.CI_CR_DT = new Date().toISOString();
+    // hardcoded values
+    payload.CI_CR_UID = 'TSHEPANDG';
+    payload.CI_COMP_CODE = '001';
+    payload.CI_DEPT_CODE = '10';
+    payload.CI_DIVN_CODE = '101';
+    payload.CI_DS_CODE = '10-IN-01-001';
+    payload.CI_DS_TYPE = 10;
+    payload.CI_ADDR_01 = 'null';
+    payload.CI_CR_DT = new Date().toISOString();
 
     const request$ = this.isEdit && this.intmNo
       ? this.menuService.updateClaimIntimation(this.intmNo as any, payload)
@@ -170,16 +227,17 @@ payload.CI_CR_DT = new Date().toISOString();
     request$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-       next: (res) => {
-  
-  const intmNo = res?.data?.data?.data?.CI_INTM_NO;
- 
-  if (intmNo) {
-    this.formData['CI_INTM_NO'] = intmNo;
-    this.cdr.detectChanges();
-  }
-  alert('Claim Notification Saved Successfully');
-},
+        next: (res) => {
+          const intmNo = res?.data?.data?.data?.CI_INTM_NO;
+          if (intmNo) {
+            this.formData['CI_INTM_NO'] = intmNo;
+            this.intmNo = intmNo;      // ADD THIS BACK
+            this.isEdit = true;
+
+            this.cdr.detectChanges();
+          }
+          alert('Claim Notification Saved Successfully');
+        },
         error: (err) => {
           console.error('Save Failed', err);
         }
@@ -188,18 +246,24 @@ payload.CI_CR_DT = new Date().toISOString();
 
 
   isLovField(columnName: string): boolean {
-  if (this.forceTextFields.includes(columnName)) return false;
-  return !!this.lovMap()[columnName];
-}
+    if (this.forceTextFields.includes(columnName)) return false;
+    return !!this.lovMap()[columnName];
+  }
 
 
   getDropdownOptions(columnName: string): any[] {
     const raw = this.dropdownOptionsMap()[columnName] || [];
     return raw.map((row: any) => {
       const keys = Object.keys(row);
+      if (columnName === 'CI_POL_NO') {
+        return {
+          label: row.POLH_NO,
+          value: row.POLH_NO
+        };
+      }
       return {
-        value: row['PC_CODE'] ?? row[keys[0]],
-        label: row[keys[1]] ?? row['PC_CODE']   // second key is the decode expression column
+        label: row[keys[0]],
+        value: row[keys[1]]
       };
     });
   }

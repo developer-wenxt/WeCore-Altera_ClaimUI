@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RiskDetails } from './risk-details';
+import { GlobalMessageDialog } from './global-message-dialog';
 
-describe('RiskDetails', () => {
-  let component: RiskDetails;
-  let fixture: ComponentFixture<RiskDetails>;
+describe('GlobalMessageDialog', () => {
+  let component: GlobalMessageDialog;
+  let fixture: ComponentFixture<GlobalMessageDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RiskDetails],
+      imports: [GlobalMessageDialog],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RiskDetails);
+    fixture = TestBed.createComponent(GlobalMessageDialog);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

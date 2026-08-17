@@ -1,10 +1,10 @@
 import { HttpErrorResponse, HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, tap, throwError } from 'rxjs';
-import { MessageService } from 'primeng/api';
+import { GlobalMessageService } from '../services/GlobalMessageService';
 
 export const globalErrorInterceptor: HttpInterceptorFn = (req, next) => {
-  const messageService = inject(MessageService);
+  const globalMessage = inject(GlobalMessageService);
 
   return next(req).pipe(
     tap((event) => {
@@ -13,24 +13,14 @@ export const globalErrorInterceptor: HttpInterceptorFn = (req, next) => {
         if (body) {
           const status = body.status || body.data?.status;
           const backendMessage = body.data?.message || body.message || body.msg;
-          
+
           if (backendMessage && req.method !== 'GET') {
             const isErrorStatus = status === 'error' || status === 'ERROR' || status === 'Error';
-            
+
             if (isErrorStatus) {
-              messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: backendMessage,
-                life: 5000
-              });
+              globalMessage.show('error', 'Error', backendMessage);
             } else {
-              messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: backendMessage,
-                life: 3000
-              });
+              globalMessage.show('success', 'Success', backendMessage);
             }
           }
         }
@@ -40,7 +30,6 @@ export const globalErrorInterceptor: HttpInterceptorFn = (req, next) => {
       let errorMsg = 'An unexpected error occurred';
       const errBody = error.error as any;
 
-      // Extract the exact error message provided by the backend (checking data.message first)
       if (errBody) {
         if (errBody.data && errBody.data.message) {
           errorMsg = errBody.data.message;
@@ -55,12 +44,7 @@ export const globalErrorInterceptor: HttpInterceptorFn = (req, next) => {
         errorMsg = error.message;
       }
 
-      messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: errorMsg,
-        life: 5000
-      });
+      globalMessage.show('error', 'Error', errorMsg);
 
       return throwError(() => error);
     })

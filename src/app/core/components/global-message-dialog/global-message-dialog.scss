@@ -1,0 +1,13 @@
+.msg-text {
+  text-align: center;
+  margin: 1rem 0;
+  font-size: 1rem;
+}
+.error-title { color: #d32f2f; font-weight: 600; }
+.success-title { color: #2e7d32; font-weight: 600; }
+.ok-btn { margin: 0 auto; display: block; min-width: 90px; }
+
+::ng-deep .global-msg-dialog .p-dialog-footer {
+  display: flex;
+  justify-content: center;
+}

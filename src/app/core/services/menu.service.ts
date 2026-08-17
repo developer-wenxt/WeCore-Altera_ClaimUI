@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environments';
-import { Claim, MenuItem } from '../models/model';
+import { Claim, ClaimMenuItem, MenuItem } from '../models/model';
 import { FieldConfig } from '../models/model';
 
 
@@ -20,10 +20,15 @@ export class MenuService {
       );
   }
 
+
+  updateClaimRegistration(sysId: number, payload: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/pgitClaim/${sysId}`, payload);
+  }
+
   getPolicyData(polNo: string): Observable<any> {
-  return this.http.get<any>(`${this.baseUrl}/policyData?POLNO=${polNo}`)
-    .pipe(map(response => response.data.data));
-}
+    return this.http.get<any>(`${this.baseUrl}/policyData?POLNO=${polNo}`)
+      .pipe(map(response => response.data.data));
+  }
 
   getFields(): Observable<FieldConfig[]> {
     return this.http.get<any>(`${this.baseUrl}/claimIntField`)
@@ -67,11 +72,19 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
-  getDropdownValues(progCode: string, blockName: string, fieldName: string): Observable<any[]> {
-    return this.http.get<any>(
-      `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`
-    ).pipe(map(response => response.data.data.data)); 
+  getDropdownValues(progCode: string, blockName: string, fieldName: string, lossDate?: string): Observable<any[]> {   // CHANGED
+    let url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`;
+    if (lossDate) {
+      url += `&lossDt=${lossDate}`;   // ADDED — adjust param name to match your backend
+    }
+    return this.http.get<any>(url).pipe(map(response => response.data.data.data));
   }
+
+
+  decodeToken(token: string): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/decodeToken`, { token })
+    .pipe(map(response => response.data.data));
+}
 
   getRiskDetailsByClaim(clmSysId: number) {
     return this.http.get(`/api/pgitClmApplPolicy/getById?CLMAP_CLM_SYS_ID=${clmSysId}`);
@@ -120,10 +133,10 @@ export class MenuService {
 
 
   getClaimIntimationById(intmNo: string): Observable<any> {
-  return this.http.get<any>(`${this.baseUrl}/pgitClmIntimation/byId`, {
-    params: { CI_INTM_NO: intmNo }
-  }).pipe(map(response => response.data.data));
-}
+    return this.http.get<any>(`${this.baseUrl}/pgitClmIntimation/byId`, {
+      params: { CI_INTM_NO: intmNo }
+    }).pipe(map(response => response.data.data));
+  }
 
   updateRiskDetail(row: any) {
     return this.http.put(`${this.baseUrl}/pgitClmApplPolicy/${row.CLMAP_SYS_ID}`, row);
@@ -135,6 +148,12 @@ export class MenuService {
 
   createEstDetail(row: any) {
     return this.http.post(`${this.baseUrl}/pgitClmEst`, row);
+  }
+
+
+  getMenuListClaim(): Observable<ClaimMenuItem[]> {
+    return this.http.get<any>(`${this.baseUrl}/menuListClaim`)
+      .pipe(map(response => response.data.data));
   }
 
   createSettlementDetail(row: any) {

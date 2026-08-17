@@ -39,7 +39,7 @@ export function getVisibleFieldsSorted(fields: FieldConfig[]): FieldConfig[] {
 
 export function getTableColumnFields(fields: FieldConfig[]): FieldConfig[] {
   return fields
-    .filter(f => f.TABLE_COLUMN === 1)
+     .filter(f => f.HIDE_FIELD_YES === 2)   
     .sort((a, b) => a.DISPLAY_ORDER_NO - b.DISPLAY_ORDER_NO);
 }
 

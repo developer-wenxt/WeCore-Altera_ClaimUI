@@ -319,8 +319,8 @@ addRow(): void {
   }
 
   goBack(): void {
-    this.router.navigate(['/risk-details'], {
-      queryParams: { sysId: this.clmSysId }
+    this.router.navigate(['/claim-registration'], {
+      queryParams: { mode: 'edit', sysId: this.clmSysId }
     });
   }
 }

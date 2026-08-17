@@ -6,45 +6,42 @@
   /* Typography */
   --font-family-base: 'Inter', 'Roboto', sans-serif;
 
-  /* ─── Professional Blue Palette ─────────────────────────────── */
-  --color-primary: #1e3a5f;
-  /* deep navy - headings, text */
-  --color-primary-rgb: 30, 58, 95;
-  --color-primary-mid: #2563eb;
-  /* medium blue - interactive */
-  --color-primary-light: #eff6ff;
-  /* pale blue - tinted backgrounds */
-  --color-accent: #3b82f6;
-  /* vivid blue - icons, highlights */
-  --color-accent-light: #dbeafe;
-  /* soft blue - badges, chips */
+  /* ─── Premium Modern Indigo Palette ─────────────────────────────── */
+  --color-primary: #1e1b4b;
+  /* deep indigo */
+  --color-primary-mid: #6366f1;
+  /* vibrant indigo */
+  --color-primary-light: #e0e7ff;
+  /* soft indigo */
+  --color-accent: #8b5cf6;
+  /* vibrant violet */
+  --color-accent-light: #ede9fe;
+  /* soft violet */
 
-  --header-bg-blue: #2563eb;
-  /* table header & form section bg */
-  --header-bg-dark: #1e40af;
-  /* darker variant for gradients */
+  --header-bg-blue: var(--color-accent);
+  --header-bg-dark: #7c3aed;
 
   /* Text Colors */
-  --text-main: #1e3a5f;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --text-lighter: #94a3b8;
+  --text-main: #1e1b4b;
+  --text-secondary: #3730a3;
+  --text-muted: #6b7280;
+  --text-lighter: #9ca3af;
 
   /* Background Colors */
-  --bg-page: #e2e8f0;
-  --bg-surface: #ffffff;
-  --bg-hover: #f1f5f9;
-  --bg-icon-default: #e8f0fe;
+  --bg-page-gradient: linear-gradient(135deg, #f0f4ff 0%, #eef2ff 100%);
+  --bg-surface: rgba(255, 255, 255, 0.85);
+  --bg-hover: #f8fafc;
+  --bg-icon-default: #e0e7ff;
 
   /* Borders */
-  --border-light: #dde5ef;
-  --border-focus: #2563eb;
-  --border-hover-accent: #3b82f6;
+  --border-light: #c7d2fe;
+  --border-focus: #6366f1;
+  --border-hover-accent: #8b5cf6;
 
   /* Box Shadows */
-  --shadow-card: 0 4px 16px rgba(37, 99, 235, 0.10);
-  --shadow-elevated: 0 8px 28px rgba(30, 58, 95, 0.12);
-  --shadow-focus: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  --shadow-card: 0 8px 32px rgba(31, 38, 135, 0.07);
+  --shadow-elevated: 0 12px 40px rgba(31, 38, 135, 0.12);
+  --shadow-focus: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
 
 html {
@@ -90,7 +87,8 @@ html {
 body {
   font-family: var(--font-family-base);
   color: var(--text-main);
-  background-color: var(--bg-page);
+  background: var(--bg-page-gradient);
+  background-attachment: fixed;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -99,8 +97,10 @@ body {
 /* ─── Global Card ───────────────────────────────────────────── */
 .global-card {
   background: var(--bg-surface);
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
   padding: 1.5rem;
   transition: all 0.22s ease;
 }
@@ -114,7 +114,7 @@ body {
 /* ─── Page Level ────────────────────────────────────────────── */
 .form-page {
   padding: 16px 24px;
-  background: var(--bg-page);
+  background: transparent;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -180,7 +180,7 @@ body {
 .primary-btn,
 .submit-btn,
 .add-row-btn {
-  background: var(--color-primary-mid) !important;
+  background: linear-gradient(135deg, var(--color-primary-mid) 0%, var(--header-bg-dark) 100%) !important;
   border: none !important;
   border-radius: 24px !important;
   padding: 10px 24px !important;
@@ -213,7 +213,6 @@ body {
 
 .submit-btn {
   display: flex;
-  margin: 28px auto 0;
   width: 200px;
   padding: 10px 22px !important;
 }
@@ -254,8 +253,10 @@ body {
 /* ─── Cards & Layout ────────────────────────────────────────── */
 .table-card {
   background: var(--bg-surface);
-  border-radius: 12px;
-  border: 1px solid var(--border-light);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
   padding: 24px;
   box-shadow: var(--shadow-card);
   animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -358,32 +359,66 @@ body {
 .search-wrap input,
 select,
 textarea {
-  border: 2px solid var(--border-light);
-  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  background: #ffffff;
   border-radius: 10px;
   padding: 10px 14px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   outline: none;
-  color: var(--text-secondary);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-main);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
 }
 
 /* Ensure readonly inputs (like datepickers) that are still meant to be interacted with via popup don't look disabled */
 ::ng-deep p-datepicker input[readonly] {
-  background: #f8fafc !important;
+  background: #f1f5f9 !important;
   cursor: pointer;
 }
 
 ::ng-deep p-datepicker input[readonly]:hover {
-  background: var(--bg-surface) !important;
-  border-color: #cbd5e1;
+  background: #e2e8f0 !important;
+  border-color: #64748b;
 }
 
 ::ng-deep p-datepicker input[readonly]:focus {
-  background: var(--bg-surface) !important;
+  background: #ffffff !important;
   border-color: var(--color-primary-mid) !important;
   box-shadow: var(--shadow-focus) !important;
+}
+
+/* Global Disabled Input Styles - Grey for read-only state */
+input:disabled,
+input[readonly]:not(.p-datepicker input),
+select:disabled,
+textarea:disabled,
+::ng-deep .p-select.p-disabled,
+::ng-deep .p-select.p-disabled .p-select-label,
+::ng-deep .p-inputtext:disabled,
+::ng-deep .p-inputtext:not(.p-datepicker input)[readonly],
+::ng-deep .p-datepicker.p-disabled input,
+::ng-deep .p-datepicker input:disabled {
+  background: #e5e7eb !important;
+  /* grey background */
+  color: #6b7280 !important;
+  /* grey text */
+  border: 1px solid #d1d5db !important;
+  /* grey solid border */
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+/* Ensure we don't override the interactive datepicker's pointer */
+::ng-deep p-datepicker:not(.p-disabled) input[readonly] {
+  cursor: pointer !important;
+}
+
+.checkbox-label input[type="checkbox"]:disabled {
+  cursor: not-allowed !important;
+  accent-color: #94a3b8 !important;
+  opacity: 0.9 !important;
 }
 
 .form-field input:hover,
@@ -553,8 +588,15 @@ textarea:focus {
 }
 
 @keyframes rowFadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .risk-grid tbody tr,
@@ -573,7 +615,8 @@ textarea:focus {
 /* Alternating row stripes */
 .risk-grid tbody tr:nth-child(even),
 ::ng-deep .risk-grid .p-datatable-tbody>tr:nth-child(even) {
-  background: #f8fafc;
+  background: #fafaf9;
+  /* warm off-white, no grey */
 }
 
 .risk-grid tbody tr:nth-child(even):hover,
@@ -612,8 +655,10 @@ textarea:focus {
 }
 
 .view-btn {
-  color: #3b82f6 !important; /* Blue for view */
+  color: #3b82f6 !important;
+  /* Blue for view */
 }
+
 .view-btn:hover {
   background: #eff6ff !important;
   border-color: #3b82f6 !important;
@@ -621,8 +666,10 @@ textarea:focus {
 }
 
 .edit-btn {
-  color: #10b981 !important; /* Green for edit */
+  color: #10b981 !important;
+  /* Green for edit */
 }
+
 .edit-btn:hover {
   background: #ecfdf5 !important;
   border-color: #10b981 !important;
@@ -665,6 +712,8 @@ textarea:focus {
 .submit-btn-wrap {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 16px;
   margin-top: 28px;
 }
 

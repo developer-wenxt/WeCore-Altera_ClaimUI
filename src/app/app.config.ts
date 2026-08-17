@@ -16,7 +16,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 const MyPreset = definePreset(Aura, {
   components: {
     datatable: {
-      headerCell: {
+      headerCell: { 
         background: '#2563eb',
         color: '#ffffff',
         hoverBackground: '#1e40af',

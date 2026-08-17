@@ -2,10 +2,11 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Toast } from 'primeng/toast';
 import { LoadingComponent } from './core/components/loading/loading.component';
+import { GlobalMessageDialog } from './core/components/global-message-dialog/global-message-dialog';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Toast, LoadingComponent],
+  imports: [RouterOutlet, Toast, LoadingComponent, GlobalMessageDialog],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
