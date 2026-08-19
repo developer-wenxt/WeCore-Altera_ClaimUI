@@ -25,10 +25,32 @@ export class MenuService {
     return this.http.put<any>(`${this.baseUrl}/pgitClaim/${sysId}`, payload);
   }
 
-  getPolicyData(polNo: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/policyData?POLNO=${polNo}`)
-      .pipe(map(response => response.data.data));
+ getPolicyData(polNo: string, lossDate?: string): Observable<any> {
+  let url = `${this.baseUrl}/policyData?POLNO=${polNo}`;
+  if (lossDate) {
+    url += `&lossDt=${lossDate}`;
   }
+  return this.http.get<any>(url)
+    .pipe(map(response => response.data.data));
+}
+
+
+getIntimationData(intmNo: string): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/intiData/intimation?intmNo=${intmNo}`)
+    .pipe(map(response => response.data.data));
+}
+
+getPolicyDataByPolNo(polNo: string): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/intiData/policy?polNo=${polNo}`)
+    .pipe(map(response => response.data.data));
+}
+
+getIntmNoDropdownValues(progCode: string, blockName: string, fieldName: string, polNo: string, dsCode: string): Observable<any[]> {
+  const quotedPolNo = `'${polNo}'`;
+  const quotedDsCode = `'${dsCode}'`;
+  const url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}&POL_NO=${encodeURIComponent(quotedPolNo)}&DS_CODE=${encodeURIComponent(quotedDsCode)}`;
+  return this.http.get<any>(url).pipe(map(response => response.data.data.data));
+}
 
   getFields(): Observable<FieldConfig[]> {
     return this.http.get<any>(`${this.baseUrl}/claimIntField`)
@@ -72,13 +94,13 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
-  getDropdownValues(progCode: string, blockName: string, fieldName: string, lossDate?: string): Observable<any[]> {   // CHANGED
-    let url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`;
-    if (lossDate) {
-      url += `&lossDt=${lossDate}`;   // ADDED — adjust param name to match your backend
-    }
-    return this.http.get<any>(url).pipe(map(response => response.data.data.data));
+getDropdownValues(progCode: string, blockName: string, fieldName: string, lossDate?: string): Observable<any[]> {
+  let url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`;
+  if (lossDate) {
+    url += `&lossDt=${lossDate}`;
   }
+  return this.http.get<any>(url).pipe(map(response => response.data.data.data));
+}
 
 
   decodeToken(token: string): Observable<any> {
@@ -87,8 +109,8 @@ export class MenuService {
 }
 
   getRiskDetailsByClaim(clmSysId: number) {
-    return this.http.get(`/api/pgitClmApplPolicy/getById?CLMAP_CLM_SYS_ID=${clmSysId}`);
-  }
+  return this.http.get(`${this.baseUrl}/pgitClmApplPolicy/getById?CLMAP_CLM_SYS_ID=${clmSysId}`);
+}
 
   getRiskDetailFields(): Observable<FieldConfig[]> {
     return this.http.get<any>(`${this.baseUrl}/clmRegDtlField`)
@@ -167,5 +189,26 @@ export class MenuService {
   createRiskDetail(row: any) {
     return this.http.post(`${this.baseUrl}/pgitClmApplPolicy`, row);
   }
+
+getRiskPolicy(polNo: string): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/riskDtlReg/policy?POLH_NO=${polNo}`)
+    .pipe(map(response => response.data.data)); // CHANGED
+}
+getRiskSection(polhSysId: number, endIdx: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/riskDtlReg/section?POLH_SYS_ID=${polhSysId}&POLH_END_NO_IDX=${endIdx}`)
+    .pipe(map(response => response.data.data)); // CHANGED
+}
+getRiskRisk(psechSysId: number, polhSysId: number, endIdx: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/riskDtlReg/risk?PSECH_SYS_ID=${psechSysId}&POLH_SYS_ID=${polhSysId}&POLH_END_NO_IDX=${endIdx}`)
+    .pipe(map(response => response.data.data)); // CHANGED
+}
+getRiskSmi(praihSysId: number, psechSysId: number, polhSysId: number, endIdx: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/riskDtlReg/smi?PRAIH_SYS_ID=${praihSysId}&PSECH_SYS_ID=${psechSysId}&POLH_SYS_ID=${polhSysId}&POLH_END_NO_IDX=${endIdx}`)
+    .pipe(map(response => response.data.data)); // CHANGED
+}
+getRiskCover(praihSysId: number, psechSysId: number, polhSysId: number, endIdx: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/riskDtlReg/cover?PRAIH_SYS_ID=${praihSysId}&PSECH_SYS_ID=${psechSysId}&POLH_SYS_ID=${polhSysId}&POLH_END_NO_IDX=${endIdx}`)
+    .pipe(map(response => response.data.data)); // CHANGED
+}
 
 }

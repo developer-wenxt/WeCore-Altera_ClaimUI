@@ -37,6 +37,10 @@
             <span class="required" *ngIf="field.MANDATORY === 1">*</span>
           </label>
 
+               <small *ngIf="field.COLUMN_NAME === 'CI_POL_NO' && !formData['CI_LOSS_DT']" class="field-hint">
+      Please fill Loss Date first to select Policy No
+    </small>
+
           <ng-container [ngSwitch]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE)">
 
             <!-- Checkbox -->

@@ -51,16 +51,16 @@
             <!-- Text / LOV dropdown -->
             <ng-container *ngSwitchDefault>
               <p-select *ngIf="isLovField(field.COLUMN_NAME); else textInput"
-                [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
-                optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME" [disabled]="!canEditField(field)"
-                [ngModelOptions]="{standalone: true}" (onShow)="onDropdownOpen(field.COLUMN_NAME)" [filter]="true"
-                filterBy="label" [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="-- Select --">
-              </p-select>
+  [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
+  optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME" [disabled]="!canEditField(field)"
+  [ngModelOptions]="{standalone: true}" (onShow)="onDropdownOpen(field.COLUMN_NAME)"
+(onChange)="field.COLUMN_NAME === 'CLM_INTM_NO' ? onIntmNoSelect($event.value) : (field.COLUMN_NAME === 'CLM_POL_NO' ? onPolicyNoSelect($event.value) : null)"  [filter]="true" filterBy="label" [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="-- Select --">
+</p-select>
               <ng-template #textInput>
                 <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"
                   [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
                   [readonly]="!canEditField(field) " [ngModelOptions]="{standalone: true}"
-                  (blur)="field.COLUMN_NAME === 'CLM_POL_NO' && onPolicyNoBlur()" />
+                   />
               </ng-template>
             </ng-container>
 
@@ -99,7 +99,8 @@
 
     <div *ngIf="riskLoading()" class="state-msg">Loading table...</div>
 
-    <table *ngIf="!riskLoading()" class="risk-grid">
+    <div class="risk-table-wrapper">
+  <table *ngIf="!riskLoading()" class="risk-grid">
       <thead>
         <tr>
           <th>#</th>
@@ -122,8 +123,42 @@
                 [disabled]="!canEditRiskField(col)"></p-datepicker>
               <input *ngSwitchCase="'number'" type="number" [(ngModel)]="row[col.COLUMN_NAME]"
                 [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" />
-              <input *ngSwitchDefault type="text" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
-                [disabled]="!canEditRiskField(col)" />
+             <ng-container *ngSwitchDefault>
+
+  <!-- Multi-value fields -->
+  <div
+    *ngIf="
+      col.COLUMN_NAME === 'CLMAP_PRAI_LVL1_DESC' ||
+      col.COLUMN_NAME === 'CLMAP_SMI_CODE' ||
+      col.COLUMN_NAME === 'CLMAP_COVER_CODE';
+      else normalRiskInput
+    "
+    class="multi-value-cell">
+
+    <span
+      *ngFor="let value of getMultiValues(row[col.COLUMN_NAME])"
+      class="value-pill">
+      {{ value }}
+    </span>
+
+    <span
+      *ngIf="getMultiValues(row[col.COLUMN_NAME]).length === 0"
+      class="empty-value">
+      —
+    </span>
+
+  </div>
+
+  <!-- Normal fields -->
+  <ng-template #normalRiskInput>
+    <input
+      type="text"
+      [(ngModel)]="row[col.COLUMN_NAME]"
+      [name]="col.COLUMN_NAME + i"
+      [disabled]="!canEditRiskField(col)" />
+  </ng-template>
+
+</ng-container>
             </ng-container>
           </td>
 
@@ -136,6 +171,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <p-menu #rowMenu [popup]="true" [model]="rowMenuItems" appendTo="body"></p-menu>
 

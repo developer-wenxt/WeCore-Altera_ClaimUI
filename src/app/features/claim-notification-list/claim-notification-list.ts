@@ -84,11 +84,15 @@ onViewRecord(record: any): void {
 
   const classCode = this.menuItem?.CLASS_CODE || sessionStorage.getItem('claimClassCode') || '';
   sessionStorage.setItem('claimClassCode', classCode);
+    sessionStorage.setItem('claimDsCode', this.menuItem?.CLM_INTM_DS_CODE || sessionStorage.getItem('claimDsCode') || '');  // ADDED
+
   this.router.navigate(['/claim-notification', menuId]);
 }
 
 onEditRecord(record: any): void {
   sessionStorage.setItem('claimClassCode', this.menuItem?.CLASS_CODE || record.CLASS_CODE || '');
+    sessionStorage.setItem('claimDsCode', this.menuItem?.CLM_INTM_DS_CODE || sessionStorage.getItem('claimDsCode') || '');  // ADDED
+
   this.router.navigate(['/claim-notification', record.CI_INTM_NO], {
     queryParams: { mode: 'edit', intmNo: record.CI_INTM_NO }
   });

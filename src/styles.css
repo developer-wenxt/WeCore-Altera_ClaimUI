@@ -8,84 +8,56 @@
 
   /* ─── Premium Modern Indigo Palette ─────────────────────────────── */
   --color-primary: #1e1b4b;
-  /* deep indigo */
   --color-primary-mid: #6366f1;
-  /* vibrant indigo */
   --color-primary-light: #e0e7ff;
-  /* soft indigo */
   --color-accent: #8b5cf6;
-  /* vibrant violet */
   --color-accent-light: #ede9fe;
-  /* soft violet */
 
   --header-bg-blue: var(--color-accent);
   --header-bg-dark: #7c3aed;
 
-  /* Text Colors */
   --text-main: #1e1b4b;
   --text-secondary: #3730a3;
   --text-muted: #6b7280;
   --text-lighter: #9ca3af;
 
-  /* Background Colors */
   --bg-page-gradient: linear-gradient(135deg, #f0f4ff 0%, #eef2ff 100%);
   --bg-surface: rgba(255, 255, 255, 0.85);
   --bg-hover: #f8fafc;
   --bg-icon-default: #e0e7ff;
 
-  /* Borders */
   --border-light: #c7d2fe;
   --border-focus: #6366f1;
   --border-hover-accent: #8b5cf6;
 
-  /* Box Shadows */
   --shadow-card: 0 8px 32px rgba(31, 38, 135, 0.07);
   --shadow-elevated: 0 12px 40px rgba(31, 38, 135, 0.12);
   --shadow-focus: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
 
-html {
-  zoom: 85%;
-}
+/* NOTE: no html { zoom / transform } — those break position:fixed overlays
+   (p-menu, p-select, p-datepicker, p-dialog). Sizing is reduced directly below. */
 
 /* ─── Animations ────────────────────────────────────────────── */
 @keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes ripple {
-  0% {
-    transform: scale(1);
-    opacity: 0.4;
-  }
-
-  100% {
-    transform: scale(10);
-    opacity: 0;
-  }
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(10); opacity: 0; }
 }
 
 /* ─── Base ──────────────────────────────────────────────────── */
 body {
   font-family: var(--font-family-base);
+  font-size: 13px;               /* bumped ~10% from 12px */
   color: var(--text-main);
   background: var(--bg-page-gradient);
   background-attachment: fixed;
@@ -100,8 +72,8 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 1rem;
   transition: all 0.22s ease;
 }
 
@@ -113,39 +85,37 @@ body {
 
 /* ─── Page Level ────────────────────────────────────────────── */
 .form-page {
-  padding: 16px 24px;
+  padding: 11px 16px;
   background: transparent;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 11px;
   animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @media (max-width: 768px) {
-  .form-page {
-    padding: 16px 12px;
-  }
+  .form-page { padding: 11px 8px; }
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .header-left h2,
 .page-header h2 {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--color-primary);
   margin: 0;
@@ -153,7 +123,7 @@ body {
 
 .header-actions {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   align-items: center;
 }
 
@@ -162,8 +132,9 @@ body {
   background: var(--bg-surface) !important;
   border: 1px solid var(--border-light) !important;
   color: var(--text-main) !important;
-  border-radius: 20px !important;
-  padding: 8px 18px !important;
+  border-radius: 18px !important;
+  padding: 7px 15px !important;
+  font-size: 13px !important;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -182,8 +153,9 @@ body {
 .add-row-btn {
   background: linear-gradient(135deg, var(--color-primary-mid) 0%, var(--header-bg-dark) 100%) !important;
   border: none !important;
-  border-radius: 24px !important;
-  padding: 10px 24px !important;
+  border-radius: 20px !important;
+  padding: 8px 19px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   color: white !important;
   cursor: pointer;
@@ -213,14 +185,14 @@ body {
 
 .submit-btn {
   display: flex;
-  width: 200px;
-  padding: 10px 22px !important;
+  width: 160px;
+  padding: 8px 17px !important;
 }
 
 .icon-btn,
 .view-btn {
-  width: 38px !important;
-  height: 38px !important;
+  width: 31px !important;
+  height: 31px !important;
   border-radius: 50% !important;
   background: var(--bg-surface) !important;
   border: 1px solid var(--border-light) !important;
@@ -244,9 +216,9 @@ body {
   background: transparent !important;
   border: none !important;
   color: var(--color-primary-mid) !important;
-  font-size: 12px !important;
+  font-size: 10px !important;
   font-weight: 600 !important;
-  padding: 4px 8px !important;
+  padding: 3px 6px !important;
   cursor: pointer;
 }
 
@@ -255,9 +227,9 @@ body {
   background: var(--bg-surface);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-radius: 16px;
+  border-radius: 13px;
   border: 1px solid rgba(255, 255, 255, 0.6);
-  padding: 24px;
+  padding: 16px;
   box-shadow: var(--shadow-card);
   animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -272,24 +244,24 @@ body {
 
 .info-chips {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%);
   border: 1px solid var(--border-light);
-  border-radius: 10px;
-  padding: 12px 16px;
-  margin-bottom: 12px;
+  border-radius: 8px;
+  padding: 8px 11px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 
 .chip {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-width: 120px;
+  gap: 2px;
+  min-width: 85px;
 }
 
 .chip-label {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   color: #cbd5e1;
   letter-spacing: 0.5px;
@@ -297,12 +269,12 @@ body {
 }
 
 .chip-value {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--text-main);
   background: #ffffff;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 5px 9px;
+  border-radius: 7px;
 }
 
 .chip.highlight .chip-value {
@@ -313,21 +285,21 @@ body {
 /* ─── Forms & Grids ─────────────────────────────────────────── */
 .dynamic-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px 20px;
-  margin-top: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 11px 13px;
+  margin-top: 11px;
   animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
   position: relative;
 }
 
 .form-field label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-main);
   transition: color 0.3s ease;
@@ -345,13 +317,10 @@ body {
 .required {
   color: #dc2626;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 12px;
   margin-left: 4px;
   vertical-align: middle;
 }
-
-
-
 
 .form-field input,
 .search-box input,
@@ -361,9 +330,9 @@ select,
 textarea {
   border: 1px solid var(--border-light);
   background: #ffffff;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 15px;
+  border-radius: 9px;
+  padding: 7px 11px;
+  font-size: 13px;
   font-weight: 500;
   outline: none;
   color: var(--text-main);
@@ -371,7 +340,6 @@ textarea {
   width: 100%;
 }
 
-/* Ensure readonly inputs (like datepickers) that are still meant to be interacted with via popup don't look disabled */
 ::ng-deep p-datepicker input[readonly] {
   background: #f1f5f9 !important;
   cursor: pointer;
@@ -388,7 +356,6 @@ textarea {
   box-shadow: var(--shadow-focus) !important;
 }
 
-/* Global Disabled Input Styles - Grey for read-only state */
 input:disabled,
 input[readonly]:not(.p-datepicker input),
 select:disabled,
@@ -400,17 +367,13 @@ textarea:disabled,
 ::ng-deep .p-datepicker.p-disabled input,
 ::ng-deep .p-datepicker input:disabled {
   background: #e5e7eb !important;
-  /* grey background */
   color: #6b7280 !important;
-  /* grey text */
   border: 1px solid #d1d5db !important;
-  /* grey solid border */
   cursor: not-allowed !important;
   opacity: 1 !important;
   font-weight: 500 !important;
 }
 
-/* Ensure we don't override the interactive datepicker's pointer */
 ::ng-deep p-datepicker:not(.p-disabled) input[readonly] {
   cursor: pointer !important;
 }
@@ -448,16 +411,16 @@ textarea:focus {
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--color-primary-mid);
 }
 
 .checkbox-label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  width: 13px;
+  height: 13px;
   margin: 0;
   cursor: pointer;
   accent-color: var(--color-primary-mid);
@@ -469,14 +432,14 @@ textarea:focus {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
 
 .filter-group {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   align-items: center;
 }
 
@@ -488,35 +451,35 @@ textarea:focus {
 
 .search-wrap i {
   position: absolute;
-  left: 14px;
+  left: 10px;
   color: var(--text-lighter);
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .search-wrap input {
-  padding-left: 36px;
-  border-radius: 22px;
-  max-width: 260px;
+  padding-left: 28px;
+  border-radius: 18px;
+  max-width: 200px;
 }
 
 .search-box {
-  margin-bottom: 16px;
+  margin-bottom: 11px;
 }
 
 .search-box input {
-  max-width: 320px;
+  max-width: 240px;
 }
 
 /* ─── p-select Dropdown ─────────────────────────────────────── */
 .p-select {
-  border-radius: 22px !important;
+  border-radius: 18px !important;
   border: 1px solid var(--border-light) !important;
   background: var(--bg-surface) !important;
 }
 
 .p-select .p-select-label {
-  padding: 10px 14px !important;
-  font-size: 13px !important;
+  padding: 6px 10px !important;
+  font-size: 11px !important;
   color: var(--text-secondary);
 }
 
@@ -535,11 +498,11 @@ textarea:focus {
   background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
   color: #ffffff !important;
   text-align: left;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  padding: 12px 16px;
+  letter-spacing: 0.6px;
+  padding: 9px 12px;
   border: none;
   border-bottom: 3px solid var(--header-bg-dark);
   white-space: nowrap;
@@ -550,21 +513,20 @@ textarea:focus {
   z-index: 10;
 }
 
-/* First & last header cell rounded corners */
 .risk-grid th:first-child,
 ::ng-deep .risk-grid .p-datatable-thead>tr>th:first-child {
-  border-radius: 12px 0 0 0;
+  border-radius: 8px 0 0 0;
 }
 
 .risk-grid th:last-child,
 ::ng-deep .risk-grid .p-datatable-thead>tr>th:last-child {
-  border-radius: 0 12px 0 0;
+  border-radius: 0 8px 0 0;
 }
 
 .risk-grid td,
 ::ng-deep .risk-grid .p-datatable-tbody>tr>td {
-  padding: 12px 16px;
-  font-size: 13px;
+  padding: 9px 12px;
+  font-size: 12px;
   color: var(--text-secondary);
   border: none;
   border-bottom: 1px solid var(--border-light);
@@ -572,10 +534,9 @@ textarea:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 0;
-  transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.2s ease;
 }
 
-/* Let the actions column auto-size and not clip */
 .risk-grid td:last-child,
 ::ng-deep .risk-grid .p-datatable-tbody>tr>td:last-child,
 .risk-grid th:last-child,
@@ -583,40 +544,32 @@ textarea:focus {
   white-space: nowrap;
   overflow: visible;
   max-width: none;
-  width: 100px;
+  width: 72px;
   text-align: center;
 }
 
 @keyframes rowFadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .risk-grid tbody tr,
 ::ng-deep .risk-grid .p-datatable-tbody>tr {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   animation: rowFadeInUp 0.4s ease-out forwards;
 }
 
 .risk-grid tbody tr:hover,
 ::ng-deep .risk-grid .p-datatable-tbody>tr:hover {
   background: var(--color-primary-light);
-  transform: scale(1.002);
   box-shadow: inset 4px 0 0 var(--color-primary-mid);
+  /* NOTE: no transform: scale() here — breaks position:fixed overlays
+     (p-menu / p-select / p-datepicker) when a row containing them is hovered. */
 }
 
-/* Alternating row stripes */
 .risk-grid tbody tr:nth-child(even),
 ::ng-deep .risk-grid .p-datatable-tbody>tr:nth-child(even) {
   background: #fafaf9;
-  /* warm off-white, no grey */
 }
 
 .risk-grid tbody tr:nth-child(even):hover,
@@ -626,21 +579,20 @@ textarea:focus {
 
 ::ng-deep .risk-grid .p-paginator {
   border: none;
-  padding-top: 16px;
+  padding-top: 11px;
 }
 
-/* Dialog Table Specific */
 ::ng-deep .p-dialog .risk-grid th,
 ::ng-deep .p-dialog .risk-grid td {
-  padding: 8px 12px;
+  padding: 6px 9px;
 }
 
 /* ─── Action Buttons (eye + pencil) ─────────────────────────── */
 .view-btn,
 .edit-btn {
-  width: 30px !important;
-  height: 30px !important;
-  min-width: 30px !important;
+  width: 27px !important;
+  height: 27px !important;
+  min-width: 27px !important;
   border-radius: 50% !important;
   background: var(--bg-surface) !important;
   border: 1px solid var(--border-light) !important;
@@ -650,13 +602,12 @@ textarea:focus {
   justify-content: center;
   cursor: pointer;
   vertical-align: middle;
-  margin-right: 4px;
+  margin-right: 3px;
   transition: all 0.18s ease;
 }
 
 .view-btn {
   color: #3b82f6 !important;
-  /* Blue for view */
 }
 
 .view-btn:hover {
@@ -667,7 +618,6 @@ textarea:focus {
 
 .edit-btn {
   color: #10b981 !important;
-  /* Green for edit */
 }
 
 .edit-btn:hover {
@@ -680,41 +630,38 @@ textarea:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 12px;
-  font-size: 13px;
+  margin-top: 8px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 /* ─── Badges & States ───────────────────────────────────────── */
 .state-msg {
   text-align: center;
-  padding: 20px;
+  padding: 14px;
   color: var(--text-muted);
 }
 
 .status-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 10px;
+  font-size: 8px;
   font-weight: 700;
   text-transform: uppercase;
   white-space: nowrap;
   letter-spacing: 0.3px;
 }
 
-
-
 .settlement-header {
   position: relative;
 }
-
 
 .submit-btn-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  margin-top: 28px;
+  gap: 11px;
+  margin-top: 20px;
 }
 
 .settlement-title {
@@ -724,36 +671,18 @@ textarea:focus {
   margin: 0;
 }
 
-.status-J {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.status-A {
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-.status-C {
-  background: #f1f5f9;
-  color: #64748b;
-}
-
-.status-O {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-R {
-  background: #dcfce7;
-  color: #15803d;
-}
+.status-J { background: #fee2e2; color: #b91c1c; }
+.status-A { background: #dbeafe; color: #1d4ed8; }
+.status-C { background: #f1f5f9; color: #64748b; }
+.status-O { background: #fef3c7; color: #92400e; }
+.status-R { background: #dcfce7; color: #15803d; }
 
 /* ─── PrimeNG Global Overrides — Blue Theme ─────────────────── */
 ::ng-deep .p-button {
   background: var(--color-primary-mid) !important;
   border-color: var(--color-primary-mid) !important;
   transition: all 0.18s ease;
+  font-size: 12px !important;
 }
 
 ::ng-deep .p-button:hover {
@@ -765,17 +694,17 @@ textarea:focus {
   background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
   color: #ffffff !important;
   border: none !important;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  padding: 10px 12px;
+  padding: 7px 8px;
 }
 
 ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
   border-color: var(--border-light) !important;
-  padding: 10px 12px;
-  font-size: 12px;
+  padding: 6px 8px;
+  font-size: 10px;
 }
 
 ::ng-deep .p-datatable .p-datatable-tbody>tr:hover {
@@ -785,16 +714,37 @@ textarea:focus {
 ::ng-deep .p-dialog .p-dialog-header {
   background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
   color: #ffffff !important;
-  border-radius: 12px 12px 0 0;
+  border-radius: 8px 8px 0 0;
+  padding: 10px 14px !important;
 }
 
 ::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
   color: #ffffff !important;
   font-weight: 700;
+  font-size: 13px !important;
 }
 
 ::ng-deep .p-dialog .p-dialog-header-close {
   color: #ffffff !important;
+}
+
+::ng-deep .p-dialog .p-dialog-content {
+  font-size: 12px !important;
+}
+
+/* ─── p-menu (row action popup) — compact sizing ────────────── */
+::ng-deep .p-menu {
+  font-size: 13px !important;
+  min-width: 160px !important;
+}
+
+::ng-deep .p-menu .p-menuitem-link {
+  padding: 8px 11px !important;
+}
+
+::ng-deep .p-menu .p-menuitem-icon {
+  font-size: 13px !important;
+  margin-right: 6px !important;
 }
 
 ::ng-deep .risk-grid {
@@ -810,15 +760,10 @@ textarea:focus {
   --p-datatable-header-cell-color: #ffffff !important;
 }
 
-
-
-
-
-
 /* ─── Responsive Utilities ──────────────────────────────────── */
 @media (max-width: 1300px) {
   .dynamic-form-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
   }
 }
 
@@ -838,30 +783,30 @@ textarea:focus {
   }
 
   .info-chips {
-    gap: 8px;
-    padding: 12px 14px;
+    gap: 6px;
+    padding: 8px 10px;
   }
 
   .chip {
-    min-width: 100px;
+    min-width: 72px;
   }
 }
 
 @media (max-width: 768px) {
   .form-page {
-    padding: 16px 12px;
+    padding: 11px 8px;
   }
 
   .table-card {
-    padding: 14px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 8px;
   }
 
   .claim-toolbar,
   .table-toolbar {
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 6px;
   }
 
   .search-wrap input {
@@ -872,7 +817,6 @@ textarea:focus {
   .filter-group {
     flex-wrap: wrap;
   }
-
 
   ::ng-deep .risk-grid .p-datatable-scrollable-body {
     overflow-y: auto;
@@ -886,12 +830,12 @@ textarea:focus {
 @media (max-width: 576px) {
   .dynamic-form-grid {
     grid-template-columns: 1fr;
-    gap: 14px 0;
+    gap: 10px 0;
   }
 
   .header-left h2,
   .page-header h2 {
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .submit-btn {
@@ -903,7 +847,7 @@ textarea:focus {
 
   .table-footer {
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     align-items: flex-start;
   }
 }

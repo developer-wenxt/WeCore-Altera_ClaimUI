@@ -1,25 +1,8 @@
 /* Layout and styles moved to global styles.css for consistency and responsiveness */
-.back-btn-wrap {
-    margin-bottom: 12px;
-}
-
-.plain-chips {
-    background: var(--bg-surface) !important;
-    border: 1px solid var(--border-light);
-}
-
-.plain-chips .chip-label {
-    color: var(--text-muted) !important;
-}
-
-.plain-chips .chip-value {
-    background: var(--bg-page) !important;
-    color: var(--text-main) !important;
-}
 
 /* ─── Settlement Page Layout ────────────────────────────────── */
 .back-btn-wrap {
-    margin-bottom: 16px;
+    margin-bottom: 11px;               // was 16px
 }
 
 /* Section header — clean flex layout, no absolute positioning needed */
@@ -27,13 +10,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 11px;               // was 16px
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;                          // was 10px
 
     h2 {
         margin: 0;
-        font-size: 20px;
+        font-size: 17px;               // was 20px
         font-weight: 700;
         color: var(--color-primary);
     }
@@ -52,58 +35,55 @@
      justify-content: flex-end !important;
      position: relative;
 }
+
 /* Claim Settlement info strip — professional, plain card look */
 .plain-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 11px;                         // was 14px
     background: var(--bg-page) !important;
     border: 1px solid var(--border-light);
-    border-radius: 10px;
-    padding: 16px 20px;
+    border-radius: 9px;                // was 10px
+    padding: 12px 15px;                // was 16px 20px
 }
 
 .plain-chips .chip {
-    flex: 1 1 150px;
-    min-width: 130px;
+    flex: 1 1 130px;                   // was 150px
+    min-width: 110px;                  // was 130px
 }
 
 .plain-chips .chip-label {
     color: var(--text-muted) !important;
-    font-size: 10px;
+    font-size: 9px;                    // was 10px
 }
 
 .plain-chips .chip-value {
     background: var(--bg-surface) !important;
     color: var(--text-main) !important;
     border: 1px solid var(--border-light);
-    font-size: 13px;
-    padding: 8px 12px;
+    font-size: 12px;                   // was 13px
+    padding: 6px 10px;                 // was 8px 12px
 }
 
 /* Table cards spacing */
 .table-card {
-    margin-bottom: 24px;
+    margin-bottom: 18px;               // was 24px
+    overflow-x: auto;                  // merged from second .table-card block
 
     h3 {
-        margin: 0 0 16px;
-        font-size: 16px;
+        margin: 0 0 12px;              // was 16px
+        font-size: 14px;               // was 16px
         font-weight: 700;
         color: var(--color-primary);
     }
 }
 
-/* Make tables horizontally scrollable on small screens instead of squashing */
-.table-card {
-    overflow-x: auto;
-}
-
 .chip-input {
   background: var(--bg-page) !important;
   border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 13px;
+  border-radius: 7px;                  // was 8px
+  padding: 6px 10px;                   // was 8px 12px
+  font-size: 12px;                     // was 13px
   color: var(--text-main);
   outline: none;
 }
@@ -119,8 +99,8 @@
 }
 
 .chip-checkbox-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 15px;                         // was 18px
+  height: 15px;                        // was 18px
   cursor: pointer;
   accent-color: var(--color-primary-mid);
 }
@@ -129,7 +109,6 @@
     min-width: 700px;
     /* prevents squished columns on small viewports */
 }
-
 
 /* ─── Flatten table-card — no shadow, no hover lift ──────────── */
 .table-card {
@@ -146,11 +125,11 @@
 ::ng-deep .risk-grid th {
   background: var(--bg-surface) !important;
   color: var(--text-muted) !important;
-  font-size: 11px;
+  font-size: 10px;                     // was 11px
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  padding: 14px 16px;
+  padding: 11px 13px;                  // was 14px 16px
   border: none;
   border-bottom: 1px solid var(--border-light) !important;
   box-shadow: none;
@@ -164,7 +143,7 @@
 
 /* ─── Rows: flat, no slide/shadow hover ──────────────────────── */
 ::ng-deep .risk-grid td {
-  padding: 14px 16px;
+  padding: 11px 13px;                  // was 14px 16px
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -182,9 +161,9 @@
 ::ng-deep .risk-grid input {
   background: var(--color-accent-light) !important;
   border: none !important;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 13px;
+  border-radius: 7px;                  // was 8px
+  padding: 6px 10px;                   // was 8px 12px
+  font-size: 12px;                     // was 13px
   color: var(--text-main);
   width: 100%;
 }
@@ -226,26 +205,6 @@ input[readonly],
   opacity: 0.6;
 }
 
-/* ─── Flat white table header (no blue gradient) ─────────────── */
-::ng-deep .risk-grid th {
-  background: var(--bg-surface) !important;
-  color: var(--text-muted) !important;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  padding: 14px 16px;
-  border: none;
-  border-bottom: 1px solid var(--border-light) !important;
-  box-shadow: none;
-  position: static;
-}
-
-::ng-deep .risk-grid th:first-child,
-::ng-deep .risk-grid th:last-child {
-  border-radius: 0;
-}
-
 /* ─── Responsive tweaks ──────────────────────────────────────── */
 @media (max-width: 768px) {
     .page-header {
@@ -272,21 +231,21 @@ input[readonly],
     }
 
     .table-card {
-        padding: 16px;
+        padding: 13px;                 // was 16px
     }
 }
 
 @media (max-width: 480px) {
     .back-btn-wrap {
-        margin-bottom: 12px;
+        margin-bottom: 10px;           // was 12px
     }
 
     .page-header h2 {
-        font-size: 17px;
+        font-size: 15px;               // was 17px
     }
 
     .table-card h3 {
-        font-size: 14px;
+        font-size: 12px;               // was 14px
     }
 }
 
@@ -303,5 +262,3 @@ input[readonly],
   color: var(--text-main) !important;
   border-color: var(--border-light) !important;
 }
-
-

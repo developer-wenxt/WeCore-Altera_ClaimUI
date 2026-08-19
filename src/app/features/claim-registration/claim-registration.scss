@@ -1,16 +1,16 @@
 .dynamic-form-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px 24px;
-    font-size: 16px;
+    gap: 16px 19px;                    // was 20px 24px
+    font-size: 13px;                   // was 16px
 
     .form-field {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 5px;                      // was 6px
 
         label {
-            font-size: 15px;
+            font-size: 12px;           // was 15px
             font-weight: 500;
         }
 
@@ -18,8 +18,8 @@
         .p-inputtext,
         .p-select,
         .p-datepicker input {
-            font-size: 15px;
-            height: 40px;
+            font-size: 12px;           // was 15px
+            height: 34px;              // was 40px
         }
 
         &.checkbox-field {
@@ -27,10 +27,10 @@
             align-items: center;
 
             .checkbox-label {
-                font-size: 15px;
+                font-size: 12px;       // was 15px
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: 6px;              // was 8px
             }
         }
 
@@ -73,18 +73,16 @@
 
 .info-chips {
   .chip {
-    min-width: 220px; // whole chip won't shrink even if value is blank
-    
+    min-width: 180px;                  // was 220px
+
     .chip-value {
       display: inline-block;
-      min-width: 160px;
-      min-height: 36px;
-      line-height: 36px;
+      min-width: 130px;                // was 160px
+      min-height: 30px;                // was 36px
+      line-height: 30px;               // was 36px
     }
   }
 }
-
-
 
 .risk-grid {
   td.field-disabled {
@@ -126,4 +124,54 @@
     .dynamic-form-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.risk-grid {
+
+  .multi-value-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    min-height: 34px;
+    padding: 3px 0;
+  }
+
+  .value-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: #f0ebff;
+    color: #5b35c9;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid #ddd3ff;
+  }
+
+  .empty-value {
+    color: #aaa;
+    font-size: 12px;
+  }
+}
+
+.risk-grid {
+  width: 100%;
+  min-width: 1100px;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th,
+  td {
+    padding: 8px 10px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
+
+.risk-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
 }

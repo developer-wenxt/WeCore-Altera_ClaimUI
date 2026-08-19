@@ -84,6 +84,14 @@
 }
 
 
+.field-hint {
+  color: red;   // amber warning tone, adjust to your theme
+  font-size: 0.75rem;
+  margin-top: 2px;
+  display: block;
+}
+
+
 
 // Responsive fallback so 4 columns don't break on smaller screens
 @media (max-width: 1200px) {

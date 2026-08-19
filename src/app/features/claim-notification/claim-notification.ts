@@ -27,6 +27,8 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
 
   dateError: string = '';
 
+  dsCode: string = ''; 
+
   classCode: string = '';
   classDesc: string = '';
 
@@ -54,6 +56,7 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
     this.isReadOnly = this.route.snapshot.queryParamMap.get('mode') === 'view';
     this.isEdit = this.route.snapshot.queryParamMap.get('mode') === 'edit';
     this.intmNo = this.route.snapshot.queryParamMap.get('intmNo');
+    this.dsCode = sessionStorage.getItem('claimDsCode') || ''; 
 
     if (!this.isEdit && !this.isReadOnly) {
       this.formData['CI_DOC_DESP_YN'] = false;
@@ -215,7 +218,7 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
     payload.CI_COMP_CODE = '001';
     payload.CI_DEPT_CODE = '10';
     payload.CI_DIVN_CODE = '101';
-    payload.CI_DS_CODE = '10-IN-01-001';
+    payload.CI_DS_CODE = this.dsCode;  
     payload.CI_DS_TYPE = 10;
     payload.CI_ADDR_01 = 'null';
     payload.CI_CR_DT = new Date().toISOString();
@@ -252,21 +255,23 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
 
 
   getDropdownOptions(columnName: string): any[] {
-    const raw = this.dropdownOptionsMap()[columnName] || [];
-    return raw.map((row: any) => {
-      const keys = Object.keys(row);
-      if (columnName === 'CI_POL_NO') {
-        return {
-          label: row.POLH_NO,
-          value: row.POLH_NO
-        };
-      }
+  const raw = this.dropdownOptionsMap()[columnName] || [];
+  return raw.map((row: any) => {
+    const keys = Object.keys(row);
+    if (columnName === 'CI_POL_NO') {
       return {
-        label: row[keys[0]],
-        value: row[keys[1]]
+        label: row.POLH_NO,
+        value: row.POLH_NO
       };
-    });
-  }
+    }
+    const code = row[keys[0]];
+    const desc = row[keys[1]];
+    return {
+      label: `${code} - ${desc}`,  
+      value: code                 
+    };
+  });
+}
 
   goBack(): void {
     this.router.navigate(['/claim-notification-list']);

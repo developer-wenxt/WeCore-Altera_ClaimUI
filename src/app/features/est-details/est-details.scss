@@ -1,4 +1,4 @@
-/* Layout and styles moved to global styles.css for consistency and responsiveness *//* ─── Header: flat, left-aligned like the screenshot ────────── */
+/* Layout and styles moved to global styles.css for consistency and responsiveness */
 /* ─── Header: back left, title centered, add-row right ──────── */
 .est-header {
   justify-content: space-between;
@@ -10,7 +10,7 @@
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;               // was 18px
   font-weight: 700;
   color: var(--text-main);
 }
@@ -32,11 +32,11 @@
 .risk-grid th {
   background: var(--bg-surface) !important;
   color: var(--text-muted) !important;
-  font-size: 11px;
+  font-size: 10px;               // was 11px
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  padding: 14px 16px;
+  padding: 11px 13px;            // was 14px 16px
   border: none;
   border-bottom: 1px solid var(--border-light) !important;
   box-shadow: none;
@@ -47,7 +47,6 @@
 .risk-grid th:last-child {
   border-radius: 0;
 }
-
 
 input:disabled,
 input[readonly],
@@ -72,7 +71,7 @@ input[readonly],
 
 /* ─── Rows: flat, no slide/shadow hover ──────────────────────── */
 .risk-grid td {
-  padding: 14px 16px;
+  padding: 11px 13px;            // was 14px 16px
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -90,9 +89,9 @@ input[readonly],
 .risk-grid input {
   background: var(--color-accent-light) !important;
   border: none !important;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 13px;
+  border-radius: 7px;            // was 8px
+  padding: 6px 10px;             // was 8px 12px
+  font-size: 12px;               // was 13px
   color: var(--text-main);
   width: 100%;
 }
@@ -117,25 +116,4 @@ input[readonly],
 .more-btn,
 .p-button-text {
   color: var(--text-muted) !important;
-}
-
-
-/* ─── Flat white table header (no blue gradient) ─────────────── */
-.risk-grid th {
-  background: var(--bg-surface) !important;
-  color: var(--text-muted) !important;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  padding: 14px 16px;
-  border: none;
-  border-bottom: 1px solid var(--border-light) !important;
-  box-shadow: none;
-  position: static;
-}
-
-.risk-grid th:first-child,
-.risk-grid th:last-child {
-  border-radius: 0;
 }

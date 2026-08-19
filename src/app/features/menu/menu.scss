@@ -8,7 +8,7 @@
 
 // ── Left sidebar ──────────────────────────────────────────────────────────
 .sidebar {
-    width: 250px;
+    width: 215px;                      // was 250px
     flex-shrink: 0;
     background: var(--bg-surface);
     border-right: 1px solid var(--border-light);
@@ -18,7 +18,7 @@
 }
 
 .sidebar-header {
-    padding: 1.5rem 1.5rem 1.25rem;
+    padding: 1.25rem 1.25rem 1rem;     // was 1.5rem 1.5rem 1.25rem
     background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%);
     margin-bottom: 0;
     display: block;
@@ -26,7 +26,7 @@
 
 .sidebar-title {
     display: block;
-    font-size: 1rem;
+    font-size: 0.88rem;                // was 1rem
     font-weight: 700;
     color: #ffffff;
     text-transform: uppercase;
@@ -36,14 +36,14 @@
 
 .sidebar-subtitle {
     display: block;
-    font-size: 0.82rem;
+    font-size: 0.72rem;                // was 0.82rem
     color: rgba(255, 255, 255, 0.7);
 }
 
 // ── Category list ─────────────────────────────────────────────────────────
 .category-list {
     list-style: none;
-    padding: 0.5rem 0;
+    padding: 0.4rem 0;                 // was 0.5rem
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -54,8 +54,8 @@
 .category-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.7rem 1.25rem;
+    gap: 0.65rem;                      // was 0.75rem
+    padding: 0.6rem 1.1rem;            // was 0.7rem 1.25rem
     cursor: pointer;
     transition: all 0.18s ease;
     border-left: 3px solid transparent;
@@ -100,9 +100,9 @@
 }
 
 .category-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
+    width: 29px;                       // was 34px
+    height: 29px;                      // was 34px
+    border-radius: 7px;                // was 8px
     background: var(--bg-icon-default);
     flex-shrink: 0;
     display: flex;
@@ -111,7 +111,7 @@
     transition: all 0.18s ease;
 
     .pi {
-        font-size: 1rem;
+        font-size: 0.88rem;            // was 1rem
         color: var(--color-primary-mid);
     }
 }
@@ -127,7 +127,7 @@
 
 .category-name {
     flex: 1;
-    font-size: 0.92rem;
+    font-size: 0.8rem;                 // was 0.92rem
     font-weight: 500;
     color: var(--text-secondary);
     line-height: 1.3;
@@ -137,11 +137,11 @@
 .category-count {
     background: var(--bg-icon-default);
     border-radius: 100px;
-    font-size: 0.75rem;
+    font-size: 0.66rem;                // was 0.75rem
     font-weight: 700;
-    padding: 3px 10px;
+    padding: 3px 9px;                  // was 3px 10px
     color: var(--text-muted);
-    min-width: 26px;
+    min-width: 22px;                   // was 26px
     text-align: center;
     transition: all 0.18s ease;
 }
@@ -149,30 +149,60 @@
 .category-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.35rem 1rem 0.75rem 3rem;
+    gap: 0.4rem;                       // was 0.5rem
+    padding: 0.3rem 0.85rem 0.65rem 2.5rem;   // was 0.35rem 1rem 0.75rem 3rem
     background: var(--color-primary-light);
     border-left: 3px solid var(--color-primary-mid);
 
+    // ADD — smooth grow-in animation when actions appear
+    animation: growIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: top;
+
     .p-button {
-        font-size: 0.82rem !important;
-        padding: 6px 14px !important;
+        font-size: 0.72rem !important;     // was 0.82rem
+        padding: 5px 12px !important;      // was 6px 14px
         border-radius: 6px !important;
         justify-content: flex-start;
+        background: var(--color-primary-mid) !important;
+        border-color: var(--color-primary-mid) !important;
+        color: #ffffff !important;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+        &:hover {
+            background: var(--header-bg-dark) !important;
+            border-color: var(--header-bg-dark) !important;
+        }
+
+        &:active {
+            transform: scale(0.94);
+        }
+    }
+}
+
+// ADD — keyframes for the expand animation
+@keyframes growIn {
+    0% {
+        opacity: 0;
+        transform: scaleY(0.7) translateY(-6px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
     }
 }
 
 // ── Main content area ─────────────────────────────────────────────────────
 .main-content {
     flex: 1;
-    padding: 1rem;
+    padding: 0.85rem;                  // was 1rem
     background: var(--bg-page);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
 
     &.no-pad {
-        padding: 1rem;
+        padding: 0.85rem;              // was 1rem
     }
 }
 
@@ -181,19 +211,19 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin-bottom: 2rem;
-    padding-top: 0.5rem;
-    gap: 0.5rem 1.5rem;
+    margin-bottom: 1.6rem;             // was 2rem
+    padding-top: 0.4rem;               // was 0.5rem
+    gap: 0.4rem 1.25rem;               // was 0.5rem 1.5rem
 
     .breadcrumb {
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 0.88rem;
+        gap: 0.4rem;                   // was 0.5rem
+        font-size: 0.76rem;            // was 0.88rem
         font-weight: 600;
         color: var(--text-main);
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.25rem;        // was 0.3rem
 
         span {
             color: var(--color-primary-mid);
@@ -201,7 +231,7 @@
 
         .sep {
             color: var(--text-lighter);
-            font-size: 0.75rem;
+            font-size: 0.65rem;        // was 0.75rem
             font-weight: normal;
         }
 
@@ -212,7 +242,7 @@
     }
 
     h1 {
-        font-size: 1.75rem;
+        font-size: 1.45rem;            // was 1.75rem
         font-weight: 800;
         color: var(--color-primary);
         margin: 0;
@@ -229,18 +259,18 @@
 
     .pi-search {
         position: absolute;
-        left: 0.75rem;
+        left: 0.65rem;                 // was 0.75rem
         color: var(--text-lighter);
-        font-size: 0.85rem;
+        font-size: 0.75rem;            // was 0.85rem
     }
 
     input {
-        min-width: 260px;
-        height: 42px;
-        padding-left: 2.25rem;
+        min-width: 220px;              // was 260px
+        height: 36px;                  // was 42px
+        padding-left: 2rem;            // was 2.25rem
         border: 1px solid var(--border-light);
-        border-radius: 22px;
-        font-size: 0.88rem;
+        border-radius: 20px;           // was 22px
+        font-size: 0.76rem;            // was 0.88rem
         background: var(--bg-surface);
         color: var(--text-secondary);
 
@@ -256,48 +286,17 @@
     }
 }
 
-
 app-claim-list {
     display: block;
     width: 100%;
     height: 100%;
 }
 
-
-.category-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.35rem 1rem 0.75rem 3rem;
-    background: var(--color-primary-light);
-    border-left: 3px solid var(--color-primary-mid);
-
-    .p-button {
-        font-size: 0.82rem !important;
-        padding: 6px 14px !important;
-        border-radius: 6px !important;
-        justify-content: flex-start;
-        background: var(--color-primary-mid) !important;
-        /* ADD */
-        border-color: var(--color-primary-mid) !important;
-        /* ADD */
-        color: #ffffff !important;
-        /* ADD */
-
-        &:hover {
-            background: var(--header-bg-dark) !important;
-            /* ADD */
-            border-color: var(--header-bg-dark) !important;
-            /* ADD */
-        }
-    }
-}
-
 // ── Product grid ──────────────────────────────────────────────────────────
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));  // was 200px
+    gap: 13px;                         // was 16px
 
     @media (max-width: 1300px) {
         grid-template-columns: repeat(4, 1fr);
@@ -320,16 +319,16 @@ app-claim-list {
 .product-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-light);
-    border-radius: 12px;
+    border-radius: 10px;               // was 12px
     cursor: pointer;
     transition: all 0.22s ease;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 1rem;
-    padding: 1.25rem;
-    min-height: 140px;
+    gap: 0.85rem;                      // was 1rem
+    padding: 1.05rem;                  // was 1.25rem
+    min-height: 118px;                 // was 140px
 
     &:hover {
         border-color: var(--color-primary-mid);
@@ -346,131 +345,6 @@ app-claim-list {
         }
     }
 
-    &.active {
-        border-color: var(--color-primary-mid);
-        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-    }
-}
-
-.product-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    background: var(--color-primary-light);
-    border: 1.5px solid var(--color-primary-mid);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-
-    .pi {
-        font-size: 1.3rem;
-        color: var(--color-primary-mid);
-        transition: color 0.2s ease;
-    }
-}
-
-.product-name {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-main);
-    margin: 0;
-    line-height: 1.4;
-    text-align: left;
-}
-
-// ── Empty / loading / error states ─────────────────────────────────────────
-.state-msg {
-    text-align: center;
-    padding: 5rem 1rem;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    grid-column: 1 / -1;
-
-    &.error {
-        color: #dc2626;
-    }
-}
-
-
-.category-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.35rem 1rem 0.75rem 3rem;
-    background: var(--color-primary-light);
-    border-left: 3px solid var(--color-primary-mid);
-
-    // ADD — smooth grow-in animation when actions appear
-    animation: growIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transform-origin: top;
-
-    .p-button {
-        font-size: 0.82rem !important;
-        padding: 6px 14px !important;
-        border-radius: 6px !important;
-        justify-content: flex-start;
-        background: var(--color-primary-mid) !important;
-        border-color: var(--color-primary-mid) !important;
-        color: #ffffff !important;
-        transition: transform 0.15s ease, box-shadow 0.15s ease; // ADD
-
-        &:hover {
-            background: var(--header-bg-dark) !important;
-            border-color: var(--header-bg-dark) !important;
-        }
-
-        // ADD — shrink/grow feedback on click
-        &:active {
-            transform: scale(0.94);
-        }
-    }
-}
-
-// ADD — keyframes for the expand animation
-@keyframes growIn {
-    0% {
-        opacity: 0;
-        transform: scaleY(0.7) translateY(-6px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scaleY(1) translateY(0);
-    }
-}
-
-.product-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-light);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.22s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 1rem;
-    padding: 1.25rem;
-    min-height: 140px;
-
-    &:hover {
-        border-color: var(--color-primary-mid);
-        box-shadow: var(--shadow-card);
-        transform: translateY(-2px);
-
-        .product-icon {
-            background: var(--color-primary-mid);
-            border-color: var(--color-primary-mid);
-
-            .pi {
-                color: #ffffff;
-            }
-        }
-    }
-
-    // ADD — shrink then settle on click
     &:active {
         transform: scale(0.96);
         transition: transform 0.1s ease;
@@ -479,11 +353,10 @@ app-claim-list {
     &.active {
         border-color: var(--color-primary-mid);
         box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-        animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); // ADD
+        animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 }
 
-// ADD
 @keyframes popIn {
     0% {
         transform: scale(0.92);
@@ -498,14 +371,55 @@ app-claim-list {
     }
 }
 
+.product-icon {
+    width: 36px;                       // was 42px
+    height: 36px;                      // was 42px
+    border-radius: 9px;                // was 10px
+    background: var(--color-primary-light);
+    border: 1.5px solid var(--color-primary-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+
+    .pi {
+        font-size: 1.1rem;             // was 1.3rem
+        color: var(--color-primary-mid);
+        transition: color 0.2s ease;
+    }
+}
+
+.product-name {
+    font-size: 0.82rem;                // was 0.95rem
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+    line-height: 1.4;
+    text-align: left;
+}
+
+// ── Empty / loading / error states ─────────────────────────────────────────
+.state-msg {
+    text-align: center;
+    padding: 4.2rem 0.85rem;           // was 5rem 1rem
+    color: var(--text-muted);
+    font-size: 0.82rem;                // was 0.95rem
+    grid-column: 1 / -1;
+
+    &.error {
+        color: #dc2626;
+    }
+}
+
 // ── Responsive sidebar collapse ─────────────────────────────────────────────
 @media (max-width: 1100px) {
     .sidebar {
-        width: 220px;
+        width: 190px;                  // was 220px
     }
 
     .main-content {
-        padding: 1.5rem 2rem;
+        padding: 1.25rem 1.7rem;       // was 1.5rem 2rem
     }
 }
 
@@ -521,21 +435,21 @@ app-claim-list {
     }
 
     .sidebar-header {
-        padding: 1rem 1.25rem;
+        padding: 0.85rem 1.1rem;       // was 1rem 1.25rem
     }
 
     .category-list {
         flex-direction: row;
         flex-wrap: wrap;
-        padding: 0.75rem 1rem;
-        gap: 0.5rem;
+        padding: 0.65rem 0.85rem;      // was 0.75rem 1rem
+        gap: 0.4rem;                   // was 0.5rem
         overflow-y: visible;
     }
 
     .category-item {
         border: 1px solid var(--border-light);
         border-radius: 8px;
-        padding: 0.5rem 0.85rem;
+        padding: 0.42rem 0.72rem;      // was 0.5rem 0.85rem
         border-left: 1px solid var(--border-light);
         width: auto;
 
@@ -548,34 +462,34 @@ app-claim-list {
 
     .category-actions {
         border-left: none;
-        padding: 0.35rem 0.75rem;
+        padding: 0.3rem 0.65rem;       // was 0.35rem 0.75rem
         flex-direction: row;
     }
 
     .main-content {
-        padding: 1.25rem;
+        padding: 1.05rem;              // was 1.25rem
     }
 
     .content-header {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;        // was 1.5rem
 
         h1 {
-            font-size: 1.4rem;
+            font-size: 1.2rem;         // was 1.4rem
         }
     }
 
     .search-wrap input {
-        min-width: 200px;
+        min-width: 170px;              // was 200px
     }
 }
 
 @media (max-width: 500px) {
     .main-content {
-        padding: 1rem 0.75rem;
+        padding: 0.85rem 0.65rem;      // was 1rem 0.75rem
     }
 
     .content-header h1 {
-        font-size: 1.2rem;
+        font-size: 1.05rem;            // was 1.2rem
     }
 
     .search-wrap {
@@ -588,7 +502,7 @@ app-claim-list {
     }
 
     .product-card {
-        min-height: 120px;
-        padding: 1rem;
+        min-height: 102px;             // was 120px
+        padding: 0.85rem;              // was 1rem
     }
 }

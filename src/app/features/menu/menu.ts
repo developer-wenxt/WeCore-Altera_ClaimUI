@@ -29,8 +29,8 @@ export class MenuComponent extends UnSubscriber implements OnInit {
   loading = signal(true);
   error = signal(false);
 
-  isloading = false;        // ADDED — SSO decode spinner
-  ssoError: string | null = null;   // ADDED
+  isloading = false;       
+  ssoError: string | null = null; 
 
   selectedItem: MenuItem | null = null;
   selectedCategory = signal<string>('');
@@ -219,6 +219,9 @@ export class MenuComponent extends UnSubscriber implements OnInit {
     sessionStorage.setItem('claimClassCode', cat.code);
     sessionStorage.setItem('claimClassDesc', cat.desc || '');
     sessionStorage.setItem('claimIntmDsCode', claimMatch ? claimMatch.CLM_DS_CODE : '');
+    sessionStorage.setItem('claimIntm_1DsCode', match ? match.CLM_INTM_DS_CODE : '');
+    
+
 
     this.switchView('claim-list');
   }
@@ -239,6 +242,8 @@ export class MenuComponent extends UnSubscriber implements OnInit {
     sessionStorage.setItem('claimMenuId', String(this.selectedItem.MENU_ID));
     sessionStorage.setItem('claimClassCode', this.selectedItem.CLASS_CODE || '');
     sessionStorage.setItem('claimClassDesc', this.selectedItem.CLASS_DESC || '');
+      sessionStorage.setItem('claimDsCode', match?.CLM_INTM_DS_CODE || ''); 
+      
 
     this.switchView('claim-notification-list');
   }
