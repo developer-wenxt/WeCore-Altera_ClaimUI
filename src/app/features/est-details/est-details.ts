@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { GlobalMessageService } from '../../core/services/GlobalMessageService';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnSubscriber } from '../../core/un-subscriber';
@@ -24,17 +25,21 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   showMoreDialog = signal(false);
   activeRowIndex = signal<number | null>(null);
 
+  lovMap = signal<{ [fieldName: string]: any }>({});
+  dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
+
   clmapSysId: number | null = null;
   clmSysId: number | null = null;
+  crUid: string = 'ADMIN';
 
   prodCode: string = '';
-polNo: string = '';
-classDesc: string = '';
+  polNo: string = '';
+  classDesc: string = '';
 
   constructor(private menuService: MenuService,
     private router: Router,
-    private route: ActivatedRoute
-
+    private route: ActivatedRoute,
+    private msgService: GlobalMessageService
   ) {
     super();
   }
@@ -43,13 +48,48 @@ classDesc: string = '';
 
     this.clmapSysId = Number(this.route.snapshot.queryParamMap.get('clmapSysId')) || null;
     this.clmSysId = Number(this.route.snapshot.queryParamMap.get('sysId')) || null;
-      const headerData = sessionStorage.getItem('claimHeaderData');   // ADD
-  if (headerData) {                                                // ADD
-    const parsed = JSON.parse(headerData);                         // ADD
-    this.prodCode = parsed.CLM_PROD_CODE || '';                     // ADD
-    this.polNo = parsed.CLM_POL_NO || '';                           // ADD
-  }                                                                 // ADD
-  this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
+    this.crUid = this.route.snapshot.queryParamMap.get('crUid') || 'ADMIN';
+    const headerData = sessionStorage.getItem('claimHeaderData');   // ADD
+    if (headerData) {                                                // ADD
+      const parsed = JSON.parse(headerData);                         // ADD
+      this.prodCode = parsed.CLM_PROD_CODE || '';                     // ADD
+      this.polNo = parsed.CLM_POL_NO || '';                           // ADD
+    }                                                                 // ADD
+    this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
+
+    this.menuService.getLovFields('PGIT8000', 'PGIT_CLM_EST')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (lovList) => {
+          const map: { [key: string]: any } = {};
+          lovList.forEach(l => map[l.PLD_FIELD_NAME] = l);
+
+          // Force CE_CUST_CODE as a dropdown even if the LOV API doesn't return it
+          if (!map['CE_CUST_CODE']) {
+            map['CE_CUST_CODE'] = {
+              PLD_PROG_CODE: 'PGIT8000',
+              PLD_BLOCK_NAME: 'PGIT_CLM_EST',
+              PLD_FIELD_NAME: 'CE_CUST_CODE'
+            };
+          }
+
+          this.lovMap.set(map);
+
+          Object.values(map).forEach((l: any) => {
+            this.menuService.getDropdownValues(l.PLD_PROG_CODE, l.PLD_BLOCK_NAME, l.PLD_FIELD_NAME)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (values) => {
+                  const current = this.dropdownOptionsMap();
+                  this.dropdownOptionsMap.set({ ...current, [l.PLD_FIELD_NAME]: values });
+                },
+                error: (err) => console.error(`Error loading dropdown values for ${l.PLD_FIELD_NAME}`, err)
+              });
+          });
+        },
+        error: (err) => console.error('Error loading LOV fields', err)
+      });
+
     this.menuService.getEstDetailFields()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -57,7 +97,8 @@ classDesc: string = '';
           const filtered = getEstDetailColumns(fields);
           this.tableColumns.set(getEstDetailColumns(fields));
           this.loading.set(false);
-          this.loadEstRows();
+          this.gridRows.set([{ CE_DT: new Date() }]);
+
         },
         error: (err) => {
           console.error('Error loading estimation detail fields:', err);
@@ -66,36 +107,10 @@ classDesc: string = '';
       });
   }
 
-  private loadEstRows(): void {
-    if (!this.clmapSysId) {
-      this.loading.set(false);
-      return;
-    }
-
-    this.menuService.getEstDetailsByClmap(this.clmapSysId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res: any) => {
-          const dataObj = res?.data?.data || {};
-          const sortedKeys = Object.keys(dataObj).sort((a, b) => Number(a) - Number(b));
-
-          const rows: any[] = [];
-          sortedKeys.forEach(key => {
-            dataObj[key].forEach((entry: any) => rows.push(this.normalizeRow(entry)));
-          });
-
-          this.gridRows.set(rows.length ? rows : [{}]);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          console.error('Error loading estimation detail rows:', err);
-          this.loading.set(false);
-        }
-      });
-  }
 
   addRow(): void {
-    this.gridRows.update(rows => [...rows, { CE_CLMAP_SYS_ID: this.clmapSysId }]);
+    this.gridRows.update(rows => [...rows, { CE_CLMAP_SYS_ID: this.clmapSysId, CE_DT: new Date() }]);
+    // was: [...rows, { CE_CLMAP_SYS_ID: this.clmapSysId }]
   }
 
   private normalizeRow(entry: any): any {
@@ -131,28 +146,81 @@ classDesc: string = '';
   }
 
   saveRow(index: number): void {
-    const row = { ...this.gridRows()[index], CE_CLMAP_SYS_ID: this.clmapSysId };
+    const row = { ...this.gridRows()[index] };
 
     const missing = this.tableColumns()
       .filter(col => col.MANDATORY === 1)
+      .filter(col => this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) !== 'checkbox')
       .filter(col => {
         const v = row[col.COLUMN_NAME];
         return v === null || v === undefined || v === '';
       });
 
     if (missing.length > 0) {
-      alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
+      this.msgService.show('error', 'Validation Error', 'Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
       return;
     }
 
+    // Validate that required IDs are available
+    if (!this.clmapSysId || !this.clmSysId) {
+      this.msgService.show('error', 'Missing Data', 'Claim or Risk Detail ID is missing. Please navigate from the Claim Registration page.');
+      return;
+    }
+
+    this.tableColumns().forEach(col => {
+      if (this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) === 'checkbox') {
+        row[col.COLUMN_NAME] = row[col.COLUMN_NAME] ? '1' : '0';
+      }
+      // Convert date fields to ISO string for API
+      if (this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) === 'date' && row[col.COLUMN_NAME] instanceof Date) {
+        row[col.COLUMN_NAME] = row[col.COLUMN_NAME].toISOString();
+      }
+    });
+
     const request = row.CE_SYS_ID
       ? this.menuService.updateEstDetail(row)
-      : this.menuService.createEstDetail(row);
+      : this.menuService.saveEstimation(row, this.clmapSysId, this.clmSysId, this.crUid);
 
     request.pipe(takeUntil(this.destroy$)).subscribe({
-      next: () => console.log('Row saved successfully'),
-      error: (err) => console.error('Error saving estimation row', err)
+      next: (res: any) => {
+        // Update the row with returned data (e.g. CE_SYS_ID) so subsequent saves are updates
+        const savedData = res?.data?.data || res?.data || res;
+        if (savedData?.CE_SYS_ID) {
+          this.gridRows.update(rows => {
+            const copy = [...rows];
+            copy[index] = { ...copy[index], CE_SYS_ID: savedData.CE_SYS_ID };
+            return copy;
+          });
+        }
+        this.msgService.show('success', 'Success', 'Estimation row saved successfully');
+      },
+      error: (err) => {
+        console.error('Error saving estimation row', err);
+        this.msgService.show('error', 'Error', 'Failed to save estimation row. Please try again.');
+      }
     });
+  }
+
+  isLovField(columnName: string): boolean {
+    return !!this.lovMap()[columnName];
+  }
+
+  getDropdownOptions(columnName: string): any[] {
+    const raw = this.dropdownOptionsMap()[columnName] || [];
+    return raw.map((row: any) => {
+      const keys = Object.keys(row);
+      const code = row[keys[0]];
+      const desc = row[keys[1]];
+      return {
+        label: desc ? `${code} - ${desc}` : `${code}`,
+        value: code
+      };
+    });
+  }
+
+
+  getRefNo(index: number): string {
+    return 'REFER/' + String(index).padStart(4, '0');
   }
 
   goBack(): void {

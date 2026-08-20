@@ -175,3 +175,44 @@
   overflow-x: auto;
   border-radius: 10px;
 }
+
+.risk-table-wrapper {
+  width: 100%;
+  border-radius: 10px;
+  overflow: visible;   // was auto — no more horizontal scroll
+}
+
+.risk-grid {
+  width: 100%;
+  min-width: 0;         // remove the 1100px floor that forced scrolling
+  table-layout: fixed;  // 6 known columns + # + actions divide evenly
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th, td {
+    padding: 8px 10px;
+    white-space: normal;   // allow wrap instead of forcing overflow
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+  }
+
+  .actions-col {
+    width: 90px;
+    white-space: nowrap;
+  }
+}
+
+.more-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    label { font-size: 12px; font-weight: 500; }
+  }
+}

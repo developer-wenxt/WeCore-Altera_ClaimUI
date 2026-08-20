@@ -123,41 +123,44 @@
                 [disabled]="!canEditRiskField(col)"></p-datepicker>
               <input *ngSwitchCase="'number'" type="number" [(ngModel)]="row[col.COLUMN_NAME]"
                 [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" />
-             <ng-container *ngSwitchDefault>
-
-  <!-- Multi-value fields -->
-  <div
-    *ngIf="
-      col.COLUMN_NAME === 'CLMAP_PRAI_LVL1_DESC' ||
-      col.COLUMN_NAME === 'CLMAP_SMI_CODE' ||
-      col.COLUMN_NAME === 'CLMAP_COVER_CODE';
-      else normalRiskInput
-    "
-    class="multi-value-cell">
-
-    <span
-      *ngFor="let value of getMultiValues(row[col.COLUMN_NAME])"
-      class="value-pill">
-      {{ value }}
-    </span>
-
-    <span
-      *ngIf="getMultiValues(row[col.COLUMN_NAME]).length === 0"
-      class="empty-value">
-      —
-    </span>
-
-  </div>
+              <ng-container *ngSwitchDefault>
+  <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_POL_NO'; else sectionCodeField">
+    <p-select [options]="row.policyOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="POLH_NO" optionValue="POLH_NO" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+  </ng-container>
+  
+  <ng-template #sectionCodeField>
+    <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_SECTION_CODE'; else riskDescField">
+      <p-select [options]="row.sectionOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="PSECH_SEC_CODE" optionValue="PSECH_SEC_CODE" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+    </ng-container>
+  </ng-template>
+  
+  <ng-template #riskDescField>
+    <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_PRAI_LVL1_DESC'; else smiCodeField">
+      <p-select [options]="row.riskOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="PRAIH_RISK_ID" optionValue="PRAIH_RISK_ID" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+    </ng-container>
+  </ng-template>
+  
+  <ng-template #smiCodeField>
+    <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_SMI_CODE'; else coverCodeField">
+      <p-select [options]="row.smiOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="PRSH_SMI_DESC" optionValue="PRSH_SMI_CODE" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+    </ng-container>
+  </ng-template>
+  
+  <ng-template #coverCodeField>
+    <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_COVER_CODE'; else normalRiskInput">
+      <p-select [options]="row.coverOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="PRCH_DESC" optionValue="PRCH_CODE" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+    </ng-container>
+  </ng-template>
 
   <!-- Normal fields -->
   <ng-template #normalRiskInput>
     <input
       type="text"
+      pInputText
       [(ngModel)]="row[col.COLUMN_NAME]"
       [name]="col.COLUMN_NAME + i"
       [disabled]="!canEditRiskField(col)" />
   </ng-template>
-
 </ng-container>
             </ng-container>
           </td>

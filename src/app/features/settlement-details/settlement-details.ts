@@ -183,6 +183,7 @@ saveRow(index: number): void {
 
   const missing = this.tableColumns()
     .filter(col => col.MANDATORY === 1)
+    .filter(col => this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) !== 'checkbox')
     .filter(col => {
       const v = row[col.COLUMN_NAME];
       return v === null || v === undefined || v === '';
@@ -192,6 +193,12 @@ saveRow(index: number): void {
     alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
     return;
   }
+
+  this.tableColumns().forEach(col => {
+    if (this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) === 'checkbox') {
+      row[col.COLUMN_NAME] = row[col.COLUMN_NAME] ? '1' : '0';
+    }
+  });
 
   this.menuService.saveSettlementDetail(row)
     .pipe(takeUntil(this.destroy$))

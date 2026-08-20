@@ -9,12 +9,11 @@ import { getInputType, getVisibleFieldsSorted, isFieldEditable, isFieldEditableI
 import { MenuItem } from 'primeng/api';
 import {  map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { DatePicker } from "primeng/datepicker";
 
 @Component({
   selector: 'app-claim-registration',
   standalone: true,
-  imports: [...SHARED_IMPORTS, DatePicker],
+  imports: [...SHARED_IMPORTS],
   templateUrl: './claim-registration.html',
   styleUrls: ['./claim-registration.scss'],
   providers: [UnSubscriber]
@@ -536,11 +535,20 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
           }
           alert('Claim Registration Saved Successfully');
 const polNo = this.formData['CLM_POL_NO'];
-this.loadRiskRowsThenPopulate(polNo);
+this.populateFreshRiskRow(polNo);
         },
         error: (err) => console.error('Error saving claim registration', err)
       });
   }
+
+  private populateFreshRiskRow(polNo: string): void {
+  this.riskGridRows.set([{}]);
+  this.riskLoading.set(false);
+
+  if (polNo) {
+    this.onRiskPolicyNoChange(polNo, 0);
+  }
+}
 
 
    onPolicyNoSelect(polNo: string): void {
@@ -609,9 +617,10 @@ console.log('lovMap CLM_ASSR_CODE:', this.lovMap()['CLM_ASSR_CODE']);
     const rows = this.riskGridRows();
     const index = this.activeRowIndex;
     const clmapSysId = index !== null ? rows[index]?.CLMAP_SYS_ID : null;
+    const crUid = index !== null ? (rows[index]?.CLMAP_CR_UID || 'ADMIN') : 'ADMIN';
 
     this.router.navigate(['/est-details'], {
-      queryParams: { clmapSysId, sysId: this.sysId }
+      queryParams: { clmapSysId, sysId: this.sysId, crUid }
     });
   }
 
@@ -695,6 +704,7 @@ openRowMenu(event: Event, menu: any, index: number): void {
 
     const missing = this.riskTableColumns()
       .filter(col => col.MANDATORY === 1)
+      .filter(col => this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) !== 'checkbox')
       .filter(col => {
         const v = row[col.COLUMN_NAME];
         return v === null || v === undefined || v === '';
@@ -712,8 +722,8 @@ openRowMenu(event: Event, menu: any, index: number): void {
     });
 
     const request = row.CLMAP_SYS_ID
-      ? this.menuService.updateRiskDetail(row)
-      : this.menuService.createRiskDetail(row);
+      ? this.menuService.updateRiskDetail(row, this.sysId, this.formData['CLM_PROD_CODE'])
+      : this.menuService.createRiskDetail(row, this.sysId, this.formData['CLM_PROD_CODE']);
 
     request
       .pipe(takeUntil(this.destroy$))
@@ -730,44 +740,57 @@ onRiskPolicyNoChange(polNo: string, index: number): void {
 
   this.menuService.getRiskPolicy(polNo).pipe(
     switchMap((polRes: any) => {
-      const pol = Array.isArray(polRes) ? polRes[0] : polRes;
+      const polRows = Array.isArray(polRes) ? polRes : (polRes ? [polRes] : []);
+      this.updateRiskRow(index, { policyOptions: polRows });
+      const pol = polRows[0];
       const polhSysId = pol?.POLH_SYS_ID;
       const endIdx = pol?.POLH_END_NO_IDX ?? 0;
+      this.updateRiskRow(index, { CLMAP_POL_SYS_ID: polhSysId, CLMAP_END_NO_IDX: endIdx });
       return this.menuService.getRiskSection(polhSysId, endIdx).pipe(
         map((sec: any): { sec: any; polhSysId: any; endIdx: any } => ({ sec, polhSysId, endIdx }))
       );
     }),
     switchMap(({ sec, polhSysId, endIdx }: { sec: any; polhSysId: any; endIdx: any }) => {
-      const secData = Array.isArray(sec) ? sec[0] : sec;
-      this.updateRiskRow(index, { CLMAP_SECTION_CODE: secData?.PSECH_SEC_CODE });
+      const secRows = Array.isArray(sec) ? sec : (sec ? [sec] : []);
+      this.updateRiskRow(index, { sectionOptions: secRows });
+      const secData = secRows[0];
       const psechSysId = secData?.PSECH_SYS_ID;
+      this.updateRiskRow(index, { 
+        CLMAP_SECTION_CODE: secData?.PSECH_SEC_CODE, 
+        CLMAP_PSEC_SYS_ID: psechSysId 
+      });
       return this.menuService.getRiskRisk(psechSysId, polhSysId, endIdx).pipe(
         map((risk: any): { risk: any; polhSysId: any; endIdx: any; psechSysId: any } => ({ risk, polhSysId, endIdx, psechSysId }))
       );
     }),
     switchMap(({ risk, polhSysId, endIdx, psechSysId }: { risk: any; polhSysId: any; endIdx: any; psechSysId: any }) => {
-      const riskRows = Array.isArray(risk) ? risk : (risk ? [risk] : []); // CHANGED — keep all rows
+      const riskRows = Array.isArray(risk) ? risk : (risk ? [risk] : []); 
+      this.updateRiskRow(index, { riskOptions: riskRows });
+      
+      const riskDesc = riskRows.length > 0 ? riskRows[0].PRAIH_RISK_ID : '';
+      const praihSysId = riskRows[0]?.PRAIH_SYS_ID; 
+      this.updateRiskRow(index, { 
+        CLMAP_PRAI_LVL1_DESC: riskDesc,
+        CLMAP_PRAI_LVL1_SYS_ID: praihSysId
+      });
 
-      // ADDED — join all PRAIH_RISK_ID values into Risk Desc 1
-      const riskDesc = riskRows.map((r: any) => r.PRAIH_RISK_ID).filter(Boolean).join(', ');
-      this.updateRiskRow(index, { CLMAP_PRAI_LVL1_DESC: riskDesc });
-
-      const praihSysId = riskRows[0]?.PRAIH_SYS_ID; // still use first for downstream chain
       return this.menuService.getRiskSmi(praihSysId, psechSysId, polhSysId, endIdx).pipe(
         map((smi: any): { smi: any; praihSysId: any; psechSysId: any; polhSysId: any; endIdx: any } => ({ smi, praihSysId, psechSysId, polhSysId, endIdx }))
       );
     }),
     switchMap(({ smi, praihSysId, psechSysId, polhSysId, endIdx }: { smi: any; praihSysId: any; psechSysId: any; polhSysId: any; endIdx: any }) => {
-      const smiRows = Array.isArray(smi) ? smi : (smi ? [smi] : []); // CHANGED
-      const smiCode = smiRows.map((s: any) => s.PRSH_SMI_CODE).filter(Boolean).join(', '); // CHANGED — join multiple
+      const smiRows = Array.isArray(smi) ? smi : (smi ? [smi] : []); 
+      this.updateRiskRow(index, { smiOptions: smiRows });
+      const smiCode = smiRows.length > 0 ? smiRows[0].PRSH_SMI_CODE : '';
       this.updateRiskRow(index, { CLMAP_SMI_CODE: smiCode });
       return this.menuService.getRiskCover(praihSysId, psechSysId, polhSysId, endIdx);
     }),
     takeUntil(this.destroy$)
   ).subscribe({
     next: (coverRes: any) => {
-      const coverRows = Array.isArray(coverRes) ? coverRes : (coverRes ? [coverRes] : []); // CHANGED
-      const coverCode = coverRows.map((c: any) => c.PRCH_CODE).filter(Boolean).join(', '); // CHANGED — join multiple
+      const coverRows = Array.isArray(coverRes) ? coverRes : (coverRes ? [coverRes] : []); 
+      this.updateRiskRow(index, { coverOptions: coverRows });
+      const coverCode = coverRows.length > 0 ? coverRows[0].PRCH_CODE : '';
       this.updateRiskRow(index, { CLMAP_COVER_CODE: coverCode });
     },
     error: (err) => console.error('Error chaining risk detail lookups', err)
@@ -790,48 +813,6 @@ private reorderRiskColumns(fields: FieldConfig[]): FieldConfig[] {
   return result;
 }
 
-private loadRiskRowsThenPopulate(polNo: string): void {
-  if (!this.sysId) {
-    this.riskLoading.set(false);
-    return;
-  }
-  this.riskLoading.set(true);
-
-  this.menuService.getRiskDetailsByClaim(this.sysId)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (res: any) => {
-        const dataObj = res?.data?.data || {};
-        const sortedKeys = Object.keys(dataObj).sort((a, b) => Number(a) - Number(b));
-
-        const rows: any[] = [];
-        sortedKeys.forEach(key => {
-          dataObj[key].forEach((entry: any) => rows.push(this.normalizeRiskRow(entry)));
-        });
-
-        this.riskGridRows.set(rows.length ? rows : [{}]);
-        this.riskLoading.set(false);
-
-        if (!rows.length && polNo) {
-          this.onRiskPolicyNoChange(polNo, 0);
-        }
-      },
-      error: (err) => {
-        // CHANGED — 404 here just means "no risk rows yet", not a real failure
-        if (err?.status === 404) {
-          console.log('No existing risk rows — populating fresh row from policy chain');
-          this.riskGridRows.set([{}]);
-          this.riskLoading.set(false);
-          if (polNo) {
-            this.onRiskPolicyNoChange(polNo, 0);
-          }
-        } else {
-          console.error('Error loading risk detail rows:', err);
-          this.riskLoading.set(false);
-        }
-      }
-    });
-}
 
 private updateRiskRow(index: number, patch: any): void {
   this.riskGridRows.update(rows => {
@@ -853,10 +834,6 @@ getFieldStateClass(field: FieldConfig): string {
 private isFieldEditable2(field: FieldConfig): boolean {
   return field.UPDATE_YN === 2;
 }
-
-
-
-
 
 
   isHeaderField(columnName: string): boolean {

@@ -182,7 +182,7 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
   saveClaim(): void {
     const missing = this.fields()
       .filter(f => f.MANDATORY === 1)
-      .filter(f => f.COLUMN_NAME !== 'CI_DOC_DESP_YN' && f.COLUMN_NAME !== 'CI_CLM_REGD_YN')
+      .filter(f => this.getInputType(f.SOURCE_DESIGN_TYPE, f.DATA_TYPE) !== 'checkbox')
       .filter(f => {
         const v = this.formData[f.COLUMN_NAME];
         return v === null || v === undefined || v === '';
@@ -202,16 +202,12 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
     // ---- dynamic payload instead of hardcoded keys ----
     const payload: any = {};
     this.fields().forEach(f => {
-      payload[f.COLUMN_NAME] = this.formData[f.COLUMN_NAME];
+      let val = this.formData[f.COLUMN_NAME];
+      if (this.getInputType(f.SOURCE_DESIGN_TYPE, f.DATA_TYPE) === 'checkbox') {
+        val = val ? '1' : '0';
+      }
+      payload[f.COLUMN_NAME] = val;
     });
-
-    // checked = '1', unchecked = '0'
-    if ('CI_DOC_DESP_YN' in payload) {
-      payload['CI_DOC_DESP_YN'] = this.formData['CI_DOC_DESP_YN'] ? '1' : '0';
-    }
-    if ('CI_CLM_REGD_YN' in payload) {
-      payload['CI_CLM_REGD_YN'] = this.formData['CI_CLM_REGD_YN'] ? '1' : '0';
-    }
 
     // hardcoded values
     payload.CI_CR_UID = 'TSHEPANDG';
