@@ -1,13 +1,52 @@
 .msg-text {
   text-align: center;
-  margin: 1rem 0;
-  font-size: 1rem;
+  margin: 1.5rem 0;
+  font-size: 1.1rem;
+  color: #344054;
+  line-height: 1.5;
 }
-.error-title { color: #d32f2f; font-weight: 600; }
-.success-title { color: #2e7d32; font-weight: 600; }
-.ok-btn { margin: 0 auto; display: block; min-width: 90px; }
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.error-title { color: #d92d20; }
+.success-title { color: #027a48; }
+
+.ok-btn { 
+  margin: 0 auto; 
+  display: block; 
+  min-width: 120px; 
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 10px 24px;
+}
+
+::ng-deep .global-msg-dialog {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+::ng-deep .global-msg-dialog .p-dialog-header {
+  border-bottom: 1px solid #eaecf0;
+  padding: 1.25rem 1.5rem;
+  background: #fcfcfd;
+}
+
+::ng-deep .global-msg-dialog .p-dialog-content {
+  padding: 1.5rem;
+}
 
 ::ng-deep .global-msg-dialog .p-dialog-footer {
   display: flex;
   justify-content: center;
-}
+  border-top: 1px solid #eaecf0;
+  padding: 1rem 1.5rem;
+  background: #fcfcfd;
+}

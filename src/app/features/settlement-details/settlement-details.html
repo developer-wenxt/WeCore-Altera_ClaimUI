@@ -19,7 +19,7 @@
       <h2>Claim Settlement</h2>
     </div>
     <div class="info-chips plain-chips">
-      <div *ngFor="let f of claimHeaderFields()" class="chip">
+      <div *ngFor="let f of claimHeaderFields(); trackBy: trackByColName" class="chip">
         <span class="chip-label">
           {{ f.FIELD_PROMPT }}
           <span class="required" *ngIf="f.MANDATORY === 1">*</span>
@@ -59,16 +59,16 @@
       <thead>
         <tr>
           <th>#</th>
-          <th *ngFor="let col of extraColumns">
+          <th *ngFor="let col of extraColumns; trackBy: trackByColName">
   {{ col.FIELD_PROMPT }}
   <span class="required" *ngIf="col.MANDATORY === 1">*</span>
 </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of riskGridRows(); let i = index">
+        <tr *ngFor="let row of riskGridRows(); let i = index; trackBy: trackByIndex">
           <td>{{ i + 1 }}</td>
-          <td *ngFor="let col of riskTableColumns()">
+          <td *ngFor="let col of riskTableColumns(); trackBy: trackByColName">
             <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
               <input *ngSwitchCase="'checkbox'" type="checkbox"
                 [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" disabled />
@@ -97,16 +97,16 @@
       <thead>
         <tr>
           <th>#</th>
-          <th *ngFor="let col of visibleColumns">{{ col.FIELD_PROMPT }}</th>
+          <th *ngFor="let col of visibleColumns; trackBy: trackByColName">{{ col.FIELD_PROMPT }}</th>
           <th *ngIf="extraColumns.length > 0"></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of gridRows(); let i = index">
+        <tr *ngFor="let row of gridRows(); let i = index; trackBy: trackByIndex">
           <td>{{ i + 1 }}</td>
 
           <!-- REPLACED: was <input type="text"> -->
-          <td *ngFor="let col of visibleColumns">
+          <td *ngFor="let col of visibleColumns; trackBy: trackByColName">
             <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
               <input *ngSwitchCase="'checkbox'" type="checkbox"
                 [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
@@ -133,7 +133,7 @@
   <table class="risk-grid" *ngIf="activeRowIndex() !== null">
     <thead>
       <tr>
-        <th *ngFor="let col of extraColumns">
+        <th *ngFor="let col of extraColumns; trackBy: trackByColName">
   {{ col.FIELD_PROMPT }}
   <span class="required" *ngIf="col.MANDATORY === 1">*</span>
 </th>
@@ -142,7 +142,7 @@
     <tbody>
       <tr>
         <!-- REPLACED: was <input type="text"> -->
-        <td *ngFor="let col of extraColumns">
+        <td *ngFor="let col of extraColumns; trackBy: trackByColName">
           <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
             <input *ngSwitchCase="'checkbox'" type="checkbox"
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />

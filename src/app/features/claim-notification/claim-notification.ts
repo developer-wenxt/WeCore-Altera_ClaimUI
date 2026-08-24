@@ -2,6 +2,7 @@ import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { GlobalMessageService } from '../../core/services/GlobalMessageService';
 import { UnSubscriber } from '../../core/un-subscriber';
 import { MenuService } from '../../core/services/menu.service';
 import { FieldConfig } from '../../core/models/model';
@@ -39,12 +40,15 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
 
   getInputType = getInputType;
 
+  trackByIndex(index: number, item: any): number { return index; }
+  trackByColName(index: number, col: any): string | number { return col?.COLUMN_NAME || index; }
 
   constructor(
     private menuService: MenuService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private msgService: GlobalMessageService
   ) {
     super();
   }
@@ -189,13 +193,13 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
       });
 
     if (missing.length > 0) {
-      alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
+      this.msgService.show('error', 'Validation Error', 'Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
       return;
     }
 
 
     if (this.dateError) {
-      alert(this.dateError);
+      this.msgService.show('error', 'Validation Error', this.dateError);
       return;
     }
 
@@ -235,7 +239,7 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
 
             this.cdr.detectChanges();
           }
-          alert('Claim Notification Saved Successfully');
+          this.msgService.show('success', 'Success', 'Claim Notification Saved Successfully');
         },
         error: (err) => {
           console.error('Save Failed', err);

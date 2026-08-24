@@ -27,7 +27,7 @@
 
     <form *ngIf="!loading()" class="dynamic-form-grid">
 
-      <ng-container *ngFor="let field of fields()">
+      <ng-container *ngFor="let field of fields(); trackBy: trackByColName">
         <div *ngIf="field.COLUMN_NAME !== 'CI_INTM_NO' && field.COLUMN_NAME !== 'CI_COUNTY'" class="form-field"
           [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'"
           [class.field-disabled]="!canEditField(field)">

@@ -7,7 +7,7 @@ import { FieldConfig } from '../../core/models/model';
 import { SHARED_IMPORTS } from '../../core/shared/shared';
 import { getSettlementColumns, getTableColumnFields, getInputType } from '../../core/utils/field-filter.util';
 import { ActivatedRoute } from '@angular/router';
-
+import { GlobalMessageService } from '../../core/services/GlobalMessageService';
 
 
 const CLAIM_HEADER_FIELDS = [
@@ -86,8 +86,8 @@ export class SettlementDetailsComponent extends UnSubscriber implements OnInit {
   // Risk Details logic
   riskTableColumns = signal<FieldConfig[]>([]);
   
-
-
+  trackByIndex(index: number, item: any): number { return index; }
+  trackByColName(index: number, col: any): string | number { return col?.COLUMN_NAME || index; }
 
   claimHeaderFields = signal<any[]>([
   ...CLAIM_HEADER_FIELDS
@@ -112,7 +112,8 @@ classDesc: string = '';
   constructor(
     private menuService: MenuService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private msgService: GlobalMessageService
   ) {
     super();
   }
@@ -190,7 +191,7 @@ saveRow(index: number): void {
     });
 
   if (missing.length > 0) {
-    alert('Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
+    this.msgService.show('error', 'Validation Error', 'Please fill mandatory fields: ' + missing.map(f => f.FIELD_PROMPT).join(', '));
     return;
   }
 

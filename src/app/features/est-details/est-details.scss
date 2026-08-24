@@ -1,8 +1,11 @@
 /* Layout and styles moved to global styles.css for consistency and responsiveness */
 /* ─── Header: back left, title centered, add-row right ──────── */
 .est-header {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   position: relative;
+  margin-bottom: 1.5rem;
 }
 
 .est-title {
@@ -10,44 +13,56 @@
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  font-size: 16px;               // was 18px
-  font-weight: 700;
-  color: var(--text-main);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main, #333);
 }
 
-/* ─── Flatten the card — no shadow, no hover lift ────────────── */
+/* ─── Flatten the card & enhance UX ────────────── */
 .table-card {
-  box-shadow: none;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  transform: none !important;
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border-light, #eaecf0);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .table-card:hover {
-  box-shadow: none;
-  transform: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-color: #d0d5dd;
 }
 
-/* ─── Flat white table header (no blue gradient) ─────────────── */
+/* ─── Table Header (Clean, Modern, Premium) ─────────────── */
+.risk-grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
 .risk-grid th {
-  background: var(--bg-surface) !important;
-  color: var(--text-muted) !important;
-  font-size: 10px;               // was 11px
-  font-weight: 700;
+  background: #f9fafb !important;
+  color: #475467 !important;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  padding: 11px 13px;            // was 14px 16px
-  border: none;
-  border-bottom: 1px solid var(--border-light) !important;
-  box-shadow: none;
-  position: static;
+  letter-spacing: 0.05em;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light, #eaecf0) !important;
+  text-align: left;
 }
 
-.risk-grid th:first-child,
+.risk-grid th:first-child {
+  border-top-left-radius: 8px;
+}
+
 .risk-grid th:last-child {
-  border-radius: 0;
+  border-top-right-radius: 8px;
+  text-align: right;
 }
 
+/* ─── Disabled & Readonly States ─────────────── */
 input:disabled,
 input[readonly],
 ::ng-deep .p-select.p-disabled,
@@ -56,9 +71,9 @@ input[readonly],
 ::ng-deep .p-inputtext[readonly],
 ::ng-deep .p-datepicker.p-disabled input,
 ::ng-deep .p-datepicker input:disabled {
-  background: #d1d5db !important;
-  color: #4b5563 !important;
-  border-color: #9ca3af !important;
+  background: #f2f4f7 !important;
+  color: #667085 !important;
+  border-color: #e4e7ec !important;
   cursor: not-allowed !important;
   opacity: 1 !important;
 }
@@ -69,51 +84,86 @@ input[readonly],
   opacity: 0.6;
 }
 
-/* ─── Rows: flat, no slide/shadow hover ──────────────────────── */
+/* ─── Rows: Soft hover effect ──────────────────────── */
 .risk-grid td {
-  padding: 11px 13px;            // was 14px 16px
-  border-bottom: 1px solid var(--border-light);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light, #eaecf0);
+  vertical-align: middle;
+  transition: background-color 0.2s ease;
 }
 
-.risk-grid tbody tr:hover {
-  background: var(--bg-hover);
-  transform: none;
-  box-shadow: none;
+.risk-grid tbody tr:hover td {
+  background-color: #fcfcfd;
 }
 
-.risk-grid tbody tr:nth-child(even) {
-  background: transparent;
+.risk-grid tbody tr:last-child td {
+  border-bottom: none;
 }
 
-/* ─── Pill-style inputs — light blue, no border, rounded ─────── */
-.risk-grid input {
-  background: var(--color-accent-light) !important;
-  border: none !important;
-  border-radius: 7px;            // was 8px
-  padding: 6px 10px;             // was 8px 12px
-  font-size: 12px;               // was 13px
-  color: var(--text-main);
+/* ─── Modern Inputs — sleek borders, focus rings ─────── */
+.risk-grid input,
+::ng-deep .p-inputtext,
+::ng-deep .p-select {
+  background: #ffffff !important;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #101828;
   width: 100%;
+  transition: all 0.2s ease;
 }
 
-.risk-grid input:disabled {
-  opacity: 1;
-  color: var(--text-secondary);
+.risk-grid input:focus,
+::ng-deep .p-inputtext:focus,
+::ng-deep .p-select:focus {
+  border-color: var(--color-primary-mid, #0056b3) !important;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
+  outline: none;
 }
 
-.risk-grid input:focus {
-  box-shadow: 0 0 0 2px var(--color-primary-mid);
-  transform: none;
-  background: var(--color-accent-light) !important;
-}
-
-/* actions column — muted dash-like look for empty state */
+/* ─── Actions Buttons ─────────────── */
 .risk-grid td:last-child {
-  text-align: center;
-  color: var(--text-lighter);
+  text-align: right;
+  white-space: nowrap;
 }
 
 .more-btn,
 .p-button-text {
-  color: var(--text-muted) !important;
+  color: #667085 !important;
+  transition: color 0.2s ease, background-color 0.2s ease !important;
+}
+
+.risk-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+}
+
+::ng-deep button.more-btn.p-button,
+::ng-deep button.p-button-text {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #475467 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+::ng-deep button.more-btn.p-button:hover,
+::ng-deep button.p-button-text:hover {
+  background: #f2f4f7 !important;
+  color: #101828 !important;
+}
+
+/* Action button variations */
+::ng-deep .p-button-rounded.pi-save {
+  color: #027a48 !important; /* Success color for save */
+}
+::ng-deep .p-button-rounded.pi-save:hover {
+  background: #ecfdf3 !important;
+  color: #027a48 !important;
 }

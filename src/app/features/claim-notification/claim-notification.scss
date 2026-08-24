@@ -16,28 +16,28 @@
 }
 
 .chip.highlight {
-  .chip-value {
-    display: inline-block;
-    background-color: white;
-    min-width: 200px;   // fixed width regardless of content
-    min-height: 36px;   // fixed height when empty
-  }
+    .chip-value {
+        display: inline-block;
+        background-color: white;
+        min-width: 200px; // fixed width regardless of content
+        min-height: 36px; // fixed height when empty
+    }
 }
 
 
 .date-error-popup {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #dc2626;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 500;
-  z-index: 9999;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #dc2626;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 
@@ -49,46 +49,47 @@
     font-size: 16px; // increased base font size
 
     .form-field.field-disabled {
-    input,
-    .p-inputtext,
-    textarea {
-      background-color: #f0f0f0 !important;
-      color: #888 !important;
-      cursor: not-allowed;
-      opacity: 1;
-    }
 
-    ::ng-deep .p-select {
-      background-color: #f0f0f0 !important;
-      opacity: 1 !important;
+        input,
+        .p-inputtext,
+        textarea {
+            background-color: #f0f0f0 !important;
+            color: #888 !important;
+            cursor: not-allowed;
+            opacity: 1;
+        }
 
-      .p-select-label {
-        color: #888 !important;
-      }
-    }
+        ::ng-deep .p-select {
+            background-color: #f0f0f0 !important;
+            opacity: 1 !important;
 
-    ::ng-deep .p-datepicker input {
-      background-color: #f0f0f0 !important;
-      color: #888 !important;
-      cursor: not-allowed;
-    }
+            .p-select-label {
+                color: #888 !important;
+            }
+        }
 
-    &.checkbox-field .checkbox-label span {
-      color: #888;
-    }
+        ::ng-deep .p-datepicker input {
+            background-color: #f0f0f0 !important;
+            color: #888 !important;
+            cursor: not-allowed;
+        }
 
-    label {
-      color: #999; // optionally grey the field label too
+        &.checkbox-field .checkbox-label span {
+            color: #888;
+        }
+
+        label {
+            color: #999; // optionally grey the field label too
+        }
     }
-  }
 }
 
 
 .field-hint {
-  color: red;   // amber warning tone, adjust to your theme
-  font-size: 0.75rem;
-  margin-top: 2px;
-  display: block;
+    color: red; // amber warning tone, adjust to your theme
+    font-size: 0.75rem;
+    margin-top: 2px;
+    display: block;
 }
 
 

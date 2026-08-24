@@ -25,8 +25,17 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   showMoreDialog = signal(false);
   activeRowIndex = signal<number | null>(null);
 
+  trackByIndex(index: number, item: any): number { return index; }
+  trackByColName(index: number, col: any): string | number { return col?.COLUMN_NAME || index; }
+
+
   lovMap = signal<{ [fieldName: string]: any }>({});
   dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
+
+  polSysId: number | null = null;   // ADD
+  endIdx: number = 0;               
+
+  
 
   clmapSysId: number | null = null;
   clmSysId: number | null = null;
@@ -48,6 +57,8 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
 
     this.clmapSysId = Number(this.route.snapshot.queryParamMap.get('clmapSysId')) || null;
     this.clmSysId = Number(this.route.snapshot.queryParamMap.get('sysId')) || null;
+    this.polSysId = Number(this.route.snapshot.queryParamMap.get('polSysId')) || null;
+this.endIdx = Number(this.route.snapshot.queryParamMap.get('endIdx')) || 0;
     this.crUid = this.route.snapshot.queryParamMap.get('crUid') || 'ADMIN';
     const headerData = sessionStorage.getItem('claimHeaderData');   // ADD
     if (headerData) {                                                // ADD
@@ -109,19 +120,16 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
 
 
   addRow(): void {
-    this.gridRows.update(rows => [...rows, { CE_CLMAP_SYS_ID: this.clmapSysId, CE_DT: new Date() }]);
-    // was: [...rows, { CE_CLMAP_SYS_ID: this.clmapSysId }]
-  }
-
-  private normalizeRow(entry: any): any {
-    const row = { ...entry };
-    this.tableColumns().forEach(col => {
-      const inputType = this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE);
-      if (inputType === 'date' && row[col.COLUMN_NAME]) {
-        row[col.COLUMN_NAME] = new Date(row[col.COLUMN_NAME]);
+    this.gridRows.update(rows => [
+      ...rows, 
+      { 
+        CE_CLMAP_SYS_ID: this.clmapSysId, 
+        CE_CLM_SYS_ID: this.clmSysId, 
+        CE_DT: new Date(),
+        CE_CR_UID: this.crUid,
+        CE_CURR_CODE: 'USD'
       }
-    });
-    return row;
+    ]);
   }
 
 
@@ -167,6 +175,12 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
       return;
     }
 
+    // ADD — need policy sys id / end idx to call FC/LC api
+    if (!this.polSysId) {
+      this.msgService.show('error', 'Missing Data', 'Policy details are missing. Please select a risk row with a policy.');
+      return;
+    }
+
     this.tableColumns().forEach(col => {
       if (this.getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE) === 'checkbox') {
         row[col.COLUMN_NAME] = row[col.COLUMN_NAME] ? '1' : '0';
@@ -177,28 +191,52 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
       }
     });
 
-    const request = row.CE_SYS_ID
-      ? this.menuService.updateEstDetail(row)
-      : this.menuService.saveEstimation(row, this.clmapSysId, this.clmSysId, this.crUid);
+    // ADD — fetch FC/LC values before saving, then merge into row and proceed
+    const amtFc = parseFloat(row.CE_AMT_FC) || 0;
+    const currCode = row.CE_CURR_CODE || 'USD';
 
-    request.pipe(takeUntil(this.destroy$)).subscribe({
-      next: (res: any) => {
-        // Update the row with returned data (e.g. CE_SYS_ID) so subsequent saves are updates
-        const savedData = res?.data?.data || res?.data || res;
-        if (savedData?.CE_SYS_ID) {
-          this.gridRows.update(rows => {
-            const copy = [...rows];
-            copy[index] = { ...copy[index], CE_SYS_ID: savedData.CE_SYS_ID };
-            return copy;
+    this.menuService.getFCandLCValues(
+      this.polSysId,
+      this.endIdx ?? 0,
+      0,
+      currCode,
+      'B',
+      amtFc
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (fcLc: any) => {
+          row.CE_AMT_LC = fcLc?.out_M_AMT_LC_1;
+          row.CE_CURR_RATE = fcLc?.out_M_CURR_RATE_1;
+
+          const request = row.CE_SYS_ID
+            ? this.menuService.updateEstDetail(row)
+            : this.menuService.saveEstimation(row, this.clmapSysId!, this.clmSysId!, this.crUid);
+
+          request.pipe(takeUntil(this.destroy$)).subscribe({
+            next: (res: any) => {
+              // Update the row with returned data (e.g. CE_SYS_ID) so subsequent saves are updates
+              const savedData = res?.data?.data || res?.data || res;
+              if (savedData?.CE_SYS_ID) {
+                this.gridRows.update(rows => {
+                  const copy = [...rows];
+                  copy[index] = { ...copy[index], CE_SYS_ID: savedData.CE_SYS_ID };
+                  return copy;
+                });
+              }
+              this.msgService.show('success', 'Success', 'Estimation row saved successfully');
+            },
+            error: (err) => {
+              console.error('Error saving estimation row', err);
+              this.msgService.show('error', 'Error', 'Failed to save estimation row. Please try again.');
+            }
           });
+        },
+        error: (err) => {
+          console.error('Error fetching FC/LC values', err);
+          this.msgService.show('error', 'Error', 'Failed to fetch currency conversion values. Please try again.');
         }
-        this.msgService.show('success', 'Success', 'Estimation row saved successfully');
-      },
-      error: (err) => {
-        console.error('Error saving estimation row', err);
-        this.msgService.show('error', 'Error', 'Failed to save estimation row. Please try again.');
-      }
-    });
+      });
   }
 
   isLovField(columnName: string): boolean {

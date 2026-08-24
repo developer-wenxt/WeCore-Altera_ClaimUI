@@ -365,7 +365,14 @@ textarea:disabled,
 ::ng-deep .p-inputtext:disabled,
 ::ng-deep .p-inputtext:not(.p-datepicker input)[readonly],
 ::ng-deep .p-datepicker.p-disabled input,
-::ng-deep .p-datepicker input:disabled {
+::ng-deep .p-datepicker input:disabled,
+.field-disabled input,
+.field-disabled textarea,
+.field-disabled select,
+::ng-deep .field-disabled .p-select,
+::ng-deep .field-disabled .p-select .p-select-label,
+::ng-deep .field-disabled .p-datepicker input,
+::ng-deep .field-disabled .p-inputtext {
   background: #e5e7eb !important;
   color: #6b7280 !important;
   border: 1px solid #d1d5db !important;
@@ -544,7 +551,7 @@ textarea:focus {
   white-space: nowrap;
   overflow: visible;
   max-width: none;
-  width: 72px;
+  width: 110px;
   text-align: center;
 }
 

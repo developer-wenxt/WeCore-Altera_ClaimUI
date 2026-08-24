@@ -108,8 +108,8 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
-  getRiskDetailsByClaim(clmSysId: number) {
-    return this.http.get(`${this.baseUrl}/pgitClmApplPolicy/getById?CLMAP_CLM_SYS_ID=${clmSysId}`);
+  getRiskDetailsByClaim(clmapSysId: number) {
+    return this.http.get(`${this.baseUrl}/pgitClmApplPolicy/?CLMAP_CLM_SYS_ID=${clmapSysId}`);
   }
 
   getRiskDetailFields(): Observable<FieldConfig[]> {
@@ -152,6 +152,13 @@ export class MenuService {
     return this.http.get<any>(`${this.baseUrl}/pgitClmIntimation`)
       .pipe(map(response => response.data.data));
   }
+
+
+  getFCandLCValues(polSysId: number, endIdx: number, endSrNo: number, currCode: string, currRateType: string, amtFc: number): Observable<any> {
+  const url = `${this.baseUrl}/FCandLCvalues?M_POL_SYS_ID=${polSysId}&M_END_NO_IDX=${endIdx}&M_END_SR_NO=${endSrNo}&M_CURR_CODE=${currCode}&M_CURR_RATE_TYP=${currRateType}&M_AMT_FC=${amtFc}`;
+  return this.http.get<any>(url)
+    .pipe(map(response => response.data.data));
+}
 
 
   getClaimIntimationById(intmNo: string): Observable<any> {
