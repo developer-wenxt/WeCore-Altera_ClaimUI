@@ -95,6 +95,10 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
       .subscribe({
         next: (res) => {
           const visible = getVisibleFields(res);
+          const notifModeField = visible.find(f => f.COLUMN_NAME === 'CI_INTM_MODE'); // CHANGE to actual column name
+      if (notifModeField) {
+        notifModeField.MANDATORY = 1;
+      }
           this.fields.set(visible);
           console.log('DATE FIELDS:', this.fields().filter(f => this.getInputType(f.SOURCE_DESIGN_TYPE, f.DATA_TYPE) === 'date').map(f => f.COLUMN_NAME));
           this.loading.set(false);
@@ -247,6 +251,29 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
       });
   }
 
+
+  onPolicyNoSelect(polNo: string): void {
+  if (!polNo) return;
+
+  this.menuService.getPolicyData(polNo)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (res: any) => {
+        // getPolicyData already unwraps to response.data.data, which is an array
+        const policy = Array.isArray(res) ? res[0] : res;
+        if (!policy) return;
+
+        const assrCode = policy.POL_ASSR_CODE ?? '';
+        const assrName = policy.POL_ASSR_NAME ?? '';
+
+        // CHANGE 'CI_ASSR_NAME' below to your actual Insured Name column name
+        this.formData['CI_ASSR_NAME'] = `${assrCode} - ${assrName}`;
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error fetching policy data for insured name', err)
+    });
+}
 
   isLovField(columnName: string): boolean {
     if (this.forceTextFields.includes(columnName)) return false;

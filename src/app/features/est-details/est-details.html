@@ -3,7 +3,7 @@
     <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
     <h2 class="est-title">Estimation Details</h2>
     <div class="header-actions">
-      <button pButton label="+ Add Row" (click)="addRow()" class="add-row-btn"></button>
+      <button *ngIf="!isViewMode" pButton label="+ Add Row" (click)="addRow()" class="add-row-btn"></button>
     </div>
   </div>
 
@@ -45,20 +45,20 @@
             <ng-template #normalEstSwitch>
               <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
                 <input *ngSwitchCase="'checkbox'" type="checkbox" [(ngModel)]="row[col.COLUMN_NAME]"
-                  [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col)" />
+                  [name]="col.COLUMN_NAME + i" [disabled]="!isFieldEditable(col) || isViewMode" />
                 <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
                   dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
-                  [disabled]="!isFieldEditable(col)"></p-datepicker>
+                  [disabled]="!isFieldEditable(col) || isViewMode" appendTo="body"></p-datepicker>
                 <ng-container *ngSwitchDefault>
                   <p-select *ngIf="isLovField(col.COLUMN_NAME); else textInput"
                     [options]="getDropdownOptions(col.COLUMN_NAME)" [(ngModel)]="row[col.COLUMN_NAME]"
                     optionLabel="label" optionValue="value" [name]="col.COLUMN_NAME + i"
-                    [disabled]="!isFieldEditable(col)" placeholder="-- Select --" appendTo="body"
+                    [disabled]="!isFieldEditable(col) || isViewMode" placeholder="-- Select --" appendTo="body"
                     [style]="{'width':'100%'}">
                   </p-select>
                   <ng-template #textInput>
                     <input pInputText type="text" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
-                      [disabled]="!isFieldEditable(col)" />
+                      [disabled]="!isFieldEditable(col) || isViewMode" />
                   </ng-template>
                 </ng-container>
               </ng-container>
@@ -66,7 +66,7 @@
           </td>
 
           <td *ngIf="extraColumns.length > 0">
-            <button pButton icon="pi pi-save" class="p-button-text p-button-rounded" (click)="saveRow(i)"></button>
+            <button *ngIf="!isViewMode" pButton icon="pi pi-save" class="p-button-text p-button-rounded" (click)="saveRow(i)"></button>
             <button pButton label="More" icon="pi pi-external-link" (click)="openMoreDialog(i)"
               class="more-btn"></button>
           </td>
@@ -94,20 +94,20 @@
           <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
             <input *ngSwitchCase="'checkbox'" type="checkbox"
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME"
-              [disabled]="!isFieldEditable(col)" />
+              [disabled]="!isFieldEditable(col) || isViewMode" />
             <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]"
               [name]="'extra_' + col.COLUMN_NAME" dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24"
-              [showIcon]="true" [readonlyInput]="true" [disabled]="!isFieldEditable(col)"></p-datepicker>
+              [showIcon]="true" [readonlyInput]="true" [disabled]="!isFieldEditable(col) || isViewMode" appendTo="body"></p-datepicker>
             <ng-container *ngSwitchDefault>
               <p-select *ngIf="isLovField(col.COLUMN_NAME); else extraTextInput"
                 [options]="getDropdownOptions(col.COLUMN_NAME)"
                 [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" optionLabel="label" optionValue="value"
-                [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" placeholder="-- Select --"
+                [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col) || isViewMode" placeholder="-- Select --"
                 appendTo="body" [style]="{'width':'100%'}">
               </p-select>
               <ng-template #extraTextInput>
                 <input pInputText type="text" [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]"
-                  [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col)" />
+                  [name]="'extra_' + col.COLUMN_NAME" [disabled]="!isFieldEditable(col) || isViewMode" />
               </ng-template>
             </ng-container>
           </ng-container>

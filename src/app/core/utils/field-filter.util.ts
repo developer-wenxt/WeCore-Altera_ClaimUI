@@ -60,7 +60,7 @@ export function isFieldEditable(field: FieldConfig): boolean {
 }  
 
 export function isFieldEditableIntimation(field: FieldConfig): boolean {
-  return field.UPDATE_YN === 2 ;
+  return field.UPDATE_YN === 1 ;
 }  
 
 

@@ -500,6 +500,7 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
   onSubmit(): void {
     const missing = this.fields()
       .filter(f => f.MANDATORY === 1)
+      .filter(f => f.COLUMN_NAME !== 'CLM_INTM_NO') 
       .filter(f => this.getInputType(f.SOURCE_DESIGN_TYPE, f.DATA_TYPE) !== 'checkbox')
       .filter(f => {
         const v = this.formData[f.COLUMN_NAME];

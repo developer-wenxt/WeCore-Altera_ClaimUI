@@ -12,7 +12,10 @@
 </div>
   <div class="chip"><span class="chip-label">Policy No</span><span class="chip-value">{{ polNo || 'null' }}</span>
   </div>
-  
+  <div class="chip">
+    <span class="chip-label">Customer</span>
+    <span class="chip-value">{{ custCode || 'null' }}{{ custDesc ? ' - ' + custDesc : '' }}</span>
+  </div>
 </div>
   <div class="table-card">
     <div class="page-header settlement-header">
@@ -35,7 +38,7 @@
           [(ngModel)]="claimHeaderData()[f.COLUMN_NAME]"
           [name]="f.COLUMN_NAME"
           dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
-          styleClass="chip-input"></p-datepicker>
+          styleClass="chip-input" appendTo="body"></p-datepicker>
 
         <label *ngIf="f.INPUT_TYPE === 'checkbox'" class="chip-checkbox-label">
           <input type="checkbox"
@@ -55,11 +58,12 @@
       <h2>Risk Details</h2>
     </div>
     <div *ngIf="riskLoading()" class="state-msg">Loading risk table...</div>
+    <div class="risk-table-wrapper">
     <table *ngIf="!riskLoading()" class="risk-grid">
       <thead>
         <tr>
           <th>#</th>
-          <th *ngFor="let col of extraColumns; trackBy: trackByColName">
+          <th *ngFor="let col of riskTableColumns(); trackBy: trackByColName">
   {{ col.FIELD_PROMPT }}
   <span class="required" *ngIf="col.MANDATORY === 1">*</span>
 </th>
@@ -74,7 +78,7 @@
                 [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" disabled />
               <p-datepicker *ngSwitchCase="'date'" [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i"
                 dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
-                [disabled]="true"></p-datepicker>
+                [disabled]="true" appendTo="body"></p-datepicker>
               <input *ngSwitchDefault type="text"
                 [ngModel]="row[col.COLUMN_NAME]" [name]="'risk_' + col.COLUMN_NAME + i" readonly disabled />
             </ng-container>
@@ -82,6 +86,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 
   <div class="table-card">
@@ -92,7 +97,8 @@
       </div>
     </div>
     <div *ngIf="loading()" class="state-msg">Loading table...</div>
-
+    
+    <div class="risk-table-wrapper">
     <table *ngIf="!loading()" class="risk-grid">
       <thead>
         <tr>
@@ -111,7 +117,7 @@
               <input *ngSwitchCase="'checkbox'" type="checkbox"
                 [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
               <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
-                dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"></p-datepicker>
+                dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true" appendTo="body"></p-datepicker>
               <input *ngSwitchDefault type="text"
                 [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i" />
             </ng-container>
@@ -121,10 +127,13 @@
           <td *ngIf="extraColumns.length > 0">
             <button pButton icon="pi pi-save" class="p-button-text p-button-rounded" (click)="saveRow(i)"></button>
             <button pButton label="More" icon="pi pi-external-link" (click)="openMoreDialog(i)" class="more-btn"></button>
+              <button pButton icon="pi pi-ellipsis-v" class="p-button-text p-button-rounded" (click)="openApproveDialog(i)"></button>
+
           </td>
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 </div>
 
@@ -147,7 +156,7 @@
             <input *ngSwitchCase="'checkbox'" type="checkbox"
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />
             <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME"
-              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"></p-datepicker>
+              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true" appendTo="body"></p-datepicker>
             <input *ngSwitchDefault type="text"
               [(ngModel)]="gridRows()[activeRowIndex()!][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" />
           </ng-container>
@@ -156,4 +165,69 @@
       </tr>
     </tbody>
   </table>
+</p-dialog>
+
+<!-- ADD — Generate Accounting Options popup -->
+<p-dialog [(visible)]="showApproveDialogValue" [modal]="true" [style]="{ width: '450px' }"
+  header="Generate Accounting Options">
+  <div class="approve-form">
+    <div class="form-field">
+      <label>Approval Date</label>
+      <p-datepicker [(ngModel)]="approveFormData.CS_APPR_DT" name="CS_APPR_DT"
+        dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true"
+        [readonlyInput]="false" appendTo="body"></p-datepicker>
+    </div>
+
+    <div class="form-field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_AC_YN" name="CS_GEN_CLM_AC_YN" />
+        <span>Generate Claim Account Y/N</span>
+      </label>
+    </div>
+
+    <div class="form-field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_COINS_AC_YN" name="CS_GEN_CLM_COINS_AC_YN" />
+        <span>Generate Coinsurance Account Y/N</span>
+      </label>
+    </div>
+
+    <div class="form-field checkbox-field">
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="approveFormData.CS_FINAL_YN" name="CS_FINAL_YN" />
+        <span>Claim Final Y/N</span>
+      </label>
+    </div>
+
+
+    <div class="form-field">
+  <label>Reason Code</label>
+ <p-select
+  [options]="reasonCodeOptions()"
+  [(ngModel)]="approveFormData.CLM_CLOSE_REASON_CODE"
+  name="CLM_CLOSE_REASON_CODE"
+  optionLabel="PC_DESC"
+  optionValue="PC_CODE"
+  appendTo="body"
+  [filter]="true"
+  placeholder="Select Reason Code">
+</p-select>
+</div>
+
+    <div class="form-field">
+  <label>Close Remarks</label>
+  <textarea
+    [(ngModel)]="approveFormData.CLM_CLOSE_REMARKS"
+    name="CLM_CLOSE_REMARKS"
+    maxlength="4000"
+    rows="4"
+    style="width: 100%; resize: vertical;">
+  </textarea>
+</div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="OK" (click)="onApproveConfirm()" class="p-button-primary"></button>
+    <button pButton label="Cancel" (click)="onApproveCancel()" class="p-button-secondary"></button>
+  </ng-template>
 </p-dialog>

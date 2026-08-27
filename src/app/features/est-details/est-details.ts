@@ -24,6 +24,7 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   getInputType = getInputType;
   showMoreDialog = signal(false);
   activeRowIndex = signal<number | null>(null);
+  isViewMode: boolean = false;
 
   trackByIndex(index: number, item: any): number { return index; }
   trackByColName(index: number, col: any): string | number { return col?.COLUMN_NAME || index; }
@@ -58,8 +59,10 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
     this.clmapSysId = Number(this.route.snapshot.queryParamMap.get('clmapSysId')) || null;
     this.clmSysId = Number(this.route.snapshot.queryParamMap.get('sysId')) || null;
     this.polSysId = Number(this.route.snapshot.queryParamMap.get('polSysId')) || null;
-this.endIdx = Number(this.route.snapshot.queryParamMap.get('endIdx')) || 0;
+    this.endIdx = Number(this.route.snapshot.queryParamMap.get('endIdx')) || 0;
     this.crUid = this.route.snapshot.queryParamMap.get('crUid') || 'ADMIN';
+    const mode = this.route.snapshot.queryParamMap.get('mode');
+    this.isViewMode = mode === 'view';
     const headerData = sessionStorage.getItem('claimHeaderData');   // ADD
     if (headerData) {                                                // ADD
       const parsed = JSON.parse(headerData);                         // ADD
@@ -106,9 +109,33 @@ this.endIdx = Number(this.route.snapshot.queryParamMap.get('endIdx')) || 0;
       .subscribe({
         next: (fields) => {
           const filtered = getEstDetailColumns(fields);
-          this.tableColumns.set(getEstDetailColumns(fields));
-          this.loading.set(false);
-          this.gridRows.set([{ CE_DT: new Date() }]);
+          this.tableColumns.set(filtered);
+          
+          if (this.clmapSysId) {
+            this.menuService.getEstDetailsByClmap(this.clmapSysId)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (res) => {
+                  if (res && res.length > 0) {
+                    res.forEach((row: any) => {
+                      if (row.CE_DT) row.CE_DT = new Date(row.CE_DT);
+                    });
+                    this.gridRows.set(res);
+                  } else {
+                    this.gridRows.set([{ CE_DT: new Date() }]);
+                  }
+                  this.loading.set(false);
+                },
+                error: (err) => {
+                  console.error('Error fetching estimation details', err);
+                  this.gridRows.set([{ CE_DT: new Date() }]);
+                  this.loading.set(false);
+                }
+              });
+          } else {
+            this.loading.set(false);
+            this.gridRows.set([{ CE_DT: new Date() }]);
+          }
 
         },
         error: (err) => {
@@ -194,6 +221,10 @@ this.endIdx = Number(this.route.snapshot.queryParamMap.get('endIdx')) || 0;
     // ADD — fetch FC/LC values before saving, then merge into row and proceed
     const amtFc = parseFloat(row.CE_AMT_FC) || 0;
     const currCode = row.CE_CURR_CODE || 'USD';
+//     CE_COMP_CODE   --  001
+// CE_DIVN_CODE   ---   104
+// CE_DEPT_CODE   ---  10
+ 
 
     this.menuService.getFCandLCValues(
       this.polSysId,
@@ -208,6 +239,10 @@ this.endIdx = Number(this.route.snapshot.queryParamMap.get('endIdx')) || 0;
         next: (fcLc: any) => {
           row.CE_AMT_LC = fcLc?.out_M_AMT_LC_1;
           row.CE_CURR_RATE = fcLc?.out_M_CURR_RATE_1;
+          row.CE_COMP_CODE = '001';
+          row.CE_DIVN_CODE=104;
+          row.CE_DEPT_CODE=10;
+          row.CE_PROD_CODE =2001;
 
           const request = row.CE_SYS_ID
             ? this.menuService.updateEstDetail(row)
@@ -223,6 +258,20 @@ this.endIdx = Number(this.route.snapshot.queryParamMap.get('endIdx')) || 0;
                   copy[index] = { ...copy[index], CE_SYS_ID: savedData.CE_SYS_ID };
                   return copy;
                 });
+
+                // ADD — trigger settlement creation using the just-saved CE_SYS_ID
+                const csDt = new Date().toISOString().slice(0, 10); // system date, YYYY-MM-DD
+                this.menuService.getSettlementCreation(
+                  savedData.CE_SYS_ID,
+                  this.clmSysId!,
+                  csDt,
+                  this.crUid
+                )
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe({
+                    next: () => console.log('Settlement creation triggered successfully'),
+                    error: (err) => console.error('Error triggering settlement creation', err)
+                  });
               }
               this.msgService.show('success', 'Success', 'Estimation row saved successfully');
             },

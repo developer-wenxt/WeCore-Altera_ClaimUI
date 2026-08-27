@@ -22,6 +22,8 @@ export class ClaimNotificationListComponent extends UnSubscriber implements OnIn
   loading = signal(true);
   searchTerm = '';
 
+   activeClassCode: string = '';
+
   constructor(
     private menuService: MenuService,
     private router: Router
@@ -30,6 +32,7 @@ export class ClaimNotificationListComponent extends UnSubscriber implements OnIn
   }
 
   ngOnInit(): void {
+     this.activeClassCode = this.menuItem?.CLASS_CODE || sessionStorage.getItem('claimClassCode') || '';
     this.menuService.getClaimIntimationList()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -56,6 +59,10 @@ export class ClaimNotificationListComponent extends UnSubscriber implements OnIn
 
   get filteredRecords() {
     let result = this.allRecords();
+    if (this.activeClassCode) {
+      result = result.filter(c => c.CLASS_CODE === this.activeClassCode);
+    }
+
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       result = result.filter(c =>

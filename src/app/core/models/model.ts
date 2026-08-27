@@ -11,6 +11,7 @@ export interface MenuItem {
   CLASS_DESC: string;
   CLM_TYPE: string;
   CLM_INTM_INST_CODE: string;
+  
 }
 
 export interface ClaimMenuItem {

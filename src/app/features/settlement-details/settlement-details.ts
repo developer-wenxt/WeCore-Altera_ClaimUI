@@ -82,6 +82,7 @@ export class SettlementDetailsComponent extends UnSubscriber implements OnInit {
   showMoreDialog = signal(false);           
   activeRowIndex = signal<number | null>(null);   
   getInputType = getInputType;
+  reasonCodeOptions = signal<any[]>([]);
 
   // Risk Details logic
   riskTableColumns = signal<FieldConfig[]>([]);
@@ -105,6 +106,20 @@ export class SettlementDetailsComponent extends UnSubscriber implements OnInit {
   prodCode: string = '';
 polNo: string = '';
 classDesc: string = '';
+custCode: string = '';
+custDesc: string = '';
+
+showApproveDialog = signal(false);
+approveRowIndex = signal<number | null>(null);
+
+approveFormData: any = {
+  CS_APPR_DT: new Date(),
+  CS_GEN_CLM_AC_YN: false,
+  CS_GEN_CLM_COINS_AC_YN: false,
+  CS_FINAL_YN: false,
+  CLM_CLOSE_REASON_CODE: '',
+  CLM_CLOSE_REMARKS: ''
+};
 
 
 
@@ -119,6 +134,12 @@ classDesc: string = '';
   }
 
  ngOnInit(): void {
+  this.menuService.getDropdownValues('PGIT0010', 'PGIT_CLM_SETL', 'CLM_CLOSE_REASON_CODE')
+  .pipe(takeUntil(this.destroy$))
+  .subscribe({
+    next: (opts) => this.reasonCodeOptions.set(opts || []),
+    error: (err) => console.error('Error loading reason code options', err)
+  });
   const headerData = sessionStorage.getItem('claimHeaderData');
   if (headerData) {
     const parsed = JSON.parse(headerData);
@@ -178,6 +199,22 @@ classDesc: string = '';
     });
 }
 
+
+// openApproveDialog() stays simple — no API call here anymore:
+openApproveDialog(index: number): void {
+  this.approveRowIndex.set(index);
+  const row = this.gridRows()[index] || {};
+  this.approveFormData = {
+    CS_APPR_DT: row.CS_APPR_DT ? new Date(row.CS_APPR_DT) : new Date(),
+    CS_GEN_CLM_AC_YN: row.CS_GEN_CLM_AC_YN === '1' || row.CS_GEN_CLM_AC_YN === true,
+    CS_GEN_CLM_COINS_AC_YN: row.CS_GEN_CLM_COINS_AC_YN === '1' || row.CS_GEN_CLM_COINS_AC_YN === true,
+    CS_FINAL_YN: row.CS_FINAL_YN === '1' || row.CS_FINAL_YN === true,
+    CLM_CLOSE_REASON_CODE: row.CLM_CLOSE_REASON_CODE || '',
+    CLM_CLOSE_REMARKS: row.CLM_CLOSE_REMARKS || ''
+  };
+  this.showApproveDialog.set(true);
+}
+
 saveRow(index: number): void {
   const row = { ...this.gridRows()[index] };
   row.CS_CLMAP_SYS_ID = this.clmapSysId;
@@ -201,7 +238,7 @@ saveRow(index: number): void {
     }
   });
 
-  this.menuService.saveSettlementDetail(row)
+  this.menuService.saveSettlementDetail(row, row.CS_SYS_ID)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: () => console.log('Settlement row saved successfully'),
@@ -212,30 +249,74 @@ saveRow(index: number): void {
 
 
 private loadSettlementRows(): void {
-  if (!this.clmapSysId) {           // CHANGED
+  console.log('loadSettlementRows called, clmapSysId =', this.clmapSysId);
+  if (!this.clmapSysId) {
     this.loading.set(false);
     return;
   }
 
-  this.menuService.getSettlementDetailsByClaim(this.clmapSysId)   // CHANGED
+  // First fetch estimation to get CE_SYS_ID
+  this.menuService.getEstDetailsByClmap(this.clmapSysId)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: (res: any) => {
-        console.log('Settlement Response:', res);
+      next: (estRes: any) => {
+        const estData = estRes && estRes.length > 0 ? estRes[0] : null;
+        const ceSysId = estData ? estData.CE_SYS_ID : null;
+        
+        if (estData && estData.CE_CUST_CODE) {
+          this.custCode = estData.CE_CUST_CODE;
+          this.menuService.getDropdownValues('PGIT8000', 'PGIT_CLM_EST', 'CE_CUST_CODE')
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (values: any[]) => {
+                if (values && values.length) {
+                  const row = values.find(v => {
+                    const keys = Object.keys(v);
+                    return v[keys[0]] === this.custCode;
+                  });
+                  if (row) {
+                    const keys = Object.keys(row);
+                    this.custDesc = row[keys[1]] || '';
+                  }
+                }
+              }
+            });
+        }
 
-        const dataObj = res?.data?.data || {};
-        const sortedKeys = Object.keys(dataObj).sort((a, b) => Number(a) - Number(b));
+        if (!ceSysId) {
+          console.warn('No estimation found for this risk row. Cannot load settlement.');
+          this.gridRows.set([{}]);
+          this.loading.set(false);
+          return;
+        }
 
-        const rows: any[] = [];
-        sortedKeys.forEach(key => {
-          dataObj[key].forEach((entry: any) => rows.push(this.normalizeSettlementRow(entry)));
-        });
+        // Now fetch settlement using ceSysId
+        this.menuService.getSettlementDetailsByClaim(ceSysId)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (res: any) => {
+              console.log('Settlement raw response:', res); 
 
-        this.gridRows.set(rows.length ? rows : [{}]);
-        this.loading.set(false);
+              const dataObj = res?.data?.data || {};
+              const sortedKeys = Object.keys(dataObj).sort((a, b) => Number(a) - Number(b));
+
+              const rows: any[] = [];
+              sortedKeys.forEach(key => {
+                dataObj[key].forEach((entry: any) => rows.push(this.normalizeSettlementRow(entry)));
+              });
+
+              this.gridRows.set(rows.length ? rows : [{}]);
+              this.loading.set(false);
+            },
+            error: (err) => {
+              console.error('Error loading settlement rows:', err);
+              this.loading.set(false);
+            }
+          });
       },
       error: (err) => {
-        console.error('Error loading settlement rows:', err);
+        console.error('Error fetching estimation for settlement:', err);
+        this.gridRows.set([{}]);
         this.loading.set(false);
       }
     });
@@ -248,7 +329,7 @@ claimHeaderData = signal<any>(
  
 
 
-  private loadRiskRows(): void {
+private loadRiskRows(): void {
   if (!this.clmSysId) {
     this.riskLoading.set(false);
     return;
@@ -258,15 +339,29 @@ claimHeaderData = signal<any>(
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (res: any) => {
-        const dataObj = res?.data?.data || {};
-        const sortedKeys = Object.keys(dataObj).sort((a, b) => Number(a) - Number(b));
+        const rawData = res?.data?.data;
+        let rows: any[] = [];
 
-        const rows: any[] = [];
-        sortedKeys.forEach(key => {
-          dataObj[key].forEach((entry: any) => rows.push(this.normalizeRiskRow(entry)));   // CHANGED
-        });
+        // ADD — handle all shapes: flat array, object-of-arrays, or object-of-single-entries
+        if (Array.isArray(rawData)) {
+          rows = rawData.map((entry: any) => this.normalizeRiskRow(entry));
+        } else if (rawData && typeof rawData === 'object') {
+          Object.keys(rawData).forEach(key => {
+            const val = rawData[key];
+            if (Array.isArray(val)) {
+              val.forEach((entry: any) => rows.push(this.normalizeRiskRow(entry)));
+            } else if (val && typeof val === 'object') {
+              rows.push(this.normalizeRiskRow(val));   // ADD — single object per key, not an array
+            }
+          });
+        }
 
-        this.riskGridRows.set(rows.length ? rows : [{}]);
+        const filteredRows = this.clmapSysId
+          ? rows.filter(r => String(r.CLMAP_SYS_ID) === String(this.clmapSysId))
+          : rows;
+
+        this.riskGridRows.set(filteredRows.length ? filteredRows : [{}]);
+
         this.riskLoading.set(false);
       },
       error: (err) => {
@@ -325,6 +420,51 @@ addRow(): void {
     this.activeRowIndex.set(index);
     this.showMoreDialog.set(true);
   }
+
+
+
+get showApproveDialogValue(): boolean {
+  return this.showApproveDialog();
+}
+set showApproveDialogValue(value: boolean) {
+  this.showApproveDialog.set(value);
+}
+
+onApproveConfirm(): void {
+  const index = this.approveRowIndex();
+  if (index === null) return;
+
+  const payload = {
+    P_CLM_SYS_ID: this.clmSysId,
+    P_GEN_AC_YN: this.approveFormData.CS_GEN_CLM_AC_YN ? 'Y' : 'N',
+    P_APPR_UID: 'ADMIN',   // TODO: replace with actual logged-in user id if available
+    P_APPR_DT: this.approveFormData.CS_APPR_DT
+      ? new Date(this.approveFormData.CS_APPR_DT).toISOString().slice(0, 10)
+      : '',
+    P_CLM_FINAL_YN: this.approveFormData.CS_FINAL_YN ? 'Y' : 'N',
+    P_CLM_CLOSE_REASON_CODE: this.approveFormData.CLM_CLOSE_REASON_CODE || '',
+    P_CLM_CLOSE_REMARKS: this.approveFormData.CLM_CLOSE_REMARKS || ''
+  };
+
+  this.menuService.approveSettlement(payload)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: () => {
+        this.gridRows.update(rows => {
+          const copy = [...rows];
+          copy[index] = { ...copy[index], ...this.approveFormData };
+          return copy;
+        });
+        this.showApproveDialog.set(false);
+      },
+      error: (err) => console.error('Error approving settlement', err)
+    });
+}
+
+// ADD — Cancel button
+onApproveCancel(): void {
+  this.showApproveDialog.set(false);
+}
 
   goBack(): void {
     this.router.navigate(['/claim-registration'], {

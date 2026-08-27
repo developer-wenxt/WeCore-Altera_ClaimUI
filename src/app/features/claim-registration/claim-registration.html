@@ -1,9 +1,9 @@
 <div class="form-page">
   <div class="table-card">
-    <div class="page-header">
-      <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
-      <h2>Claim Registration</h2>
-    </div>
+   <div class="page-header">
+  <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
+  <h2>Claim Registration</h2>
+</div>
 
     <div class="info-chips">
       <div class="chip">
@@ -39,8 +39,8 @@
 
             <!-- Date -->
             <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
-              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
-              [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }">
+              dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="false"
+              [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }" appendTo="body">
             </p-datepicker>
 
             <!-- Number -->
@@ -54,7 +54,7 @@
   [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
   optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME" [disabled]="!canEditField(field)"
   [ngModelOptions]="{standalone: true}" (onShow)="onDropdownOpen(field.COLUMN_NAME)"
-(onChange)="field.COLUMN_NAME === 'CLM_INTM_NO' ? onIntmNoSelect($event.value) : (field.COLUMN_NAME === 'CLM_POL_NO' ? onPolicyNoSelect($event.value) : null)"  [filter]="true" filterBy="label" [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="-- Select --">
+(onChange)="field.COLUMN_NAME === 'CLM_INTM_NO' ? onIntmNoSelect($event.value) : (field.COLUMN_NAME === 'CLM_POL_NO' ? onPolicyNoSelect($event.value) : null)"  [filter]="true" filterBy="label" [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="-- Select --" appendTo="body">
 </p-select>
               <ng-template #textInput>
                 <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"
@@ -119,8 +119,8 @@
               <input *ngSwitchCase="'checkbox'" type="checkbox" [(ngModel)]="row[col.COLUMN_NAME]"
                 [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" />
               <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
-                dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
-                [disabled]="!canEditRiskField(col)"></p-datepicker>
+                dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="false"
+                [disabled]="!canEditRiskField(col)" appendTo="body"></p-datepicker>
               <input *ngSwitchCase="'number'" type="number" [(ngModel)]="row[col.COLUMN_NAME]"
                 [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" />
               <ng-container *ngSwitchDefault>
@@ -203,8 +203,8 @@
             <input *ngSwitchCase="'checkbox'" type="checkbox" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]"
               [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" />
             <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME"
-              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="true"
-              [disabled]="!canEditRiskField(col)"></p-datepicker>
+              dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="false"
+              [disabled]="!canEditRiskField(col)" appendTo="body"></p-datepicker>
             <input *ngSwitchCase="'number'" type="number" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]"
               [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" />
             <ng-container *ngSwitchDefault>

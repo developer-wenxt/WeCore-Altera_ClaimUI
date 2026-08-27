@@ -51,12 +51,12 @@
             </label>
 
             <!-- Date -->
-            <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
-              dateFormat="dd/mm/yy" [showTime]="true" hourFormat="24" [showIcon]="true"
-              [readonlyInput]="!canEditField(field)"
-              [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }"
-              (ngModelChange)="checkDateValidity()">
-            </p-datepicker>
+           <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
+  dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true"
+  [readonlyInput]="false"
+  [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }"
+  (ngModelChange)="checkDateValidity()">
+</p-datepicker>
 
             <!-- Number -->
             <input *ngSwitchCase="'number'" pInputText type="number" [attr.placeholder]="field.TOOL_TIP"
@@ -66,13 +66,15 @@
             <!-- Text / LOV dropdown -->
             <ng-container *ngSwitchDefault>
 
-              <p-select *ngIf="isLovField(field.COLUMN_NAME); else textInput"
-                [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
-                optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME"
-                [disabled]="!canEditField(field)" [ngModelOptions]="{standalone: true}"
-                (onShow)="field.COLUMN_NAME === 'CI_POL_NO' && onPolicyDropdownOpen()"
-                placeholder="-- Select --">
-              </p-select>
+             <p-select *ngIf="isLovField(field.COLUMN_NAME); else textInput"
+  [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
+  optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME"
+  [disabled]="!canEditField(field)" [ngModelOptions]="{standalone: true}"
+  (onShow)="field.COLUMN_NAME === 'CI_POL_NO' && onPolicyDropdownOpen()"
+  (onChange)="field.COLUMN_NAME === 'CI_POL_NO' ? onPolicyNoSelect($event.value) : null"
+  [filter]="true" filterBy="label"
+  placeholder="-- Select --">
+</p-select>
 
               <ng-template #textInput>
                 <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"

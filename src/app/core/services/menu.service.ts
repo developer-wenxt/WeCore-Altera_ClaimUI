@@ -104,9 +104,8 @@ export class MenuService {
 
 
   decodeToken(token: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/decodeToken`, { token })
-      .pipe(map(response => response.data.data));
-  }
+  return this.http.post<any>(`${environment.wecoreUrl}/crm/authentication/validateToken`, { token });
+}
 
   getRiskDetailsByClaim(clmapSysId: number) {
     return this.http.get(`${this.baseUrl}/pgitClmApplPolicy/?CLMAP_CLM_SYS_ID=${clmapSysId}`);
@@ -117,8 +116,9 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
-  getEstDetailsByClmap(clmapSysId: number) {
-    return this.http.get(`/api/pgitClmEst/getById?CE_CLMAP_SYS_ID=${clmapSysId}`);
+  getEstDetailsByClmap(clmapSysId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/pgitClmEst?CE_CLMAP_SYS_ID=${clmapSysId}`)
+      .pipe(map(response => response.data?.data || response.data || response));
   }
 
   getEstDetailFields(): Observable<FieldConfig[]> {
@@ -131,9 +131,12 @@ export class MenuService {
   }
 
 
-  saveSettlementDetail(row: any) {
-    return this.http.put(`${this.baseUrl}/pgitClmSetl`, row);
-  }
+  saveSettlementDetail(row: any, csSysId?: number) {
+  const url = csSysId
+    ? `${this.baseUrl}/pgitClmSetl/${csSysId}`   
+    : `${this.baseUrl}/pgitClmSetl`;
+  return this.http.put(url, row);
+}
 
   getSettlementFields(): Observable<FieldConfig[]> {
     return this.http.get<any>(`${this.baseUrl}/setField`)
@@ -265,5 +268,18 @@ export class MenuService {
     return this.http.get<any>(`${this.baseUrl}/riskDtlReg/cover?PRAIH_SYS_ID=${praihSysId}&PSECH_SYS_ID=${psechSysId}&POLH_SYS_ID=${polhSysId}&POLH_END_NO_IDX=${endIdx}`)
       .pipe(map(response => response.data.data)); // CHANGED
   }
+
+   getSettlementCreation(ceSysId: number, clmSysId: number, csDt: string, loginUserId: string): Observable<any> {
+  const url = `${this.baseUrl}/settlementCreation?P_CE_SYS_ID=${ceSysId}&P_CLM_SYS_ID=${clmSysId}&P_CS_DT=${csDt}&P_LOGIN_USER_ID=${loginUserId}`;
+  return this.http.get<any>(url)
+    .pipe(map(response => response.data.data));
+}
+
+
+
+approveSettlement(payload: any): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/settlementApproval`, payload);
+}
+
 
 }
