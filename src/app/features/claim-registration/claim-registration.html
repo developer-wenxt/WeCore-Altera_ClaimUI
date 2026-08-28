@@ -3,6 +3,9 @@
    <div class="page-header">
   <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
   <h2>Claim Registration</h2>
+  <div class="header-actions">
+    <button pButton label="Accounting" icon="pi pi-book" (click)="onAccountingClick()" class="primary-btn" [disabled]="!sysId"></button>
+  </div>
 </div>
 
     <div class="info-chips">
@@ -51,11 +54,12 @@
             <!-- Text / LOV dropdown -->
             <ng-container *ngSwitchDefault>
               <p-select *ngIf="isLovField(field.COLUMN_NAME); else textInput"
-  [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
-  optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME" [disabled]="!canEditField(field)"
-  [ngModelOptions]="{standalone: true}" (onShow)="onDropdownOpen(field.COLUMN_NAME)"
-(onChange)="field.COLUMN_NAME === 'CLM_INTM_NO' ? onIntmNoSelect($event.value) : (field.COLUMN_NAME === 'CLM_POL_NO' ? onPolicyNoSelect($event.value) : null)"  [filter]="true" filterBy="label" [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="-- Select --" appendTo="body">
-</p-select>
+                [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
+                optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME"
+                [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }" appendTo="body"
+                (onShow)="onDropdownOpen(field.COLUMN_NAME)"
+                (onChange)="field.COLUMN_NAME === 'CLM_INTM_NO' ? onIntmNoSelect($event.value) : (field.COLUMN_NAME === 'CLM_POL_NO' ? onPolicyNoSelect($event.value) : null)"  [filter]="true" filterBy="label" [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="-- Select --">
+              </p-select>
               <ng-template #textInput>
                 <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"
                   [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"

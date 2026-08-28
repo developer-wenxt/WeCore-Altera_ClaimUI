@@ -28,6 +28,8 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
   estRows = signal<any[]>([{}]);
   showEstDialog = signal(false);
 
+  classCode: string = '';
+
   maxRiskRowsAllowed = signal<number>(Infinity);
 
   riskTableColumns = signal<FieldConfig[]>([]);
@@ -71,6 +73,8 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
 
   ngOnInit(): void {
     const storedInstCode = sessionStorage.getItem('claimInstCode');
+      this.classCode = sessionStorage.getItem('claimClassCode') || '';
+
 
     this.isReadOnly = this.route.snapshot.queryParamMap.get('mode') === 'view';
     this.isEdit = this.route.snapshot.queryParamMap.get('mode') === 'edit';
@@ -94,7 +98,6 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
 
     this.rowMenuItems = [
       { label: 'Est Details', icon: 'pi pi-file', command: () => this.onEstDetailsClick() },
-      { label: 'Settlement Details', icon: 'pi pi-wallet', command: () => this.onSettlementDetailsClick() },
       { label: 'More Fields', icon: 'pi pi-external-link', command: () => this.openMoreRiskDialog() }
     ];
 
@@ -255,52 +258,72 @@ canEditRiskField(col: FieldConfig): boolean {
 }
 
 
- onDropdownOpen(columnName: string): void {
+onDropdownOpen(columnName: string): void {
   const lov = this.lovMap()[columnName];
   if (!lov) return;
 
- if (columnName === 'CLM_POL_NO') {
-  const lossDate = this.formData['CLM_LOSS_DT'];
-  const formattedDate = lossDate ? this.formatDate(lossDate) : '';
+  if (columnName === 'CLM_POL_NO') {
+    const lossDate = this.formData['CLM_LOSS_DT'];
+    const formattedDate = lossDate ? this.formatDate(lossDate) : '';
 
-  this.menuService.getDropdownValues(
-    lov.PLD_PROG_CODE,
-    lov.PLD_BLOCK_NAME,
-    lov.PLD_FIELD_NAME,
-    formattedDate   // CHANGED back — plain string, same as claim-notification
-  )
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (values) => {
-        const current = this.dropdownOptionsMap();
-        this.dropdownOptionsMap.set({ ...current, [columnName]: values });
-      },
-      error: (err) => console.error(`Error loading dropdown values for ${columnName}`, err)
-    });
-  return;
-}
+    this.menuService.getDropdownValues(
+      lov.PLD_PROG_CODE,
+      lov.PLD_BLOCK_NAME,
+      lov.PLD_FIELD_NAME,
+      formattedDate   // CHANGED back — plain string, same as claim-notification
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (values) => {
+          const current = this.dropdownOptionsMap();
+          this.dropdownOptionsMap.set({ ...current, [columnName]: values });
+        },
+        error: (err) => console.error(`Error loading dropdown values for ${columnName}`, err)
+      });
+    return;
+  }
 
   if (columnName === 'CLM_INTM_NO') {
- 
+
     const dsINTCode = sessionStorage.getItem('claimIntm_1DsCode') || '';
 
-  this.menuService.getIntmNoDropdownValues(
-    lov.PLD_PROG_CODE,
-    lov.PLD_BLOCK_NAME,
-    lov.PLD_FIELD_NAME,
-    'null',
-    dsINTCode
-  )
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (values) => {
-        const current = this.dropdownOptionsMap();
-        this.dropdownOptionsMap.set({ ...current, [columnName]: values });
-      },
-      error: (err) => console.error(`Error loading dropdown values for ${columnName}`, err)
-    });
-  return;
-}
+    this.menuService.getIntmNoDropdownValues(
+      lov.PLD_PROG_CODE,
+      lov.PLD_BLOCK_NAME,
+      lov.PLD_FIELD_NAME,
+      'null',
+      dsINTCode
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (values) => {
+          const current = this.dropdownOptionsMap();
+          this.dropdownOptionsMap.set({ ...current, [columnName]: values });
+        },
+        error: (err) => console.error(`Error loading dropdown values for ${columnName}`, err)
+      });
+    return;
+  }
+
+  // ADD — Nature of Loss & Cause of Loss, filtered by class code
+  if (columnName === 'CLM_LOSS_CODE' || columnName === 'CLM_CAUSE_LOSS') {
+    this.menuService.getDropdownValues(
+      lov.PLD_PROG_CODE,
+      lov.PLD_BLOCK_NAME,
+      lov.PLD_FIELD_NAME,
+      undefined,
+      this.classCode
+    )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (values) => {
+          const current = this.dropdownOptionsMap();
+          this.dropdownOptionsMap.set({ ...current, [columnName]: values });
+        },
+        error: (err) => console.error(`Error loading dropdown values for ${columnName}`, err)
+      });
+    return;
+  }
 
   // unchanged — every other field still uses the cache
   if (this.dropdownOptionsMap()[columnName]) return;
@@ -497,6 +520,13 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
     return updated;
   }
 
+
+  onAccountingClick(): void {
+  this.router.navigate(['/policy-accounting-entry'], {
+    queryParams: { clmSysId: this.sysId }
+  });
+}
+
   onSubmit(): void {
     const missing = this.fields()
       .filter(f => f.MANDATORY === 1)
@@ -666,18 +696,7 @@ onEstDetailsClick(): void {
     }
   }
 
-  onSettlementDetailsClick(): void {
-    const rows = this.riskGridRows();
-    const index = this.activeRowIndex;
-    const clmapSysId = index !== null ? rows[index]?.CLMAP_SYS_ID : null;
 
-    this.router.navigate(['/settlement-details'], {
-      queryParams: {
-        sysId: this.sysId,
-        clmapSysId: clmapSysId
-      }
-    });
-  }
 
   addRiskRow(): void {
     const newIndex = this.riskGridRows().length;

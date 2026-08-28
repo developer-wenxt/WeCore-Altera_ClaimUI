@@ -17,7 +17,7 @@
           <input type="text" placeholder="Search assured name, claim no, or policy no..." [(ngModel)]="searchTerm" />
         </span>
 
-        <p-select [options]="statusOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value"
+        <p-select [options]="statusOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value" appendTo="body"
           placeholder="All Statuses"></p-select>
       </div>
     </div>

@@ -94,13 +94,16 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
-  getDropdownValues(progCode: string, blockName: string, fieldName: string, lossDate?: string): Observable<any[]> {
-    let url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`;
-    if (lossDate) {
-      url += `&lossDt=${lossDate}`;
-    }
-    return this.http.get<any>(url).pipe(map(response => response.data.data.data));
+ getDropdownValues(progCode: string, blockName: string, fieldName: string, lossDate?: string, classCode?: string): Observable<any[]> {
+  let url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`;
+  if (lossDate) {
+    url += `&lossDt=${lossDate}`;
   }
+  if (classCode) {
+    url += `&classCode=${classCode}`;
+  }
+  return this.http.get<any>(url).pipe(map(response => response.data.data.data));
+}
 
 
   decodeToken(token: string): Observable<any> {
@@ -193,6 +196,12 @@ export class MenuService {
   createEstDetail(row: any) {
     return this.http.post(`${this.baseUrl}/pgitClmEst`, row);
   }
+
+
+  getPolicyAccountingEntries(clmSysId: number): Observable<any[]> {
+  return this.http.get<any>(`${this.baseUrl}/polAcntEntry?clmSysId=${clmSysId}`)
+    .pipe(map(response => response.data.data));
+}
 
   saveEstimation(rowData: any, clmapSysId: number, clmSysId: number, crUid: string): Observable<any> {
     const payload = {

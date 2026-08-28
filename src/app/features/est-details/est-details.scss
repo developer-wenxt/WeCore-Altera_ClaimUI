@@ -112,6 +112,16 @@ input[readonly],
   color: #101828;
   width: 100%;
   transition: all 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+::ng-deep .p-select .p-select-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }
 
 .risk-grid input:focus,
@@ -166,4 +176,75 @@ input[readonly],
 ::ng-deep .p-button-rounded.pi-save:hover {
   background: #ecfdf3 !important;
   color: #027a48 !important;
+}
+
+/* ─── 3-dot menu button ─────────────── */
+.actions-col {
+  text-align: right;
+  white-space: nowrap;
+  width: 48px;
+}
+
+::ng-deep button.est-dots-btn.p-button {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #475467 !important;
+  font-size: 14px !important;
+  padding: 6px 8px !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  min-width: unset !important;
+}
+
+::ng-deep button.est-dots-btn.p-button:hover {
+  background: #f2f4f7 !important;
+  color: #101828 !important;
+}
+
+.risk-grid input,
+::ng-deep .p-inputtext,
+::ng-deep .p-select {
+ 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+::ng-deep .p-select .p-select-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+/* ─── Widen ref no & provision date columns ─────────────── */
+.col-ce_ref_no,
+th.col-ce_ref_no {
+  min-width: 140px;
+}
+
+.col-provision_dt,
+th.col-provision_dt {
+  min-width: 190px;
+}
+
+.col-ce_ref_no input,
+.col-provision_dt ::ng-deep .p-datepicker input {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+  min-width: 100%;
+}
+
+::ng-deep .col-provision_dt .p-datepicker {
+  width: 100%;
+}
+
+
+
+.risk-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
 }

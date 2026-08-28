@@ -38,7 +38,8 @@
         <tr *ngFor="let row of gridRows(); let i = index; trackBy: trackByIndex">
           <td>{{ i + 1 }}</td>
 
-          <td *ngFor="let col of visibleColumns; trackBy: trackByColName">
+         <td *ngFor="let col of visibleColumns; trackBy: trackByColName"
+    [ngClass]="'col-' + col.COLUMN_NAME.toLowerCase()">
             <input *ngIf="col.COLUMN_NAME === 'CE_REF_NO'; else normalEstSwitch" pInputText type="text"
               [value]="getRefNo(i)" readonly />
 
@@ -65,15 +66,16 @@
             </ng-template>
           </td>
 
-          <td *ngIf="extraColumns.length > 0">
-            <button *ngIf="!isViewMode" pButton icon="pi pi-save" class="p-button-text p-button-rounded" (click)="saveRow(i)"></button>
-            <button pButton label="More" icon="pi pi-external-link" (click)="openMoreDialog(i)"
-              class="more-btn"></button>
+          <td *ngIf="extraColumns.length > 0" class="actions-col">
+            <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-text p-button-rounded est-dots-btn"
+              (click)="openEstRowMenu($event, estRowMenu, i)"></button>
           </td>
         </tr>
       </tbody>
     </table>
     </div>
+
+    <p-menu #estRowMenu [popup]="true" [model]="estRowMenuItems" appendTo="body"></p-menu>
   </div>
 </div>
 
@@ -82,7 +84,8 @@
   <table class="risk-grid" *ngIf="activeRowIndex() !== null">
     <thead>
       <tr>
-        <th *ngFor="let col of extraColumns; trackBy: trackByColName">
+        <th *ngFor="let col of visibleColumns; trackBy: trackByColName"
+    [ngClass]="'col-' + col.COLUMN_NAME.toLowerCase()">
           {{ col.FIELD_PROMPT }}
           <span class="required" *ngIf="col.MANDATORY === 1">*</span>
         </th>

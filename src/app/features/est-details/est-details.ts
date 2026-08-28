@@ -7,6 +7,7 @@ import { MenuService } from '../../core/services/menu.service';
 import { FieldConfig } from '../../core/models/model';
 import { SHARED_IMPORTS } from '../../core/shared/shared';
 import { getEstDetailColumns, getInputType, isFieldEditable } from '../../core/utils/field-filter.util';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-est-details',
@@ -25,6 +26,8 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   showMoreDialog = signal(false);
   activeRowIndex = signal<number | null>(null);
   isViewMode: boolean = false;
+  activeEstRowIndex: number | null = null;
+  estRowMenuItems: MenuItem[] = [];
 
   trackByIndex(index: number, item: any): number { return index; }
   trackByColName(index: number, col: any): string | number { return col?.COLUMN_NAME || index; }
@@ -70,6 +73,12 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
       this.polNo = parsed.CLM_POL_NO || '';                           // ADD
     }                                                                 // ADD
     this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
+
+    this.estRowMenuItems = [
+      { label: 'Save', icon: 'pi pi-save', command: () => { if (this.activeEstRowIndex !== null) this.saveRow(this.activeEstRowIndex); } },
+      { label: 'More Fields', icon: 'pi pi-external-link', command: () => { if (this.activeEstRowIndex !== null) this.openMoreDialog(this.activeEstRowIndex); } },
+      { label: 'Settlement Details', icon: 'pi pi-wallet', command: () => this.onSettlementDetailsClick() }
+    ];
 
     this.menuService.getLovFields('PGIT8000', 'PGIT_CLM_EST')
       .pipe(takeUntil(this.destroy$))
@@ -308,6 +317,23 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
 
   getRefNo(index: number): string {
     return 'REFER/' + String(index).padStart(4, '0');
+  }
+
+  openEstRowMenu(event: Event, menu: any, index: number): void {
+    this.activeEstRowIndex = index;
+    menu.toggle(event);
+  }
+
+  onSettlementDetailsClick(): void {
+    this.router.navigate(['/settlement-details'], {
+      queryParams: {
+        sysId: this.clmSysId,
+        clmapSysId: this.clmapSysId,
+        crUid: this.crUid,
+        polSysId: this.polSysId,
+        endIdx: this.endIdx
+      }
+    });
   }
 
   goBack(): void {

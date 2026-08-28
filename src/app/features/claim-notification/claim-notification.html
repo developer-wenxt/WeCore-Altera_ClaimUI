@@ -73,7 +73,7 @@
   (onShow)="field.COLUMN_NAME === 'CI_POL_NO' && onPolicyDropdownOpen()"
   (onChange)="field.COLUMN_NAME === 'CI_POL_NO' ? onPolicyNoSelect($event.value) : null"
   [filter]="true" filterBy="label"
-  placeholder="-- Select --">
+  placeholder="-- Select --" appendTo="body">
 </p-select>
 
               <ng-template #textInput>

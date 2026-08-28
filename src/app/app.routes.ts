@@ -6,8 +6,7 @@ import { EstDetailsComponent } from './features/est-details/est-details';
 import { SettlementDetailsComponent } from './features/settlement-details/settlement-details';
 import { ClaimListComponent } from './features/claim-list/claim-list';
 import { ClaimNotificationListComponent } from './features/claim-notification-list/claim-notification-list';
-
-
+import { PolicyAccountingEntryComponent } from './features/policy-accounting-entry/policy-accounting-entry';   // ADD
 
 export const routes: Routes = [
   { path: '', component: MenuComponent },
@@ -17,5 +16,6 @@ export const routes: Routes = [
   { path: 'est-details', component: EstDetailsComponent },
   { path: 'settlement-details', component: SettlementDetailsComponent },
   { path: 'claim-list/:classCode', component: ClaimListComponent },
-  { path: 'claim-notification-list', component: ClaimNotificationListComponent }
+  { path: 'claim-notification-list', component: ClaimNotificationListComponent },
+  { path: 'policy-accounting-entry', component: PolicyAccountingEntryComponent }   // ADD
 ];
