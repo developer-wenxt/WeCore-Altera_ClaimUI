@@ -177,34 +177,33 @@
     <div class="form-field">
       <label>Approval Date</label>
       <p-datepicker [(ngModel)]="approveFormData.CS_APPR_DT" name="CS_APPR_DT" dateFormat="dd-mm-yy" [showTime]="true"
-        hourFormat="24" [showIcon]="true" [readonlyInput]="false" appendTo="body"></p-datepicker>
+  hourFormat="24" [showIcon]="true" [readonlyInput]="false" appendTo="body"></p-datepicker>
     </div>
 
     <div class="form-field checkbox-field">
       <label class="checkbox-label">
-        <input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_AC_YN" name="CS_GEN_CLM_AC_YN" />
+<input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_AC_YN" name="CS_GEN_CLM_AC_YN" />
         <span>Generate Claim Account Y/N</span>
       </label>
     </div>
 
     <div class="form-field checkbox-field">
       <label class="checkbox-label">
-        <input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_COINS_AC_YN" name="CS_GEN_CLM_COINS_AC_YN" />
+<input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_COINS_AC_YN" name="CS_GEN_CLM_COINS_AC_YN" />
         <span>Generate Coinsurance Account Y/N</span>
       </label>
     </div>
 
     <div class="form-field checkbox-field">
       <label class="checkbox-label">
-        <input type="checkbox" [(ngModel)]="approveFormData.CS_FINAL_YN" name="CS_FINAL_YN" />
-        <span>Claim Final Y/N</span>
+<input type="checkbox" [(ngModel)]="approveFormData.CS_FINAL_YN" name="CS_FINAL_YN" />        <span>Claim Final Y/N</span>
       </label>
     </div>
 
 
     <div class="form-field">
       <label>Reason Code</label>
-      <p-select [options]="reasonCodeOptions()" [(ngModel)]="approveFormData.CLM_CLOSE_REASON_CODE"
+      <p-select [options]="reasonCodeOptions()" [disabled]="isReadOnly" [(ngModel)]="approveFormData.CLM_CLOSE_REASON_CODE"
         name="CLM_CLOSE_REASON_CODE" optionLabel="PC_DESC" optionValue="PC_CODE" appendTo="body" [filter]="true"
         placeholder="Select Reason Code">
       </p-select>
@@ -212,14 +211,14 @@
 
     <div class="form-field">
       <label>Close Remarks</label>
-      <textarea [(ngModel)]="approveFormData.CLM_CLOSE_REMARKS" name="CLM_CLOSE_REMARKS" maxlength="4000" rows="4"
+      <textarea [(ngModel)]="approveFormData.CLM_CLOSE_REMARKS" [readonly]="isReadOnly" name="CLM_CLOSE_REMARKS" maxlength="4000" rows="4"
         style="width: 100%; resize: vertical;">
   </textarea>
     </div>
   </div>
 
   <ng-template pTemplate="footer">
-    <button pButton label="OK" (click)="onApproveConfirm()" class="p-button-primary"></button>
+    <button *ngIf="!isReadOnly" pButton label="OK" (click)="onApproveConfirm()" class="p-button-primary"></button>
     <button pButton label="Cancel" (click)="onApproveCancel()" class="p-button-secondary"></button>
   </ng-template>
 </p-dialog>

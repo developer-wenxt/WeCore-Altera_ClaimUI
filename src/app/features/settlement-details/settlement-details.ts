@@ -146,6 +146,13 @@ dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
 
   ngOnInit(): void {
     this.isReadOnly = this.route.snapshot.queryParamMap.get('mode') === 'view';
+    this.rowMenuItems = this.isReadOnly   // ADD (move class-level array here)
+    ? [{ label: 'More', icon: 'pi pi-external-link', command: () => this.openMoreDialog(this.activeMenuRow!) }]
+    : [
+        { label: 'Save', icon: 'pi pi-save', command: () => this.saveRow(this.activeMenuRow!) },
+        { label: 'More', icon: 'pi pi-external-link', command: () => this.openMoreDialog(this.activeMenuRow!) },
+        { label: 'Approve', icon: 'pi pi-check', command: () => this.openApproveDialog(this.activeMenuRow!) }
+      ];
     this.menuService.getDropdownValues('PGIT0010', 'PGIT_CLM_SETL', 'CLM_CLOSE_REASON_CODE')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -280,6 +287,7 @@ getDropdownOptions(columnName: string): any[] {
   }
 
   saveRow(index: number): void {
+     if (this.isReadOnly) return; 
     const row = { ...this.gridRows()[index] };
     row.CS_CLMAP_SYS_ID = this.clmapSysId;
 
@@ -481,6 +489,7 @@ this.gridRows.set([{
   }
 
 addRow(): void {
+  if (this.isReadOnly) return; 
   this.gridRows.update(rows => [
     ...rows,
     {
@@ -521,6 +530,7 @@ addRow(): void {
   }
 
   onApproveConfirm(): void {
+     if (this.isReadOnly) return; 
     const index = this.approveRowIndex();
     if (index === null) return;
 
@@ -557,14 +567,15 @@ addRow(): void {
   }
 
   goBack(): void {
-    this.router.navigate(['/est-details'], {
-      queryParams: {
-        clmapSysId: this.clmapSysId,
-        sysId: this.clmSysId,
-        crUid: 'ADMIN',
-        polSysId: this.route.snapshot.queryParamMap.get('polSysId') || '',
-        endIdx: this.route.snapshot.queryParamMap.get('endIdx') || 0
-      }
-    });
-  }
+  this.router.navigate(['/est-details'], {
+    queryParams: {
+      clmapSysId: this.clmapSysId,
+      sysId: this.clmSysId,
+      crUid: 'ADMIN',
+      polSysId: this.route.snapshot.queryParamMap.get('polSysId') || '',
+      endIdx: this.route.snapshot.queryParamMap.get('endIdx') || 0,
+      mode: this.isReadOnly ? 'view' : 'edit'   // ADD
+    }
+  });
+}
 }

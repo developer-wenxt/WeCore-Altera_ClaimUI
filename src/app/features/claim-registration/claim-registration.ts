@@ -680,9 +680,10 @@ onEstDetailsClick(): void {
   const polSysId = index !== null ? rows[index]?.CLMAP_POL_SYS_ID : null;
   const endIdx = index !== null ? (rows[index]?.CLMAP_END_NO_IDX ?? 0) : 0;
 
-  this.router.navigate(['/est-details'], {
-    queryParams: { clmapSysId, sysId: this.sysId, crUid, polSysId, endIdx }
-  });
+ this.router.navigate(['/est-details'], {
+  queryParams: { clmapSysId, sysId: this.sysId, crUid, polSysId, endIdx,
+    mode: this.isReadOnly ? 'view' : null }   // ADD THIS LINE
+});
 }
 
   onNextClick(): void {

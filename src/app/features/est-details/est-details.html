@@ -31,7 +31,7 @@
             {{ col.FIELD_PROMPT }}
             <span class="required" *ngIf="col.MANDATORY === 1">*</span>
           </th>
-          <th *ngIf="extraColumns.length > 0"></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -66,10 +66,10 @@
             </ng-template>
           </td>
 
-          <td *ngIf="extraColumns.length > 0" class="actions-col">
-            <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-text p-button-rounded est-dots-btn"
-              (click)="openEstRowMenu($event, estRowMenu, i)"></button>
-          </td>
+          <td class="actions-col">
+  <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button-text p-button-rounded est-dots-btn"
+    (click)="openEstRowMenu($event, estRowMenu, i)"></button>
+</td>
         </tr>
       </tbody>
     </table>

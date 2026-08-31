@@ -74,7 +74,12 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
     }                                                                 // ADD
     this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
 
-    this.estRowMenuItems = [
+    this.estRowMenuItems = this.isViewMode
+  ? [
+      { label: 'More Fields', icon: 'pi pi-external-link', command: () => { if (this.activeEstRowIndex !== null) this.openMoreDialog(this.activeEstRowIndex); } },
+      { label: 'Settlement Details', icon: 'pi pi-wallet', command: () => this.onSettlementDetailsClick() }
+    ]
+  : [
       { label: 'Save', icon: 'pi pi-save', command: () => { if (this.activeEstRowIndex !== null) this.saveRow(this.activeEstRowIndex); } },
       { label: 'More Fields', icon: 'pi pi-external-link', command: () => { if (this.activeEstRowIndex !== null) this.openMoreDialog(this.activeEstRowIndex); } },
       { label: 'Settlement Details', icon: 'pi pi-wallet', command: () => this.onSettlementDetailsClick() }
@@ -156,6 +161,7 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
 
 
   addRow(): void {
+    if (this.isViewMode) return;
     this.gridRows.update(rows => [
       ...rows, 
       { 
@@ -190,6 +196,7 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   }
 
   saveRow(index: number): void {
+    if (this.isViewMode) return; 
     const row = { ...this.gridRows()[index] };
 
     const missing = this.tableColumns()
@@ -331,14 +338,15 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
         clmapSysId: this.clmapSysId,
         crUid: this.crUid,
         polSysId: this.polSysId,
-        endIdx: this.endIdx
+        endIdx: this.endIdx,
+          mode: this.isViewMode ? 'view' : null
       }
     });
   }
 
   goBack(): void {
-    this.router.navigate(['/claim-registration'], {
-      queryParams: { mode: 'edit', sysId: this.clmSysId }
-    });
-  }
+  this.router.navigate(['/claim-registration'], {
+    queryParams: { mode: this.isViewMode ? 'view' : 'edit', sysId: this.clmSysId }   // CHANGED
+  });
+}
 }
