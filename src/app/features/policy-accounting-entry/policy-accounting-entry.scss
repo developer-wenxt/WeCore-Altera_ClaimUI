@@ -1,47 +1,65 @@
 // policy-accounting-entry.scss
 
 .form-page {
-  background: #f4f6f9;
+  background: transparent; // let global gradient background show through
 }
 
+/* ─── Card ─────────────────────────────────────────── */
 .table-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  padding: 18px 20px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 13px;
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+.table-card:hover {
+  box-shadow: var(--shadow-elevated);
+}
+
+/* ─── Header ───────────────────────────────────────── */
 .page-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
   h2 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--color-primary);
     margin: 0;
-    margin-right: auto;
-  }
-
-  .back-btn {
-    background: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    color: #334155 !important;
-    border-radius: 20px !important;
-    padding: 6px 14px !important;
-    font-size: 13px !important;
-    box-shadow: none !important;
-  }
-
-  .back-btn:hover {
-    border-color: #94a3b8 !important;
-    color: #1e293b !important;
   }
 }
 
+.back-btn {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-light) !important;
+  color: var(--text-main) !important;
+  border-radius: 18px !important;
+  padding: 7px 15px !important;
+  font-size: 13px !important;
+  transition: all 0.18s ease;
+}
+
+.back-btn:hover {
+  border-color: var(--color-primary-mid) !important;
+  color: var(--color-primary-mid) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+}
+
+/* ─── Search box ───────────────────────────────────── */
 .search-wrap {
   position: relative;
   display: flex;
@@ -50,143 +68,200 @@
   i {
     position: absolute;
     left: 10px;
-    color: #94a3b8;
-    font-size: 12px;
+    color: var(--text-lighter);
+    font-size: 11px;
   }
 
   input {
     padding: 7px 12px 7px 28px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    border-radius: 18px;
     font-size: 13px;
     width: 200px;
-    background: #f8fafc;
+    background: #ffffff;
     outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  input:hover {
+    border-color: var(--border-hover-accent);
   }
 
   input:focus {
-    border-color: #94a3b8;
-    background: #ffffff;
+    border-color: var(--color-primary-mid);
+    box-shadow: var(--shadow-focus);
   }
 }
 
-.chip-value {
-  background: transparent !important;
-  color: white !important;
-  font-weight: 600;
-  padding: 0 !important;
-  font-size: 13px;
+/* ─── Info chip (Policy highlight) ─────────────────── */
+.info-chips {
+  display: flex;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 8px 11px;
+  margin-bottom: 11px;
+  flex-wrap: wrap;
 }
 
-/* ─── Table — plain / light style, overriding the global purple risk-grid ─── */
+.chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 85px;
+}
+
+.chip-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #cbd5e1;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.chip-value {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+.chip.highlight .chip-value {
+  background: var(--color-accent-light);
+  color: var(--color-primary-mid);
+}
+
+/* ─── Table ────────────────────────────────────────── */
 .risk-table-wrapper {
+  width: 100%;
   overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
 }
 
 .risk-grid {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .risk-grid thead th {
-  background: #ffffff !important;
-  color: #64748b !important;
-  font-size: 11px;
+  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
+  color: #ffffff !important;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.6px;
   text-align: left;
-  padding: 10px 14px;
-  border: none !important;
-  border-bottom: 1px solid #e5e7eb !important;
+  padding: 9px 12px;
+  border: none;
   white-space: nowrap;
+}
+
+.risk-grid thead th:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.risk-grid thead th:last-child {
+  border-radius: 0 8px 0 0;
+  text-align: center;
 }
 
 .risk-grid tbody td {
-  padding: 12px 14px;
-  font-size: 13px;
-  color: #334155;
+  padding: 9px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
   border: none;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--border-light);
   white-space: nowrap;
+  transition: background-color 0.2s ease;
 }
 
-.risk-grid tbody tr:hover {
-  background: #f8fafc;
-  box-shadow: none;
+.risk-grid tbody tr:hover td {
+  background: var(--color-primary-light);
+  box-shadow: inset 4px 0 0 var(--color-primary-mid);
 }
 
-.risk-grid tbody tr:nth-child(even) {
-  background: transparent;
+.risk-grid tbody tr:nth-child(even) td {
+  background: #fafaf9;
 }
 
-.risk-grid tbody tr:nth-child(even):hover {
-  background: #f8fafc;
+.risk-grid tbody tr:nth-child(even):hover td {
+  background: var(--color-primary-light);
 }
 
-/* Policy No / Narration / Created By act like links in the image */
-.risk-grid tbody td:first-child,
-.risk-grid tbody td a {
-  color: #4f46e5;
+.risk-grid tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Policy No acts like a link/emphasis, matching accent palette */
+.risk-grid tbody td:first-child {
+  color: var(--color-primary-mid);
   font-weight: 600;
 }
 
-/* ─── View (eye) action button ─── */
+/* ─── View (eye) action button ─────────────────────── */
 .view-btn {
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px !important;
+  width: 27px !important;
+  height: 27px !important;
+  min-width: 27px !important;
   border-radius: 50% !important;
-  background: #eef2ff !important;
-  border: none !important;
-  color: #4f46e5 !important;
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-light) !important;
+  color: var(--color-primary-mid) !important;
   padding: 0 !important;
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
+  transition: all 0.18s ease;
 }
 
 .view-btn:hover {
-  background: #e0e7ff !important;
+  border-color: var(--color-primary-mid) !important;
+  background: var(--color-primary-light) !important;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.12);
 }
 
-/* ─── DR/CR badges ─── */
+/* ─── Status badges — reuse global status-* palette ─── */
 .status-badge {
   display: inline-block;
   padding: 3px 12px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 8px;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
-.status-R {
-  background: #dcfce7;
-  color: #16a34a;
-}
+/* .status-R / .status-J / .status-O / .status-C already defined globally — no need to redeclare colors here */
 
-.status-J {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-/* ─── Pagination footer (matches "Showing 1 to X of X records" + page circle) ─── */
+/* ─── Footer / pagination ──────────────────────────── */
 .table-footer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 14px;
-  margin-top: 14px;
-  font-size: 12px;
-  color: #64748b;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .page-circle {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: #dcfce7;
-  color: #16a34a;
+  background: var(--color-accent-light);
+  color: var(--color-primary-mid);
   font-weight: 700;
   font-size: 12px;
   display: flex;
@@ -197,8 +272,94 @@
 .page-size-box {
   width: 44px;
   padding: 4px 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
   font-size: 12px;
   text-align: center;
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+/* ─── Responsive ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .table-card {
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-wrap input {
+    width: 100%;
+  }
+
+  .table-footer {
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // keeps back-btn left, search right
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  position: relative; // NEW — needed for absolute centering
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  h2 {
+    font-size: 20px;          // CHANGED — was 18px, bumped for readability
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+    position: absolute;       // NEW — center regardless of siblings
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+}
+
+.risk-grid thead th {
+  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
+  color: #ffffff !important;
+  font-size: 12px;           // CHANGED — was 10px
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  text-align: left;
+  padding: 12px 14px;        // CHANGED — was 9px 12px
+  border: none;
+  white-space: nowrap;
+}
+
+.risk-grid tbody td {
+  padding: 10px 14px;        // CHANGED — was 9px 12px
+  font-size: 14px;           // CHANGED — was 12px
+  line-height: 1.5;          // NEW — extra breathing room
+  color: var(--text-main);  // CHANGED — was --text-secondary, darker for contrast
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.status-badge {
+  padding: 4px 14px;         // CHANGED — was 3px 12px
+  font-size: 10px;           // CHANGED — was 8px
+}
+
+.chip-value {
+  font-size: 10px;           // CHANGED — was 12px
+  padding: 6px 10px;         // CHANGED — was 5px 9px
 }

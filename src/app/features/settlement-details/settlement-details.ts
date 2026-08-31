@@ -146,13 +146,16 @@ dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
 
   ngOnInit(): void {
     this.isReadOnly = this.route.snapshot.queryParamMap.get('mode') === 'view';
-    this.rowMenuItems = this.isReadOnly   // ADD (move class-level array here)
-    ? [{ label: 'More', icon: 'pi pi-external-link', command: () => this.openMoreDialog(this.activeMenuRow!) }]
-    : [
-        { label: 'Save', icon: 'pi pi-save', command: () => this.saveRow(this.activeMenuRow!) },
-        { label: 'More', icon: 'pi pi-external-link', command: () => this.openMoreDialog(this.activeMenuRow!) },
-        { label: 'Approve', icon: 'pi pi-check', command: () => this.openApproveDialog(this.activeMenuRow!) }
-      ];
+    this.rowMenuItems = this.isReadOnly
+  ? [
+      { label: 'More', icon: 'pi pi-external-link', command: () => this.openMoreDialog(this.activeMenuRow!) },
+      { label: 'Approve', icon: 'pi pi-check', command: () => this.openApproveDialog(this.activeMenuRow!) }
+    ]
+  : [
+      { label: 'Save', icon: 'pi pi-save', command: () => this.saveRow(this.activeMenuRow!) },
+      { label: 'More', icon: 'pi pi-external-link', command: () => this.openMoreDialog(this.activeMenuRow!) },
+      { label: 'Approve', icon: 'pi pi-check', command: () => this.openApproveDialog(this.activeMenuRow!) }
+    ];
     this.menuService.getDropdownValues('PGIT0010', 'PGIT_CLM_SETL', 'CLM_CLOSE_REASON_CODE')
       .pipe(takeUntil(this.destroy$))
       .subscribe({

@@ -58,7 +58,7 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   }
 
   ngOnInit(): void {
-
+    
     this.clmapSysId = Number(this.route.snapshot.queryParamMap.get('clmapSysId')) || null;
     this.clmSysId = Number(this.route.snapshot.queryParamMap.get('sysId')) || null;
     this.polSysId = Number(this.route.snapshot.queryParamMap.get('polSysId')) || null;
