@@ -48,6 +48,8 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
   prodCode: string = '';
   polNo: string = '';
   classDesc: string = '';
+  custCode: string = '';
+  currCode: string = 'USD';
 
   constructor(private menuService: MenuService,
     private router: Router,
@@ -73,6 +75,8 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
       this.polNo = parsed.CLM_POL_NO || '';                           // ADD
     }                                                                 // ADD
     this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
+    this.custCode = sessionStorage.getItem('claimCustCode') || '';
+    this.currCode = sessionStorage.getItem('claimCurrCode') || 'USD';
 
     this.estRowMenuItems = this.isViewMode
   ? [
@@ -136,19 +140,19 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
                     });
                     this.gridRows.set(res);
                   } else {
-                    this.gridRows.set([{ CE_DT: new Date() }]);
+                    this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode }]);
                   }
                   this.loading.set(false);
                 },
                 error: (err) => {
                   console.error('Error fetching estimation details', err);
-                  this.gridRows.set([{ CE_DT: new Date() }]);
+                  this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode }]);
                   this.loading.set(false);
                 }
               });
           } else {
             this.loading.set(false);
-            this.gridRows.set([{ CE_DT: new Date() }]);
+            this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode }]);
           }
 
         },
@@ -169,7 +173,8 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
         CE_CLM_SYS_ID: this.clmSysId, 
         CE_DT: new Date(),
         CE_CR_UID: this.crUid,
-        CE_CURR_CODE: 'USD'
+        CE_CURR_CODE: this.currCode,
+        CE_CUST_CODE: this.custCode
       }
     ]);
   }

@@ -116,6 +116,12 @@ export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
               CLM_DOC_SUBMISSION_DT: record.CLM_DOC_SUBMISSION_DT ? record.CLM_DOC_SUBMISSION_DT.slice(0, 10) : '',
               CLM_SALVAGE_YN: record.CLM_SALVAGE_YN === '1'
             }));
+            if (record.CLM_CUST_CODE) {
+              sessionStorage.setItem('claimCustCode', record.CLM_CUST_CODE);
+            }
+            if (record.CLM_CURR_CODE) {
+              sessionStorage.setItem('claimCurrCode', record.CLM_CURR_CODE);
+            }
             const instCode = storedInstCode || record.CLM_INST_CODE;   // CHANGED: fallback to record's own inst code
 
             if (instCode) {
@@ -174,6 +180,7 @@ this.formData = this.mapRecordToFormData(record, visibleFields);
             dataLossFields.DATA_TYPE = 'D';
           }
          this.fields.set(this.reorderPriorityFields(getVisibleFieldsSorted(fields)));
+         console.log('ADD fields after filter:', this.fields()); 
           this.loading.set(false);
           this.loadLovAndDropdowns(fields);
         },
@@ -374,6 +381,9 @@ onIntmNoSelect(intmNo: string): void {
                 if (!pol) return;
                 this.formData['CLM_PROD_CODE'] = pol.POL_PROD_CODE;
                 this.formData['CLM_CURR_CODE'] = pol.POL_PREM_CURR_CODE;
+                if (pol.POL_PREM_CURR_CODE) {
+                  sessionStorage.setItem('claimCurrCode', pol.POL_PREM_CURR_CODE);
+                }
 
                 if (this.isLovField('CLM_CURR_CODE')) {
                   this.onDropdownOpen('CLM_CURR_CODE');
@@ -625,13 +635,20 @@ this.populateFreshRiskRow(polNo);
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: any) => {
-          const policy = res?.[0];
+          const policy = res?.data?.data?.[0] ?? res?.data?.[0] ?? res?.[0];
           if (!policy) return;
 
            this.lockedByFlow = 'policy';
 
           this.formData['CLM_CURR_CODE'] = policy.POL_PREM_CURR_CODE;
+          if (policy.POL_PREM_CURR_CODE) {
+             sessionStorage.setItem('claimCurrCode', policy.POL_PREM_CURR_CODE);
+          }
           this.formData['CLM_PROD_CODE'] = policy.POL_PROD_CODE;
+          this.formData['CLM_CUST_CODE'] = policy.POL_CUST_CODE;
+          if (policy.POL_CUST_CODE) {
+             sessionStorage.setItem('claimCustCode', policy.POL_CUST_CODE);
+          }
 
           // ADD THIS — ensure currency dropdown options are loaded so the select displays the value
           if (this.isLovField('CLM_CURR_CODE')) {

@@ -84,7 +84,7 @@
   <table class="risk-grid" *ngIf="activeRowIndex() !== null">
     <thead>
       <tr>
-        <th *ngFor="let col of visibleColumns; trackBy: trackByColName"
+        <th *ngFor="let col of extraColumns; trackBy: trackByColName"
     [ngClass]="'col-' + col.COLUMN_NAME.toLowerCase()">
           {{ col.FIELD_PROMPT }}
           <span class="required" *ngIf="col.MANDATORY === 1">*</span>

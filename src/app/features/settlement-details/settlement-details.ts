@@ -169,6 +169,7 @@ dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
       this.polNo = parsed.CLM_POL_NO || '';
     }
     this.classDesc = sessionStorage.getItem('claimClassDesc') || '';
+    this.custCode = sessionStorage.getItem('claimCustCode') || '';
     this.menuService.getSettlementFields()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -358,8 +359,8 @@ getDropdownOptions(columnName: string): any[] {
         this.custDisplay = this.custDesc ? `${this.custCode} - ${this.custDesc}` : this.custCode;
         this.gridRows.update(rows => rows.map(r => ({
           ...r,
-          CS_CUST_CODE: this.custDisplay,
-          CS_ASSR_CODE: this.custDisplay
+          CS_CUST_CODE: r.CS_CUST_CODE || this.custCode,
+          CS_ASSR_CODE: r.CS_ASSR_CODE || this.custCode
         })));
       }
     });
@@ -395,8 +396,8 @@ this.gridRows.set([{
                                   const display = this.custDisplay || this.custCode;
                                         const finalRows = (rows.length ? rows : [{ CS_DT: new Date() }]).map(r => ({
                       ...r,
-                      CS_CUST_CODE: this.custCode,   // Customer Code
-                      CS_ASSR_CODE: this.custCode,   // Payee Code — same value
+                      CS_CUST_CODE: r.CS_CUST_CODE || this.custCode,   // Customer Code
+                      CS_ASSR_CODE: r.CS_ASSR_CODE || this.custCode,   // Payee Code — same value
                       CS_DT: r.CS_DT || new Date()
                     }));
                     this.gridRows.set(finalRows);
