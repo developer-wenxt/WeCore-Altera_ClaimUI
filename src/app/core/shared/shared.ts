@@ -25,7 +25,7 @@ export const SHARED_IMPORTS = [
   TableModule,
   CardModule,
   DialogModule,
-   Select ,
-   MenuModule,
-   DatePicker
+  Select,
+  MenuModule,
+  DatePicker
 ];

@@ -23,14 +23,14 @@
   background: var(--bg-surface, #fff);
   border: 1px solid var(--border-light, #eaecf0);
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
 .table-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border-color: #d0d5dd;
 }
 
@@ -71,9 +71,9 @@ input[readonly],
 ::ng-deep .p-inputtext[readonly],
 ::ng-deep .p-datepicker.p-disabled input,
 ::ng-deep .p-datepicker input:disabled {
-  background: #f2f4f7 !important;
-  color: #667085 !important;
-  border-color: #e4e7ec !important;
+  background: #e2e8f0 !important;
+  color: #64748b !important;
+  border-color: #cbd5e1 !important;
   cursor: not-allowed !important;
   opacity: 1 !important;
 }
@@ -104,7 +104,6 @@ input[readonly],
 .risk-grid input,
 ::ng-deep .p-inputtext,
 ::ng-deep .p-select {
-  background: #ffffff !important;
   border: 1px solid #d0d5dd !important;
   border-radius: 6px;
   padding: 8px 12px;
@@ -115,6 +114,12 @@ input[readonly],
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.risk-grid input:not(:disabled):not([readonly]),
+::ng-deep .p-inputtext:not(:disabled):not([readonly]),
+::ng-deep .p-select:not(.p-disabled) {
+  background: #ffffff !important;
 }
 
 ::ng-deep .p-select .p-select-label {
@@ -171,8 +176,10 @@ input[readonly],
 
 /* Action button variations */
 ::ng-deep .p-button-rounded.pi-save {
-  color: #027a48 !important; /* Success color for save */
+  color: #027a48 !important;
+  /* Success color for save */
 }
+
 ::ng-deep .p-button-rounded.pi-save:hover {
   background: #ecfdf3 !important;
   color: #027a48 !important;
@@ -204,7 +211,7 @@ input[readonly],
 .risk-grid input,
 ::ng-deep .p-inputtext,
 ::ng-deep .p-select {
- 
+
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -232,7 +239,7 @@ th.col-provision_dt {
 .col-provision_dt ::ng-deep .p-datepicker input {
   white-space: nowrap;
   overflow: visible;
-   min-width: 220px; 
+  min-width: 220px;
   text-overflow: unset;
   min-width: 100%;
 }
@@ -312,4 +319,3 @@ th.col-ce_provision_dt {
   overflow: visible !important;
   white-space: nowrap !important;
 }
-

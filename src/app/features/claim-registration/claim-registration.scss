@@ -52,27 +52,27 @@
             input,
             .p-inputtext,
             textarea {
-                background-color: #f9fafb !important;
-                color: #667085 !important;
-                border-color: #eaecf0 !important;
+                background-color: #e2e8f0 !important;
+                color: #64748b !important;
+                border-color: #cbd5e1 !important;
                 cursor: not-allowed;
                 box-shadow: none;
             }
 
             ::ng-deep .p-select {
-                background-color: #f9fafb !important;
-                border-color: #eaecf0 !important;
+                background-color: #e2e8f0 !important;
+                border-color: #cbd5e1 !important;
                 box-shadow: none;
 
                 .p-select-label {
-                    color: #667085 !important;
+                    color: #64748b !important;
                 }
             }
 
             ::ng-deep .p-datepicker input {
-                background-color: #f9fafb !important;
-                color: #667085 !important;
-                border-color: #eaecf0 !important;
+                background-color: #e2e8f0 !important;
+                color: #64748b !important;
+                border-color: #cbd5e1 !important;
                 cursor: not-allowed;
                 box-shadow: none;
             }
@@ -102,14 +102,14 @@
         display: flex;
         flex-direction: column;
         color: white;
-        
+
         border-radius: 6px;
-        padding: 6px 10px;      // was 10px 16px
-        min-width: 100px;       // was 160px
+        padding: 6px 10px; // was 10px 16px
+        min-width: 100px; // was 160px
 
         .chip-label {
-            font-size: 10px;    // was 12px
-            
+            font-size: 10px; // was 12px
+
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.03em;
@@ -117,7 +117,7 @@
         }
 
         .chip-value {
-            font-size: 12px;    // was 14px
+            font-size: 12px; // was 14px
             font-weight: 600;
             color: #101828;
         }
@@ -251,19 +251,31 @@
         border-radius: 6px;
         padding: 6px 10px;
         font-size: 13px;
-        background: #ffffff !important;
         transition: all 0.2s ease;
         width: 100%;
+
+        &:not(:disabled):not([readonly]):not(.p-disabled) {
+            background: #ffffff !important;
+        }
 
         &:focus {
             border-color: var(--color-primary-mid, #0056b3) !important;
             box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
         }
 
-        &:disabled {
-            background-color: #f9fafb !important;
-            color: #667085 !important;
-            border-color: #eaecf0 !important;
+        &:disabled,
+        &[readonly],
+        &.p-disabled {
+            background: #e2e8f0 !important;
+            background-color: #e2e8f0 !important;
+            color: #64748b !important;
+            border-color: #cbd5e1 !important;
+            cursor: not-allowed !important;
+
+            ::ng-deep .p-select-label,
+            .p-select-label {
+                color: #64748b !important;
+            }
         }
     }
 }

@@ -53,33 +53,36 @@
         input,
         .p-inputtext,
         textarea {
-            background-color: #f0f0f0 !important;
-            color: #888 !important;
+            background-color: #e2e8f0 !important;
+            color: #64748b !important;
+            border-color: #cbd5e1 !important;
             cursor: not-allowed;
             opacity: 1;
         }
 
         ::ng-deep .p-select {
-            background-color: #f0f0f0 !important;
+            background-color: #e2e8f0 !important;
+            border-color: #cbd5e1 !important;
             opacity: 1 !important;
 
             .p-select-label {
-                color: #888 !important;
+                color: #64748b !important;
             }
         }
 
         ::ng-deep .p-datepicker input {
-            background-color: #f0f0f0 !important;
-            color: #888 !important;
+            background-color: #e2e8f0 !important;
+            color: #64748b !important;
+            border-color: #cbd5e1 !important;
             cursor: not-allowed;
         }
 
         &.checkbox-field .checkbox-label span {
-            color: #888;
+            color: #64748b;
         }
 
         label {
-            color: #999; // optionally grey the field label too
+            color: #64748b;
         }
     }
 }

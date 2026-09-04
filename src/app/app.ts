@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Toast } from 'primeng/toast';
 import { LoadingComponent } from './core/components/loading/loading.component';
 import { GlobalMessageDialog } from './core/components/global-message-dialog/global-message-dialog';
+import { GlobalTooltipService } from './core/services/global-tooltip.service';
 
 @Component({
   selector: 'app-root',
@@ -12,4 +13,6 @@ import { GlobalMessageDialog } from './core/components/global-message-dialog/glo
 })
 export class App {
   protected readonly title = signal('Altra-Cliam');
+
+  constructor(private globalTooltip: GlobalTooltipService) {}
 }

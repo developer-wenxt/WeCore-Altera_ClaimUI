@@ -137,22 +137,23 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
                   if (res && res.length > 0) {
                     res.forEach((row: any) => {
                       if (row.CE_DT) row.CE_DT = new Date(row.CE_DT);
+                      if (!row.CE_CURR_CODE) row.CE_CURR_CODE = this.currCode;
                     });
                     this.gridRows.set(res);
                   } else {
-                    this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode }]);
+                    this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode, CE_CURR_CODE: this.currCode }]);
                   }
                   this.loading.set(false);
                 },
                 error: (err) => {
                   console.error('Error fetching estimation details', err);
-                  this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode }]);
+                  this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode, CE_CURR_CODE: this.currCode }]);
                   this.loading.set(false);
                 }
               });
           } else {
             this.loading.set(false);
-            this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode }]);
+            this.gridRows.set([{ CE_DT: new Date(), CE_CUST_CODE: this.custCode, CE_CURR_CODE: this.currCode }]);
           }
 
         },
@@ -313,14 +314,20 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
     return !!this.lovMap()[columnName];
   }
 
+  private truncateLabel(label: string, maxLen: number = 28): string {
+    if (!label) return '';
+    return label.length > maxLen ? label.slice(0, maxLen) + '…' : label;
+  }
+
   getDropdownOptions(columnName: string): any[] {
     const raw = this.dropdownOptionsMap()[columnName] || [];
     return raw.map((row: any) => {
       const keys = Object.keys(row);
       const code = row[keys[0]];
       const desc = row[keys[1]];
+      const fullLabel = desc ? `${code} - ${desc}` : `${code}`;
       return {
-        label: desc ? `${code} - ${desc}` : `${code}`,
+        label: this.truncateLabel(fullLabel),
         value: code
       };
     });

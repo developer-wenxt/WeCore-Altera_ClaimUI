@@ -319,11 +319,11 @@
   }
 
   h2 {
-    font-size: 20px;          // CHANGED — was 18px, bumped for readability
+    font-size: 20px; // CHANGED — was 18px, bumped for readability
     font-weight: 700;
     color: var(--color-primary);
     margin: 0;
-    position: absolute;       // NEW — center regardless of siblings
+    position: absolute; // NEW — center regardless of siblings
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
@@ -333,21 +333,21 @@
 .risk-grid thead th {
   background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
   color: #ffffff !important;
-  font-size: 12px;           // CHANGED — was 10px
+  font-size: 12px; // CHANGED — was 10px
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
   text-align: left;
-  padding: 12px 14px;        // CHANGED — was 9px 12px
+  padding: 12px 14px; // CHANGED — was 9px 12px
   border: none;
   white-space: nowrap;
 }
 
 .risk-grid tbody td {
-  padding: 10px 14px;        // CHANGED — was 9px 12px
-  font-size: 14px;           // CHANGED — was 12px
-  line-height: 1.5;          // NEW — extra breathing room
-  color: var(--text-main);  // CHANGED — was --text-secondary, darker for contrast
+  padding: 10px 14px; // CHANGED — was 9px 12px
+  font-size: 14px; // CHANGED — was 12px
+  line-height: 1.5; // NEW — extra breathing room
+  color: var(--text-main); // CHANGED — was --text-secondary, darker for contrast
   border: none;
   border-bottom: 1px solid var(--border-light);
   white-space: nowrap;
@@ -355,11 +355,11 @@
 }
 
 .status-badge {
-  padding: 4px 14px;         // CHANGED — was 3px 12px
-  font-size: 10px;           // CHANGED — was 8px
+  padding: 4px 14px; // CHANGED — was 3px 12px
+  font-size: 10px; // CHANGED — was 8px
 }
 
 .chip-value {
-  font-size: 10px;           // CHANGED — was 12px
-  padding: 6px 10px;         // CHANGED — was 5px 9px
+  font-size: 10px; // CHANGED — was 12px
+  padding: 6px 10px; // CHANGED — was 5px 9px
 }

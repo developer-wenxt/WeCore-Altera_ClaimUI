@@ -16,7 +16,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 const MyPreset = definePreset(Aura, {
   components: {
     datatable: {
-      headerCell: { 
+      headerCell: {
         background: '#2563eb',
         color: '#ffffff',
         hoverBackground: '#1e40af',
@@ -27,7 +27,7 @@ const MyPreset = definePreset(Aura, {
         color: '#ffffff'
       }
     },
-    button: {                        
+    button: {
       root: {
         primary: {
           background: '#2563eb',
@@ -49,7 +49,7 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     providePrimeNG({
       theme: {
-        preset: MyPreset,      
+        preset: MyPreset,
         options: {
           darkModeSelector: false
         }

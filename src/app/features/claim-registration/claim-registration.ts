@@ -373,12 +373,17 @@ onIntmNoSelect(intmNo: string): void {
         }
 
         if (intm.CI_POL_NO) {
-          this.menuService.getPolicyDataByPolNo(intm.CI_POL_NO)
+          const lossDate = this.formData['CLM_LOSS_DT'];
+          const formattedLossDate = lossDate ? this.formatDate(lossDate) : '';
+          this.menuService.getPolicyData(intm.CI_POL_NO, formattedLossDate)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
-              next: (polRes: any) => {
-                const pol = polRes?.data?.[0] ?? polRes?.[0];
+              next: (res: any) => {
+                const pol = res?.data?.data?.[0] ?? res?.data?.[0] ?? res?.[0];
                 if (!pol) return;
+                
+                this.lockedByFlow = 'intm';
+                
                 this.formData['CLM_PROD_CODE'] = pol.POL_PROD_CODE;
                 this.formData['CLM_CURR_CODE'] = pol.POL_PREM_CURR_CODE;
                 if (pol.POL_PREM_CURR_CODE) {
@@ -388,11 +393,41 @@ onIntmNoSelect(intmNo: string): void {
                 if (this.isLovField('CLM_CURR_CODE')) {
                   this.onDropdownOpen('CLM_CURR_CODE');
                 }
+                
+                this.formData['CLM_CUST_CODE'] = pol.POL_CUST_CODE;
+                if (pol.POL_CUST_CODE) {
+                  sessionStorage.setItem('claimCustCode', pol.POL_CUST_CODE);
+                }
 
-                this.lockedByFlow = 'intm';
+                const targetAssrCode = String(pol.POL_ASSR_CODE);
+                const applyAssrCode = (options: any[]) => {
+                  const match = options.find(o => String(o.value) === targetAssrCode);
+                  this.formData['CLM_ASSR_CODE'] = match ? match.value : targetAssrCode;
+                };
+
+                const existingOptions = this.getDropdownOptions('CLM_ASSR_CODE');
+                if (existingOptions.length) {
+                  applyAssrCode(existingOptions);
+                } else {
+                  const lov = this.lovMap()['CLM_ASSR_CODE'];
+                  if (lov) {
+                    this.menuService.getDropdownValues(lov.PLD_PROG_CODE, lov.PLD_BLOCK_NAME, lov.PLD_FIELD_NAME)
+                      .pipe(takeUntil(this.destroy$))
+                      .subscribe({
+                        next: (values) => {
+                          const current = this.dropdownOptionsMap();
+                          this.dropdownOptionsMap.set({ ...current, CLM_ASSR_CODE: values });
+                          applyAssrCode(this.getDropdownOptions('CLM_ASSR_CODE'));
+                        },
+                        error: (err) => console.error('Error loading assured code options', err)
+                      });
+                  } else {
+                    this.formData['CLM_ASSR_CODE'] = targetAssrCode;
+                  }
+                }
               },
               error: (err) => {
-                console.error('Error fetching policy data by pol no', err);
+                console.error('Error fetching policy data', err);
                 this.lockedByFlow = 'intm';
               }
             });
@@ -484,14 +519,19 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
   return `${month}/${day}/${year}`;
 }
 
+  private truncateLabel(label: string, maxLen: number = 40): string {
+    if (!label) return '';
+    return label.length > maxLen ? label.slice(0, maxLen) + '…' : label;
+  }
+
   getDropdownOptions(columnName: string): any[] {
     const raw = this.dropdownOptionsMap()[columnName] || [];
     return raw.map((row: any) => {
       if (columnName === 'CLM_ASSR_CODE') {
   const keys = Object.keys(row);
   return {
-    value: row[keys[0]],   // CHANGED from row['CLM_ASSR_CODE'] — that key doesn't exist on the raw row
-    label: row[keys[1]]
+    value: row[keys[0]],
+    label: this.truncateLabel(row[keys[1]])
   };
 }
       if (columnName === 'CLM_POL_NO') {
@@ -506,7 +546,7 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
       const labelKey = keys[1];
       return {
         value: row[valueKey],
-        label: row[labelKey] ?? row[valueKey]
+        label: this.truncateLabel(row[labelKey] ?? row[valueKey])
       };
     });
   }
@@ -565,6 +605,11 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
       }                                                                            // ADDED
       payload[f.COLUMN_NAME] = v;
     });
+
+    const sessionCurrCode = sessionStorage.getItem('claimCurrCode');
+    if (sessionCurrCode) {
+      payload.CLM_CURR_CODE = sessionCurrCode;
+    }
 
 
     payload.CLM_INTM_NO =
@@ -736,59 +781,51 @@ openRowMenu(event: Event, menu: any, index: number): void {
     this.riskLoading.set(false);
     return;
   }
-  this.riskLoading.set(true);
 
-  this.menuService.getRiskDetailFields()
+  // Columns are already loaded by ngOnInit via getRiskDetailFields() — no need to call again.
+  // Just fetch the risk row data directly.
+  const riskFetchId = (this.isEdit || this.isReadOnly)
+    ? this.sysId
+    : Number(sessionStorage.getItem('lastRiskRowSysId')) || null;
+
+  if (!riskFetchId) {
+    this.riskLoading.set(false);
+    return;
+  }
+
+  this.riskLoading.set(true);
+  this.menuService.getRiskDetailsByClaim(riskFetchId)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: (fields) => {
-        const filtered = getTableColumnFields(fields);
-        const reordered = this.reorderRiskColumns(filtered);
-        this.riskTableColumns.set(reordered);
-        this.riskLoading.set(false);
+      next: (res: any) => {
+        const rawData = res?.data?.data;
+        let rows: any[] = [];
 
-        // CHANGED — In edit/view mode, always fetch risk rows by claim sysId.
-        // In add mode, fall back to sessionStorage lastRiskRowSysId (set after save).
-        const riskFetchId = (this.isEdit || this.isReadOnly)
-          ? this.sysId
-          : Number(sessionStorage.getItem('lastRiskRowSysId')) || null;
-
-        if (riskFetchId) {
-          this.menuService.getRiskDetailsByClaim(riskFetchId)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe({
-              next: (res: any) => {
-                const rawData = res?.data?.data;
-                let rows: any[] = [];
-
-                // Handle both formats: flat array (new API) or object keyed by ID (old API)
-                if (Array.isArray(rawData)) {
-                  rows = rawData.map((entry: any) => this.normalizeRiskRow(entry));
-                } else if (rawData && typeof rawData === 'object') {
-                  Object.keys(rawData).forEach(key => {
-                    const val = rawData[key];
-                    if (Array.isArray(val)) {
-                      val.forEach((entry: any) => rows.push(this.normalizeRiskRow(entry)));
-                    }
-                  });
-                }
-
-                if (rows.length) {
-                  this.riskGridRows.set(rows);
-                  // repopulate cascading dropdown options for each restored row
-                 rows.forEach((row, i) => {
-  if (row.CLMAP_POL_NO) {
-    this.loadRiskRowOptionsFromSavedIds(row, i);  // ← only populates options, values untouched
-  }
-});
-                }
-              },
-              error: (err) => console.error('Error restoring risk row', err)
-            });
+        // Handle both formats: flat array (new API) or object keyed by ID (old API)
+        if (Array.isArray(rawData)) {
+          rows = rawData.map((entry: any) => this.normalizeRiskRow(entry));
+        } else if (rawData && typeof rawData === 'object') {
+          Object.keys(rawData).forEach(key => {
+            const val = rawData[key];
+            if (Array.isArray(val)) {
+              val.forEach((entry: any) => rows.push(this.normalizeRiskRow(entry)));
+            }
+          });
         }
+
+        if (rows.length) {
+          this.riskGridRows.set(rows);
+          // repopulate cascading dropdown options for each restored row
+          rows.forEach((row, i) => {
+            if (row.CLMAP_POL_NO) {
+              this.loadRiskRowOptionsFromSavedIds(row, i);
+            }
+          });
+        }
+        this.riskLoading.set(false);
       },
       error: (err) => {
-        console.error('Error loading risk detail fields:', err);
+        console.error('Error restoring risk row', err);
         this.riskLoading.set(false);
       }
     });

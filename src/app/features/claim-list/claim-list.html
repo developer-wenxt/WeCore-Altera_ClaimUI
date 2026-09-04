@@ -17,15 +17,15 @@
           <input type="text" placeholder="Search assured name, claim no, or policy no..." [(ngModel)]="searchTerm" />
         </span>
 
-        <p-select [options]="statusOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value" appendTo="body"
-          placeholder="All Statuses"></p-select>
+        <p-select [options]="statusOptions" [(ngModel)]="statusFilter" optionLabel="label" optionValue="value"
+          appendTo="body" placeholder="All Statuses"></p-select>
       </div>
     </div>
 
     <div *ngIf="loading()" class="state-msg">Loading claims...</div>
 
     <p-table *ngIf="!loading()" [value]="filteredClaims" [paginator]="true" [rows]="5"
-      [rowsPerPageOptions]="[5,10,20,50]" [scrollable]="true" scrollHeight="400px" styleClass="risk-grid">
+      [rowsPerPageOptions]="[5,10,20,50]" styleClass="risk-grid claims-table">
 
       <ng-template pTemplate="header">
         <tr>
@@ -34,7 +34,7 @@
           <th>Policy No</th>
           <th>Assured Name</th>
           <th>Intimation No</th>
-          <th>Product Code</th>
+
           <th>Loss Date</th>
           <th>Intimation Date</th>
           <th>Created Date</th>
@@ -50,7 +50,7 @@
           <td>{{ claim.CLM_POL_NO }}</td>
           <td>{{ claim.CLM_ASSR_NAME }}</td>
           <td>{{ claim.CLM_INTM_NO }}</td>
-          <td>{{ claim.CLM_PROD_CODE }}</td>
+
 
           <td>{{ claim.CLM_LOSS_DT | date:'dd/MM/yyyy' }}</td>
           <td>{{ claim.CLM_INTM_DT | date:'dd/MM/yyyy' }}</td>

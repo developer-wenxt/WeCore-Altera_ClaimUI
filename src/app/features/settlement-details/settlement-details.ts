@@ -265,13 +265,19 @@ dropdownOptionsMap = signal<{ [fieldName: string]: any[] }>({});
   return !!this.lovMap()[columnName];
 }
 
+private truncateLabel(label: string, maxLen: number = 28): string {
+  if (!label) return '';
+  return label.length > maxLen ? label.slice(0, maxLen) + '…' : label;
+}
+
 getDropdownOptions(columnName: string): any[] {
   const raw = this.dropdownOptionsMap()[columnName] || [];
   return raw.map((row: any) => {
     const keys = Object.keys(row);
     const code = row[keys[0]];
     const desc = row[keys[1]];
-    return { label: desc ? `${code} - ${desc}` : `${code}`, value: code };
+    const fullLabel = desc ? `${code} - ${desc}` : `${code}`;
+    return { label: this.truncateLabel(fullLabel), value: code };
   });
 }
 
