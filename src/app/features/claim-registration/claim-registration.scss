@@ -334,3 +334,19 @@
     border-radius: 8px;
     background: #ffffff;
 }
+
+
+.risk-grid,
+.dynamic-form-grid {
+    ::ng-deep .p-select {
+        .p-select-label {
+            font-size: 12px; // reduce text size
+            padding: 6px 8px;
+            max-width: 140px; // constrain width
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+    }
+}

@@ -45,10 +45,14 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
-  getIntmNoDropdownValues(progCode: string, blockName: string, fieldName: string, polNo: string, dsCode: string): Observable<any[]> {
+  getIntmNoDropdownValues(progCode: string, blockName: string, fieldName: string, polNo: string, dsCode: string, lossDate?: string, intmDate?: string): Observable<any[]> {
     const quotedPolNo = `'${polNo}'`;
     const quotedDsCode = `'${dsCode}'`;
-    const url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}&POL_NO=${encodeURIComponent(quotedPolNo)}&DS_CODE=${encodeURIComponent(quotedDsCode)}`;
+    let url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}&POL_NO=${encodeURIComponent(quotedPolNo)}&DS_CODE=${encodeURIComponent(quotedDsCode)}`;
+    if (lossDate) {
+      url += `&lossDt=${lossDate}`;
+    }
+
     return this.http.get<any>(url).pipe(map(response => response.data.data.data));
   }
 
@@ -94,21 +98,21 @@ export class MenuService {
       .pipe(map(response => response.data.data));
   }
 
- getDropdownValues(progCode: string, blockName: string, fieldName: string, lossDate?: string, classCode?: string): Observable<any[]> {
-  let url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`;
-  if (lossDate) {
-    url += `&lossDt=${lossDate}`;
+  getDropdownValues(progCode: string, blockName: string, fieldName: string, lossDate?: string, classCode?: string): Observable<any[]> {
+    let url = `${this.baseUrl}/dropDown?PLD_PROG_CODE=${progCode}&PLD_BLOCK_NAME=${blockName}&PLD_FIELD_NAME=${fieldName}`;
+    if (lossDate) {
+      url += `&lossDt=${lossDate}`;
+    }
+    if (classCode) {
+      url += `&classCode=${classCode}`;
+    }
+    return this.http.get<any>(url).pipe(map(response => response.data.data.data));
   }
-  if (classCode) {
-    url += `&classCode=${classCode}`;
-  }
-  return this.http.get<any>(url).pipe(map(response => response.data.data.data));
-}
 
 
   decodeToken(token: string): Observable<any> {
-  return this.http.post<any>(`${environment.wecoreUrl}/crm/authentication/validateToken`, { token });
-}
+    return this.http.post<any>(`${environment.wecoreUrl}/crm/authentication/validateToken`, { token });
+  }
 
   getRiskDetailsByClaim(clmapSysId: number) {
     return this.http.get(`${this.baseUrl}/pgitClmApplPolicy/?CLMAP_CLM_SYS_ID=${clmapSysId}`);
@@ -135,11 +139,11 @@ export class MenuService {
 
 
   saveSettlementDetail(row: any, csSysId?: number) {
-  const url = csSysId
-    ? `${this.baseUrl}/pgitClmSetl/${csSysId}`   
-    : `${this.baseUrl}/pgitClmSetl`;
-  return this.http.put(url, row);
-}
+    const url = csSysId
+      ? `${this.baseUrl}/pgitClmSetl/${csSysId}`
+      : `${this.baseUrl}/pgitClmSetl`;
+    return this.http.put(url, row);
+  }
 
   getSettlementFields(): Observable<FieldConfig[]> {
     return this.http.get<any>(`${this.baseUrl}/setField`)
@@ -161,10 +165,10 @@ export class MenuService {
 
 
   getFCandLCValues(polSysId: number, endIdx: number, endSrNo: number, currCode: string, currRateType: string, amtFc: number): Observable<any> {
-  const url = `${this.baseUrl}/FCandLCvalues?M_POL_SYS_ID=${polSysId}&M_END_NO_IDX=${endIdx}&M_END_SR_NO=${endSrNo}&M_CURR_CODE=${currCode}&M_CURR_RATE_TYP=${currRateType}&M_AMT_FC=${amtFc}`;
-  return this.http.get<any>(url)
-    .pipe(map(response => response.data.data));
-}
+    const url = `${this.baseUrl}/FCandLCvalues?M_POL_SYS_ID=${polSysId}&M_END_NO_IDX=${endIdx}&M_END_SR_NO=${endSrNo}&M_CURR_CODE=${currCode}&M_CURR_RATE_TYP=${currRateType}&M_AMT_FC=${amtFc}`;
+    return this.http.get<any>(url)
+      .pipe(map(response => response.data.data));
+  }
 
 
   getClaimIntimationById(intmNo: string): Observable<any> {
@@ -199,9 +203,9 @@ export class MenuService {
 
 
   getPolicyAccountingEntries(clmSysId: number): Observable<any[]> {
-  return this.http.get<any>(`${this.baseUrl}/polAcntEntry?clmSysId=${clmSysId}`)
-    .pipe(map(response => response.data.data));
-}
+    return this.http.get<any>(`${this.baseUrl}/polAcntEntry?clmSysId=${clmSysId}`)
+      .pipe(map(response => response.data.data));
+  }
 
   saveEstimation(rowData: any, clmapSysId: number, clmSysId: number, crUid: string): Observable<any> {
     const payload = {
@@ -278,17 +282,17 @@ export class MenuService {
       .pipe(map(response => response.data.data)); // CHANGED
   }
 
-   getSettlementCreation(ceSysId: number, clmSysId: number, csDt: string, loginUserId: string): Observable<any> {
-  const url = `${this.baseUrl}/settlementCreation?P_CE_SYS_ID=${ceSysId}&P_CLM_SYS_ID=${clmSysId}&P_CS_DT=${csDt}&P_LOGIN_USER_ID=${loginUserId}`;
-  return this.http.get<any>(url)
-    .pipe(map(response => response.data.data));
-}
+  getSettlementCreation(ceSysId: number, clmSysId: number, csDt: string, loginUserId: string): Observable<any> {
+    const url = `${this.baseUrl}/settlementCreation?P_CE_SYS_ID=${ceSysId}&P_CLM_SYS_ID=${clmSysId}&P_CS_DT=${csDt}&P_LOGIN_USER_ID=${loginUserId}`;
+    return this.http.get<any>(url)
+      .pipe(map(response => response.data.data));
+  }
 
 
 
-approveSettlement(payload: any): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/settlementApproval`, payload);
-}
+  approveSettlement(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/settlementApproval`, payload);
+  }
 
 
 }

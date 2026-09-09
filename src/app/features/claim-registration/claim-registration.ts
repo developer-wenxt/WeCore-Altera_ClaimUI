@@ -19,6 +19,7 @@ import { GlobalMessageService } from '../../core/services/GlobalMessageService';
   styleUrls: ['./claim-registration.scss'],
   providers: [UnSubscriber]
 })
+
 export class ClaimRegistrationComponent extends UnSubscriber implements OnInit {
   fields = signal<FieldConfig[]>([]);
   loading = signal(true);
@@ -291,15 +292,20 @@ onDropdownOpen(columnName: string): void {
   }
 
   if (columnName === 'CLM_INTM_NO') {
-
-    const dsINTCode = sessionStorage.getItem('claimIntm_1DsCode') || '';
+    const dsINTCode = sessionStorage.getItem('claimDsCode') || '';
+    const lossDate = this.formData['CLM_LOSS_DT'];
+    const formattedLossDate = lossDate ? this.formatDate(lossDate) : '';
+    const intmDate = this.formData['CLM_INTM_DT'];
+    const formattedIntmDate = intmDate ? this.formatDate(intmDate) : '';
 
     this.menuService.getIntmNoDropdownValues(
       lov.PLD_PROG_CODE,
       lov.PLD_BLOCK_NAME,
       lov.PLD_FIELD_NAME,
       'null',
-      dsINTCode
+      dsINTCode,
+      formattedLossDate,
+      formattedIntmDate
     )
       .pipe(takeUntil(this.destroy$))
       .subscribe({
