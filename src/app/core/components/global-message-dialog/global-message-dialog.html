@@ -1,0 +1,24 @@
+<p-dialog
+  [visible]="messageService.visible()"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '450px' }"
+  styleClass="global-msg-dialog"
+>
+  <ng-template pTemplate="header">
+    <div class="header-container" [class.error-title]="messageService.severity() === 'error'"
+          [class.success-title]="messageService.severity() === 'success'">
+      <i class="pi" [ngClass]="{'pi-times-circle': messageService.severity() === 'error', 'pi-check-circle': messageService.severity() === 'success'}" style="font-size: 1.5rem"></i>
+      <span>{{ messageService.summary() }}</span>
+    </div>
+  </ng-template>
+
+  <p class="msg-text">{{ messageService.detail() }}</p>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="OK" class="ok-btn" [ngClass]="{'p-button-danger': messageService.severity() === 'error', 'p-button-success': messageService.severity() === 'success'}" (click)="messageService.close()"></button>
+  </ng-template>
+</p-dialog>

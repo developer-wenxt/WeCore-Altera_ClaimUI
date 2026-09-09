@@ -1,175 +1,404 @@
 /* Layout and styles moved to global styles.css for consistency and responsiveness */
-.back-btn-wrap {
-    margin-bottom: 12px;
-}
 
-.plain-chips {
-    background: var(--bg-surface) !important;
-    border: 1px solid var(--border-light);
-}
-
-.plain-chips .chip-label {
-    color: var(--text-muted) !important;
-}
-
-.plain-chips .chip-value {
-    background: var(--bg-page) !important;
-    color: var(--text-main) !important;
-}
-
-/* ─── Settlement Page Layout ────────────────────────────────── */
-.back-btn-wrap {
-    margin-bottom: 16px;
-}
-
-/* Section header — clean flex layout, no absolute positioning needed */
-.page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 10px;
-
-    h2 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--color-primary);
-    }
-}
-
-.settlement-header {
-    justify-content: center;
-    position: relative;
-
-    h2 {
-        text-align: center;
-    }
-}
-
+/* ─── Header: back left, title centered, add-row right ──────── */
+.settlement-header,
 .settlement-header1 {
-     justify-content: flex-end !important;
-     position: relative;
-}
-/* Claim Settlement info strip — professional, plain card look */
-.plain-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    background: var(--bg-page) !important;
-    border: 1px solid var(--border-light);
-    border-radius: 10px;
-    padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 1.5rem;
 }
 
-.plain-chips .chip {
-    flex: 1 1 150px;
-    min-width: 130px;
+.settlement-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main, #333);
 }
 
-.plain-chips .chip-label {
-    color: var(--text-muted) !important;
-    font-size: 10px;
+.back-btn-wrap {
+  margin-bottom: 1.5rem;
 }
 
-.plain-chips .chip-value {
-    background: var(--bg-surface) !important;
-    color: var(--text-main) !important;
-    border: 1px solid var(--border-light);
-    font-size: 13px;
-    padding: 8px 12px;
+/* ─── Flatten the card & enhance UX ────────────── */
+.table-card,
+.risk-table-card {
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border-light, #eaecf0);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-/* Table cards spacing */
-.table-card {
-    margin-bottom: 24px;
-
-    h3 {
-        margin: 0 0 16px;
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--color-primary);
-    }
+.table-card:hover,
+.risk-table-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: #d0d5dd;
 }
 
-/* Make tables horizontally scrollable on small screens instead of squashing */
-.table-card {
-    overflow-x: auto;
+/* ─── Table Header (Clean, Modern, Premium) ─────────────── */
+.risk-grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.chip-input {
-  background: var(--bg-page) !important;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
+.risk-grid th {
+  background: #f9fafb !important;
+  color: #475467 !important;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light, #eaecf0) !important;
+  text-align: left;
+}
+
+.risk-grid th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.risk-grid th:last-child {
+  border-top-right-radius: 8px;
+  text-align: right;
+}
+
+/* ─── Disabled & Readonly States — solid neutral grey (no blue tint) ─── */
+input:disabled,
+input[readonly],
+::ng-deep .p-select.p-disabled,
+::ng-deep .p-select.p-disabled .p-select-label,
+::ng-deep .p-select.p-disabled .p-select-dropdown,
+::ng-deep .p-inputtext:disabled,
+::ng-deep .p-inputtext[readonly],
+::ng-deep .p-datepicker.p-disabled input,
+::ng-deep .p-datepicker input:disabled {
+  background: #e5e7eb !important;
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.checkbox-label input[type="checkbox"]:disabled {
+  cursor: not-allowed !important;
+  accent-color: #9ca3af !important;
+  opacity: 0.6;
+}
+
+/* ─── Rows: Soft hover effect ──────────────────────── */
+.risk-grid td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light, #eaecf0);
+  vertical-align: middle;
+  transition: background-color 0.2s ease;
+}
+
+.risk-grid tbody tr:hover td {
+  background-color: #fcfcfd;
+}
+
+.risk-grid tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ─── Modern Inputs — sleek borders, focus rings ─────── */
+.risk-grid input,
+::ng-deep .p-inputtext,
+::ng-deep .p-select {
+  border: 1px solid #d0d5dd !important;
+  border-radius: 6px;
   padding: 8px 12px;
   font-size: 13px;
-  color: var(--text-main);
+  color: #101828;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.risk-grid input:not(:disabled):not([readonly]),
+::ng-deep .p-inputtext:not(:disabled):not([readonly]),
+::ng-deep .p-select:not(.p-disabled) {
+  background: #ffffff !important;
+}
+
+.risk-grid input:focus,
+::ng-deep .p-inputtext:focus,
+::ng-deep .p-select:focus {
+  border-color: var(--color-primary-mid, #0056b3) !important;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
   outline: none;
 }
 
-.chip-input:focus {
-  border-color: var(--color-primary-mid);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+/* ─── Actions Buttons ─────────────── */
+.risk-grid td:last-child {
+  text-align: right;
+  white-space: nowrap;
 }
 
-.chip-checkbox-label {
+.more-btn,
+.p-button-text {
+  color: #667085 !important;
+  transition: color 0.2s ease, background-color 0.2s ease !important;
+}
+
+.risk-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+}
+
+::ng-deep button.more-btn.p-button,
+::ng-deep button.p-button-text {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #475467 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+::ng-deep button.more-btn.p-button:hover,
+::ng-deep button.p-button-text:hover {
+  background: #f2f4f7 !important;
+  color: #101828 !important;
+}
+
+/* Action button variations */
+::ng-deep .p-button-rounded.pi-save {
+  color: #027a48 !important;
+  /* Success color for save */
+}
+
+::ng-deep .p-button-rounded.pi-save:hover {
+  background: #ecfdf3 !important;
+  color: #027a48 !important;
+}
+
+
+/* Claim Settlement info strip — professional, plain card look */
+.plain-chips {
   display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: #f9fafb !important;
+  border: 1px solid var(--border-light, #eaecf0);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 1.5rem;
+}
+
+.plain-chips .chip {
+  flex: 1 1 150px;
+  min-width: 130px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.plain-chips .chip-label {
+  color: #475467 !important;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.plain-chips .chip-value {
+  background: #ffffff !important;
+  color: #101828 !important;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  font-size: 13px;
+  padding: 8px 12px;
+}
+
+.chip-input {
+  background: #ffffff !important;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #101828;
+  outline: none;
+  width: 100%;
+}
+
+.chip-input:focus {
+  border-color: var(--color-primary-mid, #0056b3);
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}
+
+
+/* ─── Generate Accounting Options popup — match global card/theme ────── */
+::ng-deep .p-dialog .approve-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 2px 8px;
+}
+
+.approve-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.approve-form .form-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.approve-form .form-field input[type="text"] {
+  border: 1px solid #d0d5dd;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #101828;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+
+.approve-form .form-field input[type="text"]:focus {
+  border-color: var(--color-primary-mid, #0056b3);
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}
+
+.approve-form .checkbox-field {
+  flex-direction: row;
   align-items: center;
 }
 
-.chip-checkbox-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+.approve-form .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
-  accent-color: var(--color-primary-mid);
+  font-size: 12px;
+  font-weight: 600;
+  color: #101828;
 }
 
-.risk-grid {
-    min-width: 700px;
-    /* prevents squished columns on small viewports */
+.approve-form .checkbox-label input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--color-primary-mid, #0056b3);
 }
 
-/* ─── Responsive tweaks ──────────────────────────────────────── */
-@media (max-width: 768px) {
-    .page-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .settlement-header {
-        align-items: center;
-    }
-
-    .header-actions {
-        width: 100%;
-        justify-content: flex-end;
-        margin-left: 0 !important;
-    }
-
-    .plain-chips {
-        flex-direction: column;
-    }
-
-    .plain-chips .chip {
-        min-width: 100%;
-    }
-
-    .table-card {
-        padding: 16px;
-    }
+/* p-select inside the popup */
+::ng-deep .approve-form .p-select {
+  width: 100%;
+  border-radius: 6px !important;
+  border: 1px solid #d0d5dd !important;
+  background: #ffffff !important;
 }
 
-@media (max-width: 480px) {
-    .back-btn-wrap {
-        margin-bottom: 12px;
-    }
+::ng-deep .approve-form .p-select .p-select-label {
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  color: #101828 !important;
+}
 
-    .page-header h2 {
-        font-size: 17px;
-    }
+::ng-deep .approve-form .p-select.p-focus {
+  border-color: var(--color-primary-mid, #0056b3) !important;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
+}
 
-    .table-card h3 {
-        font-size: 14px;
-    }
+/* p-datepicker inside the popup */
+::ng-deep .approve-form .p-datepicker input {
+  border: 1px solid #d0d5dd !important;
+  background: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  color: #101828 !important;
+}
+
+::ng-deep .approve-form .p-datepicker input:focus {
+  border-color: var(--color-primary-mid, #0056b3) !important;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
+}
+
+/* Footer buttons */
+::ng-deep .p-dialog .p-dialog-footer .p-button-primary {
+  background: #0056b3 !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+}
+
+::ng-deep .p-dialog .p-dialog-footer .p-button-secondary {
+  background: #ffffff !important;
+  border: 1px solid #d0d5dd !important;
+  color: #344054 !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+}
+
+::ng-deep .p-dialog .p-dialog-footer .p-button-secondary:hover {
+  background: #f9fafb !important;
+}
+
+/* ─── Premium Approve Button ─────────────────────────────────────── */
+/* Used in the row menu 'Approve' action and the accounting Approve btn */
+.approve-btn,
+::ng-deep .approve-btn.p-button {
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%) !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 8px 22px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.approve-btn:hover,
+::ng-deep .approve-btn.p-button:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #6d28d9 100%) !important;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5) !important;
+  transform: translateY(-2px);
+}
+
+.approve-btn:active,
+::ng-deep .approve-btn.p-button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* ─── Dropdown Option Truncation ─────────────────────────────────── */
+/* Truncate long option labels inside p-select dropdowns */
+::ng-deep .p-select-overlay .p-select-option,
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 260px;
 }

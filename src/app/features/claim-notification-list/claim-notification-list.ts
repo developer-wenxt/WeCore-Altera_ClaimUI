@@ -22,6 +22,8 @@ export class ClaimNotificationListComponent extends UnSubscriber implements OnIn
   loading = signal(true);
   searchTerm = '';
 
+   activeClassCode: string = '';
+
   constructor(
     private menuService: MenuService,
     private router: Router
@@ -30,6 +32,7 @@ export class ClaimNotificationListComponent extends UnSubscriber implements OnIn
   }
 
   ngOnInit(): void {
+     this.activeClassCode = this.menuItem?.CLASS_CODE || sessionStorage.getItem('claimClassCode') || '';
     this.menuService.getClaimIntimationList()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -56,6 +59,10 @@ export class ClaimNotificationListComponent extends UnSubscriber implements OnIn
 
   get filteredRecords() {
     let result = this.allRecords();
+    if (this.activeClassCode) {
+      result = result.filter(c => c.CLASS_CODE === this.activeClassCode);
+    }
+
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       result = result.filter(c =>
@@ -68,31 +75,35 @@ export class ClaimNotificationListComponent extends UnSubscriber implements OnIn
   }
 
 onViewRecord(record: any): void {
-  console.log('Clicked Record:', record);
   this.router.navigate(
     ['/claim-notification', record.CI_INTM_NO],
-    { queryParams: { mode: 'view', sysId: record.CI_SYS_ID } }
+    { queryParams: { mode: 'view', intmNo: record.CI_INTM_NO } }
   );
 }
 
  onAddNotification(): void {
-  if (!this.menuItem?.MENU_ID) {
+  const menuId = this.menuItem?.MENU_ID || sessionStorage.getItem('claimMenuId');
+
+  if (!menuId) {
     console.error('MENU_ID missing from menuItem');
     return;
   }
-   sessionStorage.setItem('claimClassCode', this.menuItem?.CLASS_CODE || ''); 
-  this.router.navigate(['/claim-notification', this.menuItem.MENU_ID]);
+
+  const classCode = this.menuItem?.CLASS_CODE || sessionStorage.getItem('claimClassCode') || '';
+  sessionStorage.setItem('claimClassCode', classCode);
+    sessionStorage.setItem('claimDsCode', this.menuItem?.CLM_INTM_DS_CODE || sessionStorage.getItem('claimDsCode') || '');  // ADDED
+
+  this.router.navigate(['/claim-notification', menuId]);
 }
 
 onEditRecord(record: any): void {
   sessionStorage.setItem('claimClassCode', this.menuItem?.CLASS_CODE || record.CLASS_CODE || '');
+    sessionStorage.setItem('claimDsCode', this.menuItem?.CLM_INTM_DS_CODE || sessionStorage.getItem('claimDsCode') || '');  // ADDED
+
   this.router.navigate(['/claim-notification', record.CI_INTM_NO], {
-    queryParams: { mode: 'edit', sysId: record.CI_SYS_ID } 
+    queryParams: { mode: 'edit', intmNo: record.CI_INTM_NO }
   });
 }
-
-
-
 
  goBack(): void {
   this.router.navigate(['/']);

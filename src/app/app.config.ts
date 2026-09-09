@@ -7,6 +7,9 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';   // ADD
 import { authInterceptor } from './core/interceptor/authinterceptor';
+import { globalErrorInterceptor } from './core/interceptor/global-error.interceptor';
+import { loadingInterceptor } from './core/interceptor/loading.interceptor';
+import { MessageService } from 'primeng/api';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 // ADD — custom preset extending Aura with your blue table header
@@ -24,7 +27,7 @@ const MyPreset = definePreset(Aura, {
         color: '#ffffff'
       }
     },
-    button: {                        
+    button: {
       root: {
         primary: {
           background: '#2563eb',
@@ -42,10 +45,11 @@ const MyPreset = definePreset(Aura, {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor, globalErrorInterceptor])),
+    MessageService,
     providePrimeNG({
       theme: {
-        preset: MyPreset,      
+        preset: MyPreset,
         options: {
           darkModeSelector: false
         }

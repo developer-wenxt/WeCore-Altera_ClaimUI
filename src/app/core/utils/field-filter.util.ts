@@ -6,13 +6,30 @@ export function getVisibleFields(fields: FieldConfig[]): FieldConfig[] {
   
    .sort((a, b) => a.DISPLAY_ORDER_NO - b.DISPLAY_ORDER_NO);;
 }
-export function getInputType(dataType: string): string {
-  switch (dataType) {
-    case 'C': return 'checkbox';
-    case 'D': return 'date';
-    default: return 'text';
+
+
+export function getInputType(sourceDesignType: string, dataType: string, columnName?: string): string {
+
+  
+  if (columnName === 'CLM_LOSS_DT') {
+    return 'date';
   }
+
+  if (sourceDesignType === 'C') {
+    return 'checkbox';
+  }
+
+  if (sourceDesignType === 'T'  && dataType === 'D') {
+    return 'date';
+  }
+
+   if (sourceDesignType === 'T' && dataType === 'N') {
+    return 'number';
+  }
+
+  return 'text';
 }
+
 
 export function getVisibleFieldsSorted(fields: FieldConfig[]): FieldConfig[] {
   return fields
@@ -22,7 +39,7 @@ export function getVisibleFieldsSorted(fields: FieldConfig[]): FieldConfig[] {
 
 export function getTableColumnFields(fields: FieldConfig[]): FieldConfig[] {
   return fields
-    .filter(f => f.TABLE_COLUMN === 1)
+     .filter(f => f.HIDE_FIELD_YES === 2)   
     .sort((a, b) => a.DISPLAY_ORDER_NO - b.DISPLAY_ORDER_NO);
 }
 
@@ -39,5 +56,11 @@ export function getSettlementColumns(fields: FieldConfig[]): FieldConfig[] {
 }
 
 export function isFieldEditable(field: FieldConfig): boolean {
-  return field.UPDATE_YN === 1;
-}
+  return  field.ENTERABLE === 1;
+}  
+
+export function isFieldEditableIntimation(field: FieldConfig): boolean {
+  return field.UPDATE_YN === 1 ;
+}  
+
+

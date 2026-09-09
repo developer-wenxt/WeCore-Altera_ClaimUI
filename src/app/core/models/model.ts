@@ -11,6 +11,23 @@ export interface MenuItem {
   CLASS_DESC: string;
   CLM_TYPE: string;
   CLM_INTM_INST_CODE: string;
+  
+}
+
+export interface ClaimMenuItem {
+  CLM_MENU_NAME: string;
+  PARENT_MENU_ID: string;
+  MENU_ID: string;
+  CLM_PRODUCT: string;
+  CLM_DS_CODE: string;
+  PRODUCT_CODE: string;
+  PRODUCT_DESC: string;
+  CLM_DEPT_CODE: string;
+  CLASS_CODE: string;
+  CLASS_DESC: string;
+  CLM_TYPE: string | null;
+  CLM_INST_CODE: string;
+  CLM_SETL_INST_CODE: string;
 }
 
 

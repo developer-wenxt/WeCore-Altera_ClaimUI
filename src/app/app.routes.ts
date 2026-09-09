@@ -1,42 +1,21 @@
 import { Routes } from '@angular/router';
+import { MenuComponent } from './features/menu/menu';
+import { ClaimNotificationComponent } from './features/claim-notification/claim-notification';
+import { ClaimRegistrationComponent } from './features/claim-registration/claim-registration';
+import { EstDetailsComponent } from './features/est-details/est-details';
+import { SettlementDetailsComponent } from './features/settlement-details/settlement-details';
+import { ClaimListComponent } from './features/claim-list/claim-list';
+import { ClaimNotificationListComponent } from './features/claim-notification-list/claim-notification-list';
+import { PolicyAccountingEntryComponent } from './features/policy-accounting-entry/policy-accounting-entry';   // ADD
 
-// Feature components are lazy-loaded so they land in their own chunks instead of
-// the initial bundle — see the `initial` budget in angular.json.
 export const routes: Routes = [
-  {
-    path: '',
-    loadComponent: () => import('./features/menu/menu').then(m => m.MenuComponent)
-  },
-  {
-    path: 'menu',
-    loadComponent: () => import('./features/menu/menu').then(m => m.MenuComponent)
-  },
-  {
-    path: 'claim-notification/:menuId',
-    loadComponent: () => import('./features/claim-notification/claim-notification').then(m => m.ClaimNotificationComponent)
-  },
-  {
-    path: 'claim-registration',
-    loadComponent: () => import('./features/claim-registration/claim-registration').then(m => m.ClaimRegistrationComponent)
-  },
-  {
-    path: 'risk-details',
-    loadComponent: () => import('./features/risk-details/risk-details').then(m => m.RiskDetailsComponent)
-  },
-  {
-    path: 'est-details',
-    loadComponent: () => import('./features/est-details/est-details').then(m => m.EstDetailsComponent)
-  },
-  {
-    path: 'settlement-details',
-    loadComponent: () => import('./features/settlement-details/settlement-details').then(m => m.SettlementDetailsComponent)
-  },
-  {
-    path: 'claim-list/:classCode',
-    loadComponent: () => import('./features/claim-list/claim-list').then(m => m.ClaimListComponent)
-  },
-  {
-    path: 'claim-notification-list',
-    loadComponent: () => import('./features/claim-notification-list/claim-notification-list').then(m => m.ClaimNotificationListComponent)
-  }
+  { path: '', component: MenuComponent },
+  { path: 'menu', component: MenuComponent },
+  { path: 'claim-notification/:menuId', component: ClaimNotificationComponent },
+  { path: 'claim-registration', component: ClaimRegistrationComponent },
+  { path: 'est-details', component: EstDetailsComponent },
+  { path: 'settlement-details', component: SettlementDetailsComponent },
+  { path: 'claim-list/:classCode', component: ClaimListComponent },
+  { path: 'claim-notification-list', component: ClaimNotificationListComponent },
+  { path: 'policy-accounting-entry', component: PolicyAccountingEntryComponent }   // ADD
 ];
