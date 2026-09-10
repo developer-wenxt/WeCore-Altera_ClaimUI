@@ -71,6 +71,6 @@ export class NavbarComponent implements OnInit {
   }
 
   goToWecore(): void {
-    window.location.href = 'https://wecoreuat1.wecorephoenixgroup.com/Eway/#/home';
+    window.location.href = 'https://wecorephoenixgroup.com/Eway/#/Home';
   }
 }

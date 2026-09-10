@@ -9,10 +9,7 @@ import { FieldConfig } from '../models/model';
 
 @Injectable({ providedIn: 'root' })
 export class MenuService {
-  // Use a getter so environment.apiUrl is evaluated after UserDetails are set
-  private get baseUrl(): string {
-    return environment.apiUrl;
-  }
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 

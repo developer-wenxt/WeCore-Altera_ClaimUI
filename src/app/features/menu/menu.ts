@@ -78,8 +78,8 @@ export class MenuComponent extends UnSubscriber implements OnInit {
           this.sessionService.setToken(originalToken);
           this.sessionService.setWecorePath(wecorePath);
 
-          // Token hiding temporarily disabled for testing
-          // window.history.replaceState(null, '', window.location.pathname + '#/');
+          // Clear query params immediately from browser URL
+          window.history.replaceState(null, '', window.location.pathname + '#/');
 
           this.isloading = true;
           this.menuService.decodeToken(originalToken)
