@@ -1,79 +1,247 @@
 <div class="form-page">
- <div class="page-header">
+  <div class="table-card">
+   <div class="page-header">
   <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
   <h2>Claim Registration</h2>
   <div class="header-actions">
-    <button *ngIf="isReadOnly" pButton label="Next" icon="pi pi-arrow-right" iconPos="right" (click)="onNextClick()" class="primary-btn"></button>   <!-- ADD -->
-    <button pButton icon="pi pi-cog" class="icon-btn"></button>
+    <button pButton label="Accounting" icon="pi pi-book" (click)="onAccountingClick()" class="primary-btn" [disabled]="!sysId"></button>
   </div>
 </div>
 
-
     <div class="info-chips">
-      <div class="chip"><span class="chip-label">Product</span><span class="chip-value">2001</span></div>
-      <div class="chip"><span class="chip-label">Policy No</span><span class="chip-value">P-MBA-2023-20-2001-000021</span></div>
-      <div class="chip highlight"><span class="chip-label">Type</span><span class="chip-value">Direct</span></div>
+      <div class="chip">
+        <span class="chip-label">Product</span>
+        <span class="chip-value">{{ formData.CLM_PROD_CODE  }}</span>
+      </div>
+      <div class="chip">
+        <span class="chip-label">Claim No</span>
+        <span class="chip-value">{{ formData.CLM_NO  }}</span>
+      </div>
+
     </div>
+    <div *ngIf="loading()" class="state-msg">Loading form...</div>
 
-    <div class="table-card">
-      <div *ngIf="loading()" class="state-msg">Loading form...</div>
+    <form *ngIf="!loading()" class="dynamic-form-grid">
+      <ng-container *ngFor="let field of fields(); trackBy: trackByColName">
+        <div *ngIf="!isHeaderField(field.COLUMN_NAME)" class="form-field"
+  [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'"
+  [class.field-disabled]="!canEditField(field)">
 
-      <form *ngIf="!loading()" class="dynamic-form-grid">
-        <div *ngFor="let field of fields()" class="form-field" [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE) === 'checkbox'">
-
-          <label *ngIf="getInputType(field.SOURCE_DESIGN_TYPE) !== 'checkbox'">
+          <label *ngIf="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) !== 'checkbox'">
             {{ field.FIELD_PROMPT }} <span class="required" *ngIf="field.MANDATORY === 1">*</span>
           </label>
 
-          <ng-container [ngSwitch]="getInputType(field.SOURCE_DESIGN_TYPE)">
-          <label *ngSwitchCase="'checkbox'" class="checkbox-label">
-    <input type="checkbox"
-      [(ngModel)]="formData[field.COLUMN_NAME]"
-      [name]="field.COLUMN_NAME"
-      [disabled]="isReadOnly || !isFieldEditable(field)"
-      [ngModelOptions]="{standalone: true}" />
-    <span>{{ field.FIELD_PROMPT }}</span>
-  </label>
-  <input *ngSwitchCase="'date'" pInputText type="date"
-    [(ngModel)]="formData[field.COLUMN_NAME]"
-    [name]="field.COLUMN_NAME"
-    [readonly]="isReadOnly || !isFieldEditable(field)"
-    [ngModelOptions]="{standalone: true}" />
-  <input *ngSwitchCase="'number'" pInputText type="number" [attr.placeholder]="field.TOOL_TIP"
-    [(ngModel)]="formData[field.COLUMN_NAME]"
-    [name]="field.COLUMN_NAME"
-    [readonly]="isReadOnly || !isFieldEditable(field)"
-    [ngModelOptions]="{standalone: true}" />
-  <ng-container *ngSwitchDefault>
-    <p-select
-      *ngIf="isLovField(field.COLUMN_NAME); else textInput"
-      [options]="getDropdownOptions(field.COLUMN_NAME)"
-      [(ngModel)]="formData[field.COLUMN_NAME]"
-      optionLabel="label"
-      optionValue="value"
-      [name]="field.COLUMN_NAME"
-      [disabled]="isReadOnly || !isFieldEditable(field)"
-      [ngModelOptions]="{standalone: true}"
-      placeholder="-- Select --">
-    </p-select>
-    <ng-template #textInput>
-      <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"
-        [(ngModel)]="formData[field.COLUMN_NAME]"
-        [name]="field.COLUMN_NAME"
-        [readonly]="isReadOnly || !isFieldEditable(field)"
-        [ngModelOptions]="{standalone: true}" />
-    </ng-template>
-  </ng-container>
+          <ng-container [ngSwitch]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE)">
+
+            <!-- Checkbox -->
+            <label *ngSwitchCase="'checkbox'" class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
+                [disabled]="!canEditField(field)" [ngModelOptions]="{standalone: true}" />
+              <span>{{ field.FIELD_PROMPT }}</span>
+            </label>
+
+            <!-- Date -->
+            <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
+              dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="false"
+              [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }" appendTo="body">
+            </p-datepicker>
+
+            <!-- Number -->
+            <input *ngSwitchCase="'number'" pInputText type="number" [attr.placeholder]="field.TOOL_TIP"
+              [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME" [readonly]="!canEditField(field)"
+              [ngModelOptions]="{standalone: true}" />
+
+            <!-- Text / LOV dropdown -->
+            <ng-container *ngSwitchDefault>
+              <p-select *ngIf="isLovField(field.COLUMN_NAME); else textInput"
+                [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
+                optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME"
+                [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }" appendTo="body"
+                (onShow)="onDropdownOpen(field.COLUMN_NAME)"
+                (onChange)="field.COLUMN_NAME === 'CLM_INTM_NO' ? onIntmNoSelect($event.value) : (field.COLUMN_NAME === 'CLM_POL_NO' ? onPolicyNoSelect($event.value) : null)"  [filter]="true" filterBy="label" [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="-- Select --">
+              </p-select>
+              <ng-template #textInput>
+                <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"
+                  [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
+                  [readonly]="!canEditField(field) " [ngModelOptions]="{standalone: true}"
+                   />
+              </ng-template>
+            </ng-container>
+
           </ng-container>
         </div>
-      </form>        
+      </ng-container>
+    </form>
 
-      <div *ngIf="!loading() && fields().length === 0" class="state-msg">
-        Claim Registration is not available for this product.
-      </div>
+    <div *ngIf="!loading() && fields().length === 0" class="state-msg">
+      Claim Registration is not available for this product.
+    </div>
 
-     <div *ngIf="!loading() && fields().length > 0 && !isReadOnly" class="submit-btn-wrap">
-  <button pButton type="button" label="Submit" class="submit-btn" (click)="onSubmit()"></button>
-</div>
+    <div *ngIf="!loading() && fields().length > 0" class="submit-btn-wrap">
+      <button *ngIf="!isReadOnly" pButton type="button" label="Submit" class="submit-btn" (click)="onSubmit()"></button>
+      <button pButton label="Next" icon="pi pi-arrow-right" iconPos="right" (click)="onNextClick()"
+        class="primary-btn"></button>
     </div>
   </div>
+
+ <div class="table-card" style="margin-top: 1rem;">
+  <div class="page-header">
+    <h2>Risk Details</h2>
+    <div class="header-actions">
+      <button pButton label="+ Add Row" (click)="addRiskRow()" class="add-row-btn" [disabled]="!sysId"></button>
+    </div>
+  </div>
+
+  <div *ngIf="!sysId" class="state-msg">
+    Please save the Claim Registration first to add risk details.
+  </div>
+
+  <ng-container *ngIf="sysId">
+    <div class="search-box">
+      <input type="text" placeholder="Search details..." />
+    </div>
+
+    <div *ngIf="riskLoading()" class="state-msg">Loading table...</div>
+
+    <div class="risk-table-wrapper">
+  <table *ngIf="!riskLoading()" class="risk-grid">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th *ngFor="let col of visibleRiskColumns(); trackBy: trackByColName">
+            {{ col.FIELD_PROMPT }}
+            <span class="required" *ngIf="col.MANDATORY === 1">*</span>
+          </th>
+          <th class="actions-col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of riskGridRows(); let i = index; trackBy: trackByIndex">
+          <td>{{ i + 1 }}</td>
+          <td *ngFor="let col of visibleRiskColumns(); trackBy: trackByColName" [class.field-disabled]="!canEditRiskField(col)">
+            <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
+              <input *ngSwitchCase="'checkbox'" type="checkbox" [(ngModel)]="row[col.COLUMN_NAME]"
+                [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" />
+              <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="row[col.COLUMN_NAME]" [name]="col.COLUMN_NAME + i"
+                dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="false"
+                [disabled]="!canEditRiskField(col)" appendTo="body"></p-datepicker>
+              <input *ngSwitchCase="'number'" type="number" [(ngModel)]="row[col.COLUMN_NAME]"
+                [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" />
+              <ng-container *ngSwitchDefault>
+  <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_POL_NO'; else sectionCodeField">
+    <p-select [options]="row.policyOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="POLH_NO" optionValue="POLH_NO" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+  </ng-container>
+  
+  <ng-template #sectionCodeField>
+    <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_SECTION_CODE'; else riskDescField">
+      <p-select [options]="row.sectionOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="PSECH_SEC_CODE" optionValue="PSECH_SEC_CODE" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+    </ng-container>
+  </ng-template>
+  
+  <ng-template #riskDescField>
+    <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_PRAI_LVL1_DESC'; else smiCodeField">
+      <p-select [options]="row.riskOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="PRAIH_RISK_ID" optionValue="PRAIH_RISK_ID" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+    </ng-container>
+  </ng-template>
+  
+  <ng-template #smiCodeField>
+    <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_SMI_CODE'; else coverCodeField">
+      <p-select [options]="row.smiOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="PRSH_SMI_DESC" optionValue="PRSH_SMI_CODE" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+    </ng-container>
+  </ng-template>
+  
+  <ng-template #coverCodeField>
+    <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_COVER_CODE'; else normalRiskInput">
+      <p-select [options]="row.coverOptions || []" [(ngModel)]="row[col.COLUMN_NAME]" optionLabel="PRCH_DESC" optionValue="PRCH_CODE" [name]="col.COLUMN_NAME + i" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+    </ng-container>
+  </ng-template>
+
+  <!-- Normal fields -->
+  <ng-template #normalRiskInput>
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="row[col.COLUMN_NAME]"
+      [name]="col.COLUMN_NAME + i"
+      [disabled]="!canEditRiskField(col)" />
+  </ng-template>
+</ng-container>
+            </ng-container>
+          </td>
+
+          <td class="actions-col">
+            <button type="button" pButton icon="pi pi-save" class="p-button-text p-button-rounded"
+              (click)="saveRiskRow(i)"></button>
+            <button type="button" pButton label="More" icon="pi pi-ellipsis-v" class="p-button-text more-btn"
+  (click)="openRowMenu($event, rowMenu, i)"></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p-menu #rowMenu [popup]="true" [model]="rowMenuItems" appendTo="body"></p-menu>
+
+    <div class="table-footer">
+      <span>Showing {{ riskGridRows().length }} record(s)</span>
+    </div>
+  </ng-container>
+</div>
+</div>
+
+<p-dialog [(visible)]="showMoreDialogValue" [modal]="true" [style]="{ width: '90vw', maxWidth: '900px' }"
+  [header]="'More Risk Details — Row ' + ((activeRowIndex ?? 0) + 1)">
+  <table class="risk-grid" *ngIf="activeRowIndex !== null">
+    <thead>
+      <tr>
+        <th *ngFor="let col of extraRiskColumns(); trackBy: trackByColName">
+          {{ col.FIELD_PROMPT }}
+          <span class="required" *ngIf="col.MANDATORY === 1">*</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td *ngFor="let col of extraRiskColumns(); trackBy: trackByColName" [class.field-disabled]="!canEditRiskField(col)">
+          <ng-container [ngSwitch]="getInputType(col.SOURCE_DESIGN_TYPE, col.DATA_TYPE)">
+            <input *ngSwitchCase="'checkbox'" type="checkbox" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]"
+              [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" />
+            <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME"
+              dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true" [readonlyInput]="false"
+              [disabled]="!canEditRiskField(col)" appendTo="body"></p-datepicker>
+            <input *ngSwitchCase="'number'" type="number" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]"
+              [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" />
+            <ng-container *ngSwitchDefault>
+              <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_POL_NO'; else sectionCodeFieldExtra">
+                <p-select [options]="riskGridRows()[activeRowIndex].policyOptions || []" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]" optionLabel="POLH_NO" optionValue="POLH_NO" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+              </ng-container>
+              <ng-template #sectionCodeFieldExtra>
+                <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_SECTION_CODE'; else riskDescFieldExtra">
+                  <p-select [options]="riskGridRows()[activeRowIndex].sectionOptions || []" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]" optionLabel="PSECH_SEC_CODE" optionValue="PSECH_SEC_CODE" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+                </ng-container>
+              </ng-template>
+              <ng-template #riskDescFieldExtra>
+                <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_PRAI_LVL1_DESC'; else smiCodeFieldExtra">
+                  <p-select [options]="riskGridRows()[activeRowIndex].riskOptions || []" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]" optionLabel="PRAIH_RISK_ID" optionValue="PRAIH_RISK_ID" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+                </ng-container>
+              </ng-template>
+              <ng-template #smiCodeFieldExtra>
+                <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_SMI_CODE'; else coverCodeFieldExtra">
+                  <p-select [options]="riskGridRows()[activeRowIndex].smiOptions || []" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]" optionLabel="PRSH_SMI_DESC" optionValue="PRSH_SMI_CODE" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+                </ng-container>
+              </ng-template>
+              <ng-template #coverCodeFieldExtra>
+                <ng-container *ngIf="col.COLUMN_NAME === 'CLMAP_COVER_CODE'; else normalRiskInputExtra">
+                  <p-select [options]="riskGridRows()[activeRowIndex].coverOptions || []" [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]" optionLabel="PRCH_DESC" optionValue="PRCH_CODE" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" placeholder="Select" appendTo="body" [style]="{'width':'100%'}"></p-select>
+                </ng-container>
+              </ng-template>
+              <ng-template #normalRiskInputExtra>
+                <input type="text" pInputText [(ngModel)]="riskGridRows()[activeRowIndex][col.COLUMN_NAME]" [name]="'extra_' + col.COLUMN_NAME" [disabled]="!canEditRiskField(col)" />
+              </ng-template>
+            </ng-container>
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</p-dialog>

@@ -1,63 +1,66 @@
 <div class="form-page">
-  <div class="page-header notif-header">                    
-    <div class="header-left">
-      <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
-    </div>
-    <h2 class="notif-title">Claim Notifications</h2>           
-    <div class="header-actions">
-      <button pButton label="+ Add Notification" (click)="onAddNotification()" class="primary-btn"></button>
-    </div>
-  </div>
-
   <div class="table-card">
+    <div class="page-header notif-header">
+      <div class="header-left">
+        <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
+      </div>
+      <h2 class="notif-title">Claim Notifications</h2>
+      <div class="header-actions">
+        <button pButton label="+ Add Notification" (click)="onAddNotification()" class="primary-btn"></button>
+      </div>
+    </div>
 
     <div class="claim-toolbar">
       <div class="filter-group">
         <span class="search-wrap">
           <i class="pi pi-search"></i>
-          <input type="text" placeholder="Search assured name, policy no, or intimation no..." [(ngModel)]="searchTerm" />
+          <input type="text" placeholder="Search assured name, policy no, or intimation no..."
+            [(ngModel)]="searchTerm" />
         </span>
       </div>
     </div>
 
     <div *ngIf="loading()" class="state-msg">Loading claim notifications...</div>
 
-    <p-table *ngIf="!loading()" [value]="filteredRecords" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,50]" styleClass="risk-grid">
+    <p-table *ngIf="!loading()" [value]="filteredRecords" [paginator]="true" [rows]="5"
+      [rowsPerPageOptions]="[5,10,20,50]" styleClass="risk-grid notif-table">
       <ng-template pTemplate="header">
-  <tr>
-    <th>Class Code</th>
-<th>Product Code</th>
-    <th>Intimation No</th>
-    <th>Policy No</th>
-    <th>Assured Name</th>
-    <th>Intimated By</th>
-    <th>Loss Date</th>
-    <th>Intimation Date</th>
-    <th>Created Date</th>
-    <th>Actions</th>
-      
-  </tr>
-</ng-template>
-<ng-template pTemplate="body" let-record>
-  <tr>
-    <td>{{ record.CLASS_CODE }}</td>
-<td>{{ record.PRODUCT_CODE }}</td>
-    <td>{{ record.CI_INTM_NO }}</td>
-    <td>{{ record.CI_POL_NO }}</td>
-    <td>{{ record.CI_ASSR_NAME }}</td>
-    <td>{{ record.CI_INTM_NAME || '-' }}</td>
-    <td>{{ record.CI_LOSS_DT | date:'dd-MM-yyyy' }}</td>
-    <td>{{ record.CI_INTM_DT | date:'dd-MM-yyyy HH:mm' }}</td>
-    <td>{{ record.CI_CR_DT | date:'dd-MM-yyyy HH:mm' }}</td>
-    <td>
-  <button pButton icon="pi pi-eye" class="view-btn" (click)="onViewRecord(record)"></button>
-  <button pButton icon="pi pi-pencil" class="edit-btn" (click)="onEditRecord(record)"></button>
-</td>
-  </tr>
-</ng-template>
-<ng-template pTemplate="emptymessage">
-  <tr><td colspan="10" class="state-msg">No claim notifications found.</td></tr>
-</ng-template>
+        <tr>
+
+
+          <th>Intimation No</th>
+          <th>Policy No</th>
+          <th>Assured Name</th>
+          <th>Intimated By</th>
+          <th>Loss Date</th>
+          <th>Intimation Date</th>
+          <th>Created Date</th>
+          <th>Actions</th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-record>
+        <tr>
+
+
+          <td>{{ record.CI_INTM_NO }}</td>
+          <td>{{ record.CI_POL_NO }}</td>
+          <td>{{ record.CI_ASSR_NAME }}</td>
+          <td>{{ record.CI_INTM_NAME || '-' }}</td>
+          <td>{{ record.CI_LOSS_DT | date:'dd-MM-yyyy' }}</td>
+          <td>{{ record.CI_INTM_DT | date:'dd-MM-yyyy HH:mm' }}</td>
+          <td>{{ record.CI_CR_DT | date:'dd-MM-yyyy HH:mm' }}</td>
+          <td>
+            <button pButton icon="pi pi-eye" class="view-btn" (click)="onViewRecord(record)"></button>
+            <button pButton icon="pi pi-pencil" class="edit-btn" (click)="onEditRecord(record)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" class="state-msg">No claim notifications found.</td>
+        </tr>
+      </ng-template>
     </p-table>
   </div>
 </div>

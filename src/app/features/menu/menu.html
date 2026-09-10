@@ -30,32 +30,34 @@
     <div *ngIf="activeView() === 'empty'" class="state-msg">Select an action...</div>
 
     <ng-container *ngIf="activeView() === 'products'">
-      <div class="content-header">
-        <div class="breadcrumb">
-          <span>{{ filteredItems[0]?.CLASS_DESC || 'Products' }}</span>
-          <span class="sep">&gt;</span>
-          <span>Class Code: {{ selectedCategory() }}</span> <!-- ADD -->
-          <span class="sep">&gt;</span>
-          <span>{{ filteredItems.length }} Products available</span>
-        </div>
-        <h1>{{ filteredItems[0]?.CLASS_DESC || 'Products' }} Insurance</h1>
+      <div class="table-card">
+        <div class="content-header">
+          <div class="breadcrumb">
+            <span>{{ filteredItems[0]?.CLASS_DESC || 'Products' }}</span>
+            <span class="sep">&gt;</span>
+            <span>Class Code: {{ selectedCategory() }}</span> <!-- ADD -->
+            <span class="sep">&gt;</span>
+            <span>{{ filteredItems.length }} Products available</span>
+          </div>
+          <h1>{{ filteredItems[0]?.CLASS_DESC || 'Products' }} Insurance</h1>
 
-        <div class="search-wrap">
-          <i class="pi pi-search"></i>
-          <input type="text" [placeholder]="'Search in ' + (filteredItems[0]?.CLASS_DESC || 'products') + '...'"
-            [(ngModel)]="searchTerm" />
+          <div class="search-wrap">
+            <i class="pi pi-search"></i>
+            <input type="text" [placeholder]="'Search in ' + (filteredItems[0]?.CLASS_DESC || 'products') + '...'"
+              [(ngModel)]="searchTerm" />
+          </div>
         </div>
+
+        <div *ngIf="error()" class="state-msg error">Failed to load menu list.</div>
+
+        <div class="product-grid"> <!-- ADD -->
+          <div class="product-card" *ngFor="let item of filteredItems"
+            [class.active]="selectedItem?.MENU_ID === item.MENU_ID" (click)="onProductSelect(item)">
+            <div class="product-icon"><i [class]="getMenuIcon(item.CLM_INTM_MENU_NAME)"></i></div>
+            <div class="product-name">{{ item.CLM_INTM_MENU_NAME }}</div>
+          </div>
+        </div> <!-- ADD -->
       </div>
-
-      <div *ngIf="error()" class="state-msg error">Failed to load menu list.</div>
-
-      <div class="product-grid"> <!-- ADD -->
-        <div class="product-card" *ngFor="let item of filteredItems"
-          [class.active]="selectedItem?.MENU_ID === item.MENU_ID" (click)="onProductSelect(item)">
-          <div class="product-icon"><i [class]="getMenuIcon(item.CLM_INTM_MENU_NAME)"></i></div>
-          <div class="product-name">{{ item.CLM_INTM_MENU_NAME }}</div>
-        </div>
-      </div> <!-- ADD -->
     </ng-container>
 
     <app-claim-notification-list *ngIf="activeView() === 'claim-notification-list'" [menuItem]="selectedItem"

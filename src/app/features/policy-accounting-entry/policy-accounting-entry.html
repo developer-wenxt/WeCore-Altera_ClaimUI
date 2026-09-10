@@ -1,0 +1,127 @@
+<div class="form-page">
+  <div class="table-card">
+    <div class="page-header">
+      <div class="header-left">
+        <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
+        <h2>Policy Accounting Entry</h2>
+      </div>
+      <div class="header-actions">
+        <div class="search-wrap">
+          <i class="pi pi-search"></i>
+          <input type="text" placeholder="search" />
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loading()" class="state-msg">Loading...</div>
+
+    <div class="risk-table-wrapper" *ngIf="!loading()">
+      <table class="risk-grid">
+        <thead>
+          <tr>
+            <th>Policy No</th>
+            <th>End No</th>
+            <th>Claim No</th>
+            <th>Assured Code</th>
+            <th>Assured Name</th>
+            <th>Transaction Code</th>
+            <th>Document No</th>
+            <th>Document Date</th>
+            <th>Currency</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of masterRows()">
+            <td>{{ row.AD_POL_NO }}</td>
+            <td>{{ row.AD_END_NO ?? '—' }}</td>
+            <td>{{ row.AD_CLM_NO }}</td>
+            <td>{{ row.AD_ASSR_CODE }}</td>
+            <td>{{ row.AD_ASSR_NAME }}</td>
+            <td>{{ row.AD_TRAN_CODE }}</td>
+            <td>{{ row.AD_DOC_NO }}</td>
+            <td>{{ row.AD_DOC_DT | date:'dd/MM/yyyy' }}</td>
+            <td>{{ row.AD_CURR_CODE }}</td>
+            <td>
+              <button pButton icon="pi pi-eye" class="view-btn" (click)="viewDetails(row)"></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer" *ngIf="!loading()">
+      <span>Showing 1 to {{ masterRows().length }} of {{ masterRows().length }} records</span>
+      <div class="filter-group">
+        <span class="page-circle">1</span>
+        <input type="text" class="page-size-box" value="5" readonly />
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card" *ngIf="!loading() && selectedPolNo">
+    <div class="page-header">
+      <div class="header-left">
+        <h2>Detail Information</h2>
+      </div>
+      <div class="header-actions">
+        <div class="search-wrap">
+          <i class="pi pi-search"></i>
+          <input type="text" placeholder="search" />
+        </div>
+      </div>
+    </div>
+
+    <div class="info-chips">
+      <div class="chip highlight">
+        <span class="chip-label">Policy</span>
+        <span class="chip-value">{{ selectedPolNo }}</span>
+      </div>
+    </div>
+
+    <div class="risk-table-wrapper">
+      <table class="risk-grid">
+        <thead>
+          <tr>
+            <th>Sr No</th>
+            <th>Main Acc Code</th>
+            <th>Sub Acc Code</th>
+            <th>DR/CR</th>
+            <th>Amount FC</th>
+            <th>Amount LC</th>
+            <th>Interest Entry</th>
+            <th>Due Date</th>
+            <th>Posted</th>
+            <th>Narration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of detailRows(); let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ d.AD_MAIN_ACNT_CODE }}</td>
+            <td>{{ d.AD_SUB_ACNT_CODE }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="d.AD_DRCR_FLAG === 'C' ? 'status-R' : 'status-J'">
+                {{ d.AD_DRCR_FLAG === 'C' ? 'CR' : (d.AD_DRCR_FLAG === 'D' ? 'DR' : d.AD_DRCR_FLAG) }}
+              </span>
+            </td>
+            <td>{{ d.AD_AMT_FC | number:'1.2-2' }}</td>
+            <td>{{ d.AD_AMT_LC_1 | number:'1.2-2' }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="d.AD_INT_ENT_YN === '1' ? 'status-R' : 'status-C'">
+                {{ d.AD_INT_ENT_YN === '1' ? 'YES' : 'NO' }}
+              </span>
+            </td>
+            <td>{{ d.AD_DUE_DT ? (d.AD_DUE_DT | date:'dd/MM/yyyy') : '—' }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="d.AD_POST_YN === '1' ? 'status-R' : 'status-O'">
+                {{ d.AD_POST_YN === '1' ? 'POSTED' : 'PENDING' }}
+              </span>
+            </td>
+            <td>{{ d.AD_NARRATION }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

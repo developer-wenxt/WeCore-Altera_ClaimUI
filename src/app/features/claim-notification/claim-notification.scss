@@ -1,0 +1,111 @@
+.claim-notif-header {
+    position: relative;
+}
+
+.claim-notif-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+}
+
+.chip.highlight {
+    .chip-value {
+        display: inline-block;
+        background-color: white;
+        min-width: 200px; // fixed width regardless of content
+        min-height: 36px; // fixed height when empty
+    }
+}
+
+
+.date-error-popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #dc2626;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+
+.dynamic-form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 24px;
+    font-size: 16px; // increased base font size
+
+    .form-field.field-disabled {
+
+        input,
+        .p-inputtext,
+        textarea {
+            background-color: #e2e8f0 !important;
+            color: #64748b !important;
+            border-color: #cbd5e1 !important;
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
+        ::ng-deep .p-select {
+            background-color: #e2e8f0 !important;
+            border-color: #cbd5e1 !important;
+            opacity: 1 !important;
+
+            .p-select-label {
+                color: #64748b !important;
+            }
+        }
+
+        ::ng-deep .p-datepicker input {
+            background-color: #e2e8f0 !important;
+            color: #64748b !important;
+            border-color: #cbd5e1 !important;
+            cursor: not-allowed;
+        }
+
+        &.checkbox-field .checkbox-label span {
+            color: #64748b;
+        }
+
+        label {
+            color: #64748b;
+        }
+    }
+}
+
+
+.field-hint {
+    color: red; // amber warning tone, adjust to your theme
+    font-size: 0.75rem;
+    margin-top: 2px;
+    display: block;
+}
+
+
+
+// Responsive fallback so 4 columns don't break on smaller screens
+@media (max-width: 1200px) {
+    .dynamic-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .dynamic-form-grid {
+        grid-template-columns: 1fr;
+    }
+}

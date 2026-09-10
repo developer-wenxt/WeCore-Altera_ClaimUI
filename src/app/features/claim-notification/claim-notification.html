@@ -1,24 +1,25 @@
 <div class="form-page">
-   <div class="page-header claim-notif-header">        
-    <div class="header-left">
-      <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
-    </div>
-    <h2 class="claim-notif-title">Claim Notification</h2>   
-  </div>
-
-  <div class="info-chips">
-    <div class="chip">
-      <span class="chip-label">Product</span>
-      <span class="chip-value">2001</span>
-    </div>
-
-    <div class="chip highlight">
-      <span class="chip-label">Type</span>
-      <span class="chip-value">Intimation</span>
-    </div>
-  </div>
-
   <div class="table-card">
+    <div *ngIf="dateError" class="date-error-popup">{{ dateError }}</div>
+
+    <div class="page-header claim-notif-header">
+      <div class="header-left">
+        <button pButton icon="pi pi-arrow-left" label="Back" (click)="goBack()" class="back-btn"></button>
+      </div>
+      <h2 class="claim-notif-title">Claim Notification</h2>
+    </div>
+
+    <div class="info-chips">
+      <div class="chip">
+        <span class="chip-label">Class</span>
+        <span class="chip-value">{{ classCode || 'null' }} - {{ classDesc || 'null' }}</span>
+      </div>
+
+      <div class="chip highlight">
+        <span class="chip-label">Notification No</span>
+        <span class="chip-value">{{ formData['CI_INTM_NO'] }}</span>
+      </div>
+    </div>
 
     <div *ngIf="loading()" class="state-msg">
       Loading form...
@@ -26,91 +27,71 @@
 
     <form *ngIf="!loading()" class="dynamic-form-grid">
 
-      <div
-        *ngFor="let field of fields()"
-        class="form-field"
-        [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE) === 'checkbox'">
+      <ng-container *ngFor="let field of fields(); trackBy: trackByColName">
+        <div *ngIf="field.COLUMN_NAME !== 'CI_INTM_NO' && field.COLUMN_NAME !== 'CI_COUNTY'" class="form-field"
+          [class.checkbox-field]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) === 'checkbox'"
+          [class.field-disabled]="!canEditField(field)">
 
-        <label *ngIf="getInputType(field.SOURCE_DESIGN_TYPE) !== 'checkbox'">
-          {{ field.FIELD_PROMPT }}
-          <span class="required" *ngIf="field.MANDATORY === 1">*</span>
-        </label>
-
-        <ng-container [ngSwitch]="getInputType(field.SOURCE_DESIGN_TYPE)">
-
-          <!-- Checkbox -->
-          <label *ngSwitchCase="'checkbox'" class="checkbox-label">
-            <input
-              type="checkbox"
-              [(ngModel)]="formData[field.COLUMN_NAME]"
-              [name]="field.COLUMN_NAME"
-              [disabled]="isReadOnly || !isFieldEditable(field)"
-              [ngModelOptions]="{standalone: true}" />
-            <span>{{ field.FIELD_PROMPT }}</span>
+          <label *ngIf="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE) !== 'checkbox'">
+            {{ field.FIELD_PROMPT }}
+            <span class="required" *ngIf="field.MANDATORY === 1">*</span>
           </label>
 
-          <!-- Date -->
-          <input
-            *ngSwitchCase="'date'"
-            pInputText
-            type="datetime-local"
-            [(ngModel)]="formData[field.COLUMN_NAME]"
-            [name]="field.COLUMN_NAME"
-            [readonly]="isReadOnly || !isFieldEditable(field)"
-            [ngModelOptions]="{standalone: true}" />
+               <small *ngIf="field.COLUMN_NAME === 'CI_POL_NO' && !formData['CI_LOSS_DT']" class="field-hint">
+      Please fill Loss Date first to select Policy No
+    </small>
 
-          <!-- Number -->
-          <input
-            *ngSwitchCase="'number'"
-            pInputText
-            type="number"
-            [attr.placeholder]="field.TOOL_TIP"
-            [(ngModel)]="formData[field.COLUMN_NAME]"
-            [name]="field.COLUMN_NAME"
-            [readonly]="isReadOnly || !isFieldEditable(field)"
-            [ngModelOptions]="{standalone: true}" />
+          <ng-container [ngSwitch]="getInputType(field.SOURCE_DESIGN_TYPE, field.DATA_TYPE)">
 
-          <!-- Text / LOV dropdown -->
-          <ng-container *ngSwitchDefault>
+            <!-- Checkbox -->
+            <label *ngSwitchCase="'checkbox'" class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
+               [disabled]="!canEditField(field)" [ngModelOptions]="{standalone: true}" />
+              <span>{{ field.FIELD_PROMPT }}</span>
+            </label>
 
-          <p-select
-  *ngIf="isLovField(field.COLUMN_NAME); else textInput"
-  [options]="getDropdownOptions(field.COLUMN_NAME)"
-  [(ngModel)]="formData[field.COLUMN_NAME]"
-  optionLabel="label"
-  optionValue="value"
-  [name]="field.COLUMN_NAME"
-  [disabled]="isReadOnly || !isFieldEditable(field)"
-  [ngModelOptions]="{standalone: true}"
-  placeholder="-- Select --">
+            <!-- Date -->
+           <p-datepicker *ngSwitchCase="'date'" [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
+  dateFormat="dd-mm-yy" [showTime]="true" hourFormat="24" [showIcon]="true"
+  [readonlyInput]="false"
+  [disabled]="!canEditField(field)" [ngModelOptions]="{ standalone: true }"
+  (ngModelChange)="checkDateValidity()">
+</p-datepicker>
+
+            <!-- Number -->
+            <input *ngSwitchCase="'number'" pInputText type="number" [attr.placeholder]="field.TOOL_TIP"
+              [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
+              [readonly]="!canEditField(field)" [ngModelOptions]="{standalone: true}" />
+
+            <!-- Text / LOV dropdown -->
+            <ng-container *ngSwitchDefault>
+
+             <p-select *ngIf="isLovField(field.COLUMN_NAME); else textInput"
+  [options]="getDropdownOptions(field.COLUMN_NAME)" [(ngModel)]="formData[field.COLUMN_NAME]"
+  optionLabel="label" optionValue="value" [name]="field.COLUMN_NAME"
+  [disabled]="!canEditField(field)" [ngModelOptions]="{standalone: true}"
+  (onShow)="field.COLUMN_NAME === 'CI_POL_NO' && onPolicyDropdownOpen()"
+  (onChange)="field.COLUMN_NAME === 'CI_POL_NO' ? onPolicyNoSelect($event.value) : null"
+  [filter]="true" filterBy="label"
+  placeholder="-- Select --" appendTo="body">
 </p-select>
 
-            <ng-template #textInput>
-              <input
-                pInputText
-                type="text"
-                [attr.placeholder]="field.TOOL_TIP"
-                [(ngModel)]="formData[field.COLUMN_NAME]"
-                [name]="field.COLUMN_NAME"
-                [readonly]="isReadOnly || !isFieldEditable(field)"
-                [ngModelOptions]="{standalone: true}" />
-            </ng-template>
+              <ng-template #textInput>
+                <input pInputText type="text" [attr.placeholder]="field.TOOL_TIP"
+                  [(ngModel)]="formData[field.COLUMN_NAME]" [name]="field.COLUMN_NAME"
+                  [readonly]="!canEditField(field)" [ngModelOptions]="{standalone: true}" />
+              </ng-template>
+
+            </ng-container>
 
           </ng-container>
 
-        </ng-container>
-
-      </div>
+        </div>
+      </ng-container>
 
     </form>
-
     <div class="form-actions" *ngIf="!loading() && !isReadOnly">
-      <button
-        pButton
-        type="button"
-        label="Submit"
-        class="submit-btn"
-        (click)="saveClaim()">
+      <button pButton type="button" label="Submit" class="submit-btn" (click)="saveClaim()">
       </button>
     </div>
 

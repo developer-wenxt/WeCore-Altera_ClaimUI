@@ -1,1 +1,321 @@
 /* Layout and styles moved to global styles.css for consistency and responsiveness */
+/* ─── Header: back left, title centered, add-row right ──────── */
+.est-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.est-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main, #333);
+}
+
+/* ─── Flatten the card & enhance UX ────────────── */
+.table-card {
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border-light, #eaecf0);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.table-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: #d0d5dd;
+}
+
+/* ─── Table Header (Clean, Modern, Premium) ─────────────── */
+.risk-grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.risk-grid th {
+  background: #f9fafb !important;
+  color: #475467 !important;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light, #eaecf0) !important;
+  text-align: left;
+}
+
+.risk-grid th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.risk-grid th:last-child {
+  border-top-right-radius: 8px;
+  text-align: right;
+}
+
+/* ─── Disabled & Readonly States ─────────────── */
+input:disabled,
+input[readonly],
+::ng-deep .p-select.p-disabled,
+::ng-deep .p-select.p-disabled .p-select-label,
+::ng-deep .p-inputtext:disabled,
+::ng-deep .p-inputtext[readonly],
+::ng-deep .p-datepicker.p-disabled input,
+::ng-deep .p-datepicker input:disabled {
+  background: #e2e8f0 !important;
+  color: #64748b !important;
+  border-color: #cbd5e1 !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+}
+
+.checkbox-label input[type="checkbox"]:disabled {
+  cursor: not-allowed !important;
+  accent-color: #9ca3af !important;
+  opacity: 0.6;
+}
+
+/* ─── Rows: Soft hover effect ──────────────────────── */
+.risk-grid td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light, #eaecf0);
+  vertical-align: middle;
+  transition: background-color 0.2s ease;
+}
+
+.risk-grid tbody tr:hover td {
+  background-color: #fcfcfd;
+}
+
+.risk-grid tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ─── Modern Inputs — sleek borders, focus rings ─────── */
+.risk-grid input,
+::ng-deep .p-inputtext,
+::ng-deep .p-select {
+  border: 1px solid #d0d5dd !important;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #101828;
+  width: 100%;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.risk-grid input:not(:disabled):not([readonly]),
+::ng-deep .p-inputtext:not(:disabled):not([readonly]),
+::ng-deep .p-select:not(.p-disabled) {
+  background: #ffffff !important;
+}
+
+::ng-deep .p-select .p-select-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.risk-grid input:focus,
+::ng-deep .p-inputtext:focus,
+::ng-deep .p-select:focus {
+  border-color: var(--color-primary-mid, #0056b3) !important;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
+  outline: none;
+}
+
+/* ─── Actions Buttons ─────────────── */
+.risk-grid td:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.more-btn,
+.p-button-text {
+  color: #667085 !important;
+  transition: color 0.2s ease, background-color 0.2s ease !important;
+}
+
+.risk-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+}
+
+::ng-deep button.more-btn.p-button,
+::ng-deep button.p-button-text {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #475467 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+::ng-deep button.more-btn.p-button:hover,
+::ng-deep button.p-button-text:hover {
+  background: #f2f4f7 !important;
+  color: #101828 !important;
+}
+
+/* Action button variations */
+::ng-deep .p-button-rounded.pi-save {
+  color: #027a48 !important;
+  /* Success color for save */
+}
+
+::ng-deep .p-button-rounded.pi-save:hover {
+  background: #ecfdf3 !important;
+  color: #027a48 !important;
+}
+
+/* ─── 3-dot menu button ─────────────── */
+.actions-col {
+  text-align: right;
+  white-space: nowrap;
+  width: 48px;
+}
+
+::ng-deep button.est-dots-btn.p-button {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #475467 !important;
+  font-size: 14px !important;
+  padding: 6px 8px !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  min-width: unset !important;
+}
+
+::ng-deep button.est-dots-btn.p-button:hover {
+  background: #f2f4f7 !important;
+  color: #101828 !important;
+}
+
+.risk-grid input,
+::ng-deep .p-inputtext,
+::ng-deep .p-select {
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+::ng-deep .p-select .p-select-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+/* ─── Widen ref no & provision date columns ─────────────── */
+.col-ce_ref_no,
+th.col-ce_ref_no {
+  min-width: 140px;
+}
+
+.col-provision_dt,
+th.col-provision_dt {
+  min-width: 260px;
+}
+
+.col-ce_ref_no input,
+.col-provision_dt ::ng-deep .p-datepicker input {
+  white-space: nowrap;
+  overflow: visible;
+  min-width: 220px;
+  text-overflow: unset;
+  min-width: 100%;
+}
+
+::ng-deep .col-provision_dt .p-datepicker {
+  width: 100%;
+}
+
+
+
+.risk-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+}
+
+.col-ce_ref_no input {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+  min-width: 100%;
+}
+
+.col-provision_dt ::ng-deep .p-datepicker,
+.col-provision_dt ::ng-deep .p-datepicker .p-inputtext {
+  min-width: 220px;
+  width: 220px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+/* Override global fixed-table truncation for the date column */
+.risk-grid td.col-provision_dt,
+.risk-grid th.col-provision_dt {
+  max-width: none !important;
+  width: 260px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+.risk-grid td.col-provision_dt ::ng-deep .p-datepicker,
+.risk-grid td.col-provision_dt ::ng-deep .p-datepicker .p-inputtext {
+  width: 220px !important;
+  min-width: 220px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+.col-ce_provision_dt,
+th.col-ce_provision_dt {
+  min-width: 260px;
+}
+
+.col-ce_provision_dt ::ng-deep .p-datepicker,
+.col-ce_provision_dt ::ng-deep .p-datepicker .p-inputtext {
+  min-width: 220px;
+  width: 220px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.risk-grid td.col-ce_provision_dt,
+.risk-grid th.col-ce_provision_dt {
+  max-width: none !important;
+  width: 260px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+.risk-grid td.col-ce_provision_dt ::ng-deep .p-datepicker,
+.risk-grid td.col-ce_provision_dt ::ng-deep .p-datepicker .p-inputtext {
+  width: 220px !important;
+  min-width: 220px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
