@@ -13,7 +13,7 @@ import { SHARED_IMPORTS } from '../../core/shared/shared';
 import { ClaimListComponent } from '../claim-list/claim-list';
 import { ClaimNotificationListComponent } from '../claim-notification-list/claim-notification-list';
 
-const SSO_ENABLED = false;  
+const SSO_ENABLED = true;  
 
 @Component({
   selector: 'app-menu',
