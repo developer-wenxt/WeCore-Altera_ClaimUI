@@ -2,7 +2,7 @@
 .menu-layout {
     display: flex;
     gap: 0;
-    min-height: 100vh;
+    min-height: calc(100vh - 54px);
     margin: 0;
 }
 
