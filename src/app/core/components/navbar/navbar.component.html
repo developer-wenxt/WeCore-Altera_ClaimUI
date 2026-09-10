@@ -1,0 +1,82 @@
+<nav class="navbar">
+  <div class="navbar-inner">
+
+    <div class="nav-left">
+      <div class="logo-mark">
+        <img [src]="getLogoUrl()" alt="Logo" class="navbar-logo-img" (error)="onLogoError($event)" />
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <!-- WeCore Return Button -->
+      <button class="wecore-return-btn" (click)="goToWecore()" aria-label="Return to WeCore">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>WeCore</span>
+      </button>
+
+      <div class="nav-divider"></div>
+
+      <!-- Branch Selector -->
+      @if (branches && branches.length > 0) {
+      <div class="branch-select-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" class="branch-icon">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+        <span class="branch-name-text">{{ getActiveBranchName() }}</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="chevron">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+        <p-select class="branch-select-native"
+          [options]="branches"
+          optionLabel="name"
+          optionValue="code"
+          [ngModel]="currentBranchCode"
+          (onChange)="onBranchChange($event.value)"
+          appendTo="body"
+        ></p-select>
+      </div>
+      <div class="nav-divider"></div>
+      }
+
+      <!-- Dark Mode Toggle Button -->
+      <button class="nav-icon-btn" (click)="toggleDarkMode()"
+        [aria-label]="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        @if (isDarkMode) {
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4" />
+          <path
+            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+        </svg>
+        } @else {
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+        }
+      </button>
+
+      <div class="nav-divider"></div>
+
+      <!-- User Profile Pill -->
+      <div class="user-pill">
+        <div class="user-avatar">{{ getInitials() }}</div>
+        <div class="user-info">
+          <span class="user-name">{{ getLoginId() }}</span>
+          <span class="user-role">{{ getUserType() }}</span>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="chevron">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</nav>

@@ -1,0 +1,238 @@
+.navbar {
+  width: 100%;
+  height: 54px;
+  background: linear-gradient(90deg, #1976d2 0%, #1565c0 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  user-select: none;
+}
+
+.navbar-inner {
+  width: 100%;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-mark {
+  display: flex;
+  align-items: center;
+
+  .navbar-logo-img {
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+    display: block;
+    filter: brightness(1.05);
+  }
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.28);
+  margin: 0 0.25rem;
+}
+
+/* WeCore Return button */
+.wecore-return-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 34px;
+  padding: 0 1rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+
+  svg {
+    stroke: #ffffff;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.24);
+    border-color: rgba(255, 255, 255, 0.65);
+    transform: translateX(-1px);
+
+    svg {
+      transform: translateX(-2px);
+    }
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+/* Branch selector */
+.branch-select-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 34px;
+  padding: 0 0.9rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  .branch-icon {
+    stroke: #ffffff;
+    opacity: 0.9;
+  }
+
+  .branch-name-text {
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .chevron {
+    stroke: #ffffff;
+    opacity: 0.8;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Overlay transparent PrimeNG select so clicking anywhere opens the dropdown */
+  .branch-select-native {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+
+    ::ng-deep .p-select {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+    }
+  }
+}
+
+/* Icon button (dark mode toggle) */
+.nav-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  svg {
+    stroke: #ffffff;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.24);
+    border-color: rgba(255, 255, 255, 0.65);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* User pill */
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 36px;
+  padding: 0 0.85rem 0 0.4rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 22px;
+  color: #ffffff;
+  cursor: default;
+  transition: all 0.2s ease;
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #1565c0;
+    font-weight: 700;
+    font-size: 0.72rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+
+    .user-name {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #ffffff;
+      max-width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role {
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.8);
+      text-transform: capitalize;
+    }
+  }
+
+  .chevron {
+    stroke: #ffffff;
+    opacity: 0.75;
+    margin-left: 0.15rem;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+}

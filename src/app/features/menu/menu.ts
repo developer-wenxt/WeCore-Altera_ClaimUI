@@ -12,13 +12,14 @@ import { MenuItem, FieldConfig, ClaimMenuItem } from '../../core/models/model';
 import { SHARED_IMPORTS } from '../../core/shared/shared';
 import { ClaimListComponent } from '../claim-list/claim-list';
 import { ClaimNotificationListComponent } from '../claim-notification-list/claim-notification-list';
+import { NavbarComponent } from '../../core/components/navbar/navbar.component';
 
-const SSO_ENABLED = true;  
+const SSO_ENABLED = true;
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [...SHARED_IMPORTS, ClaimListComponent, ClaimNotificationListComponent],
+  imports: [...SHARED_IMPORTS, ClaimListComponent, ClaimNotificationListComponent, NavbarComponent],
   templateUrl: './menu.html',
   styleUrls: ['./menu.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -29,8 +30,8 @@ export class MenuComponent extends UnSubscriber implements OnInit {
   loading = signal(true);
   error = signal(false);
 
-  isloading = false;       
-  ssoError: string | null = null; 
+  isloading = false;
+  ssoError: string | null = null;
 
   selectedItem: MenuItem | null = null;
   selectedCategory = signal<string>('');
@@ -77,6 +78,11 @@ export class MenuComponent extends UnSubscriber implements OnInit {
           this.sessionService.setToken(originalToken);
           this.sessionService.setWecorePath(wecorePath);
 
+          this.router.navigate([], {
+            queryParams: {},
+            replaceUrl: true
+          });
+
           this.isloading = true;
           this.menuService.decodeToken(originalToken)
             .pipe(
@@ -93,21 +99,21 @@ export class MenuComponent extends UnSubscriber implements OnInit {
                   this.loadMenuData();
                 }
               },
-             error: (error) => {
-  this.isloading = false;
-  const msg = error?.error?.message || error?.message || 'Failed to decode token';
-  this.ssoError = msg;
-  this.globalMessage.show('error', 'Error', msg);
-},
+              error: (error) => {
+                this.isloading = false;
+                const msg = error?.error?.message || error?.message || 'Failed to decode token';
+                this.ssoError = msg;
+                this.globalMessage.show('error', 'Error', msg);
+              },
             });
         } else {
           if (this.sessionService.getToken()) {
             this.loadMenuData();
           } else {
-  const msg = 'missing token';
-  this.ssoError = msg;
-  this.globalMessage.show('error', 'Error', msg);
-}
+            const msg = 'missing token';
+            this.ssoError = msg;
+            this.globalMessage.show('error', 'Error', msg);
+          }
         }
       });
   }
@@ -200,6 +206,11 @@ export class MenuComponent extends UnSubscriber implements OnInit {
     this.activeView.set('products');
   }
 
+  goBackToEway(): void {
+    const path = this.sessionService.getWecorePath();
+    window.location.href = path || 'https://wecorephoenixgroup.com/Eway/#/Home';
+  }
+
   onCategoryClick(cat: { code: string; desc: string; count: number }): void {
     this.selectedCategory.set(cat.code);
     this.searchTerm = '';
@@ -220,7 +231,7 @@ export class MenuComponent extends UnSubscriber implements OnInit {
     sessionStorage.setItem('claimClassDesc', cat.desc || '');
     sessionStorage.setItem('claimIntmDsCode', claimMatch ? claimMatch.CLM_DS_CODE : '');
     sessionStorage.setItem('claimIntm_1DsCode', match ? match.CLM_INTM_DS_CODE : '');
-    
+
 
 
     this.switchView('claim-list');
@@ -242,8 +253,8 @@ export class MenuComponent extends UnSubscriber implements OnInit {
     sessionStorage.setItem('claimMenuId', String(this.selectedItem.MENU_ID));
     sessionStorage.setItem('claimClassCode', this.selectedItem.CLASS_CODE || '');
     sessionStorage.setItem('claimClassDesc', this.selectedItem.CLASS_DESC || '');
-      sessionStorage.setItem('claimDsCode', match?.CLM_INTM_DS_CODE || ''); 
-      
+    sessionStorage.setItem('claimDsCode', match?.CLM_INTM_DS_CODE || '');
+
 
     this.switchView('claim-notification-list');
   }
