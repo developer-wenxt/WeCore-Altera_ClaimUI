@@ -17,6 +17,6 @@ export const environment = {
     return apiMap[sessionService.getCompanyId() ?? ''] ?? '';
   },
 
-wecoreUrl: 'https://wecoreuat1.wecorephoenixgroup.com/api/EwayCommonApi/api',
-  wecoreBaseUrl: 'https://wecoreuat1.wecorephoenixgroup.com/Eway/#/api'
+wecoreUrl: 'https://wecoreuat1.wecorephoenixgroup.com/api/EwayCommonApi',
+  wecoreBaseUrl: 'https://wecoreuat1.wecorephoenixgroup.com/Eway/#'
 };
