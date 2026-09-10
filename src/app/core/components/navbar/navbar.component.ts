@@ -38,32 +38,7 @@ export class NavbarComponent implements OnInit {
     window.location.reload();
   }
 
-  ngOnInit(): void {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      this.setDarkMode(true);
-    } else if (savedTheme === 'light') {
-      this.setDarkMode(false);
-    } else {
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      this.setDarkMode(prefersDark);
-    }
-  }
-
-  toggleDarkMode(): void {
-    this.setDarkMode(!this.isDarkMode);
-  }
-
-  private setDarkMode(dark: boolean): void {
-    this.isDarkMode = dark;
-    if (dark) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'light');
-    }
-  }
+  ngOnInit(): void {}
 
   getLogoUrl(): string {
     const companyId = this.sessionService.getCompanyId();
@@ -96,8 +71,6 @@ export class NavbarComponent implements OnInit {
   }
 
   goToWecore(): void {
-    const wecorePath = this.sessionService.getWecorePath();
-    const targetUrl = wecorePath || 'https://wecorephoenixgroup.com/Eway/#/Home';
-    window.location.href = targetUrl;
+    window.location.href = 'https://wecorephoenixgroup.com/Eway/#/Home';
   }
 }
