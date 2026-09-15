@@ -42,7 +42,7 @@
   border-color: #d0d5dd;
 }
 
-/* ─── Table Header (Clean, Modern, Premium) ─────────────── */
+/* ─── Table Header — unified indigo palette (matches global styles) ─── */
 .risk-grid {
   width: 100%;
   border-collapse: separate;
@@ -50,14 +50,14 @@
 }
 
 .risk-grid th {
-  background: #f9fafb !important;
-  color: #475467 !important;
+  background: linear-gradient(135deg, var(--color-accent, #8b5cf6) 0%, var(--header-bg-dark, #7c3aed) 100%) !important;
+  color: #ffffff !important;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-light, #eaecf0) !important;
+  padding: 10px 14px;
+  border-bottom: 3px solid var(--header-bg-dark, #7c3aed) !important;
   text-align: left;
 }
 
@@ -113,30 +113,33 @@ input[readonly],
   border-bottom: none;
 }
 
-/* ─── Modern Inputs — sleek borders, focus rings ─────── */
-.risk-grid input,
-::ng-deep .p-inputtext,
-::ng-deep .p-select {
-  border: 1px solid #d0d5dd !important;
+/* ─── Modern Inputs — sleek borders, focus rings (defer to global for p-select) ─── */
+.risk-grid input {
+  border: 1px solid var(--border-light, #c7d2fe) !important;
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 7px 10px;
   font-size: 13px;
-  color: #101828;
+  color: var(--text-main, #1e1b4b);
   width: 100%;
   transition: all 0.2s ease;
 }
 
-.risk-grid input:not(:disabled):not([readonly]),
-::ng-deep .p-inputtext:not(:disabled):not([readonly]),
-::ng-deep .p-select:not(.p-disabled) {
-  background: #ffffff !important;
+::ng-deep .p-inputtext {
+  border: 1px solid var(--border-light, #c7d2fe) !important;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-main, #1e1b4b);
+  width: 100%;
+  transition: all 0.2s ease;
 }
 
+/* p-select inherits from global styles — no local override needed */
+
+
 .risk-grid input:focus,
-::ng-deep .p-inputtext:focus,
-::ng-deep .p-select:focus {
-  border-color: var(--color-primary-mid, #0056b3) !important;
-  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
+::ng-deep .p-inputtext:focus {
+  border-color: var(--border-focus, #6366f1) !important;
+  box-shadow: var(--shadow-focus, 0 0 0 4px rgba(99, 102, 241, 0.2)) !important;
   outline: none;
 }
 
@@ -303,59 +306,69 @@ input[readonly],
   accent-color: var(--color-primary-mid, #0056b3);
 }
 
-/* p-select inside the popup */
+/* p-select inside the popup — inherits from global, just set width */
 ::ng-deep .approve-form .p-select {
   width: 100%;
-  border-radius: 6px !important;
-  border: 1px solid #d0d5dd !important;
-  background: #ffffff !important;
 }
 
-::ng-deep .approve-form .p-select .p-select-label {
-  padding: 8px 12px !important;
-  font-size: 13px !important;
-  color: #101828 !important;
+/* Disabled state for popup p-select in view mode */
+::ng-deep .approve-form .p-select.p-disabled {
+  background: #e5e7eb !important;
+  border-color: #d1d5db !important;
+  cursor: not-allowed !important;
+}
+
+::ng-deep .approve-form .p-select.p-disabled .p-select-label {
+  color: #6b7280 !important;
 }
 
 ::ng-deep .approve-form .p-select.p-focus {
-  border-color: var(--color-primary-mid, #0056b3) !important;
-  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
+  border-color: var(--color-primary-mid, #6366f1) !important;
+  box-shadow: var(--shadow-focus) !important;
 }
 
 /* p-datepicker inside the popup */
 ::ng-deep .approve-form .p-datepicker input {
-  border: 1px solid #d0d5dd !important;
+  border: 1px solid var(--border-light, #c7d2fe) !important;
   background: #ffffff !important;
   border-radius: 6px !important;
   padding: 8px 12px !important;
   font-size: 13px !important;
-  color: #101828 !important;
+  color: var(--text-main, #1e1b4b) !important;
+}
+
+::ng-deep .approve-form .p-datepicker.p-disabled input {
+  background: #e5e7eb !important;
+  color: #6b7280 !important;
+  border-color: #d1d5db !important;
+  cursor: not-allowed !important;
 }
 
 ::ng-deep .approve-form .p-datepicker input:focus {
-  border-color: var(--color-primary-mid, #0056b3) !important;
-  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
+  border-color: var(--border-focus, #6366f1) !important;
+  box-shadow: var(--shadow-focus) !important;
 }
 
 /* Footer buttons */
 ::ng-deep .p-dialog .p-dialog-footer .p-button-primary {
-  background: #0056b3 !important;
+  background: linear-gradient(135deg, var(--color-primary-mid, #6366f1) 0%, var(--header-bg-dark, #7c3aed) 100%) !important;
   border: none !important;
-  border-radius: 6px !important;
+  border-radius: 8px !important;
   font-weight: 600 !important;
-  padding: 8px 16px !important;
+  padding: 8px 18px !important;
+  color: #ffffff !important;
 }
 
 ::ng-deep .p-dialog .p-dialog-footer .p-button-secondary {
   background: #ffffff !important;
-  border: 1px solid #d0d5dd !important;
-  color: #344054 !important;
-  border-radius: 6px !important;
-  padding: 8px 16px !important;
+  border: 1px solid var(--border-light, #c7d2fe) !important;
+  color: var(--text-main, #1e1b4b) !important;
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
 }
 
 ::ng-deep .p-dialog .p-dialog-footer .p-button-secondary:hover {
-  background: #f9fafb !important;
+  background: var(--color-primary-light, #e0e7ff) !important;
 }
 
 /* ─── Premium Approve Button ─────────────────────────────────────── */

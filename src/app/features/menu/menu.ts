@@ -14,7 +14,7 @@ import { ClaimListComponent } from '../claim-list/claim-list';
 import { ClaimNotificationListComponent } from '../claim-notification-list/claim-notification-list';
 import { NavbarComponent } from '../../core/components/navbar/navbar.component';
 
-const SSO_ENABLED = true;
+const SSO_ENABLED = false;
 
 @Component({
   selector: 'app-menu',

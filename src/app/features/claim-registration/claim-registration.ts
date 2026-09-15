@@ -356,6 +356,30 @@ onDropdownOpen(columnName: string): void {
 onIntmNoSelect(intmNo: string): void {
   if (!intmNo) return;
 
+  // Check if this notification number already has a claim registration
+  this.menuService.checkClaimExistsByIntmNo(intmNo, this.classCode)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (exists) => {
+        if (exists) {
+          this.msgService.show('error', 'Duplicate Not Allowed',
+            'A Claim Registration already exists for Notification No: ' + intmNo + '. Only one Claim Registration is allowed per Notification No.');
+          this.formData['CLM_INTM_NO'] = '';
+          return;
+        }
+        // No duplicate — proceed with normal flow
+        this.processIntmNoSelection(intmNo);
+      },
+      error: (err) => {
+        console.error('Error checking duplicate notification no', err);
+        // On error, proceed anyway to avoid blocking the user
+        this.processIntmNoSelection(intmNo);
+      }
+    });
+}
+
+private processIntmNoSelection(intmNo: string): void {
+
   this.menuService.getIntimationData(intmNo)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
@@ -639,10 +663,33 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
       ? this.menuService.updateClaimRegistration(this.sysId, payload)
       : this.menuService.saveClaimRegistration(payload);
 
+    // For new registrations, check if notification number already has a claim registration
+    const intmNo = this.formData['CLM_INTM_NO']?.toString().trim();
+    if (!this.isEdit && intmNo && intmNo !== 'null') {
+      this.menuService.checkClaimExistsByIntmNo(intmNo, this.classCode)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (exists) => {
+            if (exists) {
+              this.msgService.show('error', 'Duplicate Not Allowed',
+                'A Claim Registration already exists for Notification No: ' + intmNo + '. Only one Claim Registration is allowed per Notification No.');
+              return;
+            }
+            this.executeSave(request$);
+          },
+          error: () => this.executeSave(request$)
+        });
+      return;
+    }
+
+    this.executeSave(request$);
+  }
+
+  private executeSave(request$: any): void {
     request$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res) => {
+        next: (res: any) => {
             console.log('🔥 SAVE RESPONSE:', JSON.stringify(res, null, 2)); // TEMP DEBUG
 
           const data = res?.data?.data;
@@ -657,7 +704,7 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
 const polNo = this.formData['CLM_POL_NO'];
 this.populateFreshRiskRow(polNo);
         },
-        error: (err) => console.error('Error saving claim registration', err)
+        error: (err: any) => console.error('Error saving claim registration', err)
       });
   }
 

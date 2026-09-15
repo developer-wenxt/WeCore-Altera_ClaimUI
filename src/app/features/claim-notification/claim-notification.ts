@@ -230,7 +230,7 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
     const request$ = this.isEdit && this.intmNo
       ? this.menuService.updateClaimIntimation(this.intmNo as any, payload)
       : this.menuService.saveClaimIntimation(payload);
-
+                              
     request$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -280,10 +280,21 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
     return !!this.lovMap()[columnName];
   }
 
+    private extractClassCode(polNo: string): string {   // ADDED
+    if (!polNo) return '';
+    const parts = polNo.includes('/') ? polNo.split('/') : polNo.split('-');
+    // "-" format: P-LUS-2022-10-1002-000995        -> index 3 ("10")
+    // "/" format: P11/2025/107/1001/100101/70000248 -> index 2 ("107")
+    return polNo.includes('/') ? (parts[2] || '') : (parts[3] || '');
+  }
 
-  getDropdownOptions(columnName: string): any[] {
+
+    getDropdownOptions(columnName: string): any[] {
   const raw = this.dropdownOptionsMap()[columnName] || [];
-  return raw.map((row: any) => {
+  const filtered = columnName === 'CI_POL_NO' && this.classCode   // ADDED
+    ? raw.filter((row: any) => this.extractClassCode(row.POLH_NO) === this.classCode)
+    : raw;
+  return filtered.map((row: any) => {
     const keys = Object.keys(row);
     if (columnName === 'CI_POL_NO') {
       return {

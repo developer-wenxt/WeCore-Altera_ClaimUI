@@ -294,5 +294,10 @@ export class MenuService {
     return this.http.post<any>(`${this.baseUrl}/settlementApproval`, payload);
   }
 
+  checkClaimExistsByIntmNo(intmNo: string, classCode: string): Observable<boolean> {
+    return this.getClaimList(classCode).pipe(
+      map(claims => claims.some(c => String(c.CLM_INTM_NO) === String(intmNo)))
+    );
+  }
 
 }

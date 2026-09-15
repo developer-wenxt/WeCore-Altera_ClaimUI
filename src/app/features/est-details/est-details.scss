@@ -34,7 +34,7 @@
   border-color: #d0d5dd;
 }
 
-/* ─── Table Header (Clean, Modern, Premium) ─────────────── */
+/* ─── Table Header — unified indigo palette (matches global styles) ─── */
 .risk-grid {
   width: 100%;
   border-collapse: separate;
@@ -42,14 +42,14 @@
 }
 
 .risk-grid th {
-  background: #f9fafb !important;
-  color: #475467 !important;
+  background: linear-gradient(135deg, var(--color-accent, #8b5cf6) 0%, var(--header-bg-dark, #7c3aed) 100%) !important;
+  color: #ffffff !important;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-light, #eaecf0) !important;
+  padding: 10px 14px;
+  border-bottom: 3px solid var(--header-bg-dark, #7c3aed) !important;
   text-align: left;
 }
 
@@ -59,7 +59,6 @@
 
 .risk-grid th:last-child {
   border-top-right-radius: 8px;
-  text-align: right;
 }
 
 /* ─── Disabled & Readonly States ─────────────── */
@@ -100,34 +99,34 @@ input[readonly],
   border-bottom: none;
 }
 
-/* ─── Modern Inputs — sleek borders, focus rings ─────── */
-.risk-grid input,
-::ng-deep .p-inputtext,
-::ng-deep .p-select {
-  border: 1px solid #d0d5dd !important;
+/* ─── Modern Inputs — sleek borders, focus rings (p-select defers to global) ─── */
+.risk-grid input {
+  border: 1px solid var(--border-light, #c7d2fe) !important;
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 7px 10px;
   font-size: 13px;
-  color: #101828;
+  color: var(--text-main, #1e1b4b);
   width: 100%;
   transition: all 0.2s ease;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.risk-grid input:not(:disabled):not([readonly]),
-::ng-deep .p-inputtext:not(:disabled):not([readonly]),
-::ng-deep .p-select:not(.p-disabled) {
-  background: #ffffff !important;
+::ng-deep .p-inputtext {
+  border: 1px solid var(--border-light, #c7d2fe) !important;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-main, #1e1b4b);
+  width: 100%;
+  transition: all 0.2s ease;
 }
 
+/* p-select label overflow only (layout handled by global) */
 ::ng-deep .p-select .p-select-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   display: block;
 }
+
 
 .risk-grid input:focus,
 ::ng-deep .p-inputtext:focus,

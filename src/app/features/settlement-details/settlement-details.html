@@ -177,26 +177,26 @@
     <div class="form-field">
       <label>Approval Date</label>
       <p-datepicker [(ngModel)]="approveFormData.CS_APPR_DT" name="CS_APPR_DT" dateFormat="dd-mm-yy" [showTime]="true"
-  hourFormat="24" [showIcon]="true" [readonlyInput]="false" appendTo="body"></p-datepicker>
+  hourFormat="24" [showIcon]="true" [readonlyInput]="isReadOnly" appendTo="body" [disabled]="isReadOnly"></p-datepicker>
     </div>
 
     <div class="form-field checkbox-field">
       <label class="checkbox-label">
-<input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_AC_YN" name="CS_GEN_CLM_AC_YN" />
+<input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_AC_YN" name="CS_GEN_CLM_AC_YN" [disabled]="isReadOnly" />
         <span>Generate Claim Account Y/N</span>
       </label>
     </div>
 
     <div class="form-field checkbox-field">
       <label class="checkbox-label">
-<input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_COINS_AC_YN" name="CS_GEN_CLM_COINS_AC_YN" />
+<input type="checkbox" [(ngModel)]="approveFormData.CS_GEN_CLM_COINS_AC_YN" name="CS_GEN_CLM_COINS_AC_YN" [disabled]="isReadOnly" />
         <span>Generate Coinsurance Account Y/N</span>
       </label>
     </div>
 
     <div class="form-field checkbox-field">
       <label class="checkbox-label">
-<input type="checkbox" [(ngModel)]="approveFormData.CS_FINAL_YN" name="CS_FINAL_YN" />        <span>Claim Final Y/N</span>
+<input type="checkbox" [(ngModel)]="approveFormData.CS_FINAL_YN" name="CS_FINAL_YN" [disabled]="isReadOnly" />        <span>Claim Final Y/N</span>
       </label>
     </div>
 

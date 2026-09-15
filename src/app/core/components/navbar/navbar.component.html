@@ -32,14 +32,8 @@
           stroke-linecap="round" stroke-linejoin="round" class="chevron">
           <polyline points="6 9 12 15 18 9" />
         </svg>
-        <p-select class="branch-select-native"
-          [options]="branches"
-          optionLabel="name"
-          optionValue="code"
-          [ngModel]="currentBranchCode"
-          (onChange)="onBranchChange($event.value)"
-          appendTo="body"
-        ></p-select>
+        <p-select class="branch-select-native" [options]="branches" optionLabel="name" optionValue="code"
+          [ngModel]="currentBranchCode" (onChange)="onBranchChange($event.value)" appendTo="body"></p-select>
       </div>
       <div class="nav-divider"></div>
       }

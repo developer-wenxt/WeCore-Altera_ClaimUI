@@ -553,18 +553,62 @@ textarea:focus {
   max-width: 240px;
 }
 
-/* ─── p-select Dropdown ─────────────────────────────────────── */
-.p-select:not(.p-disabled) {
-  border-radius: 18px !important;
+/* ─── p-select Dropdown — fix arrow to right end ────────────────────── */
+/* PrimeNG p-select is display:inline-flex by default with:
+   .p-select-label  { flex: 1 1 auto }  — takes all remaining space
+   .p-select-dropdown { flex-shrink: 0 } — fixed width on the right
+   The component already places the arrow on the right internally.
+   Our padding/border overrides below must NOT break that layout. */
+.p-select {
+  display: inline-flex !important;
+  align-items: center !important;
+  border-radius: 8px !important;
   border: 1px solid var(--border-light) !important;
-  background: var(--bg-surface) !important;
+  background: #ffffff !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.p-select:not(.p-disabled):hover {
+  border-color: var(--color-primary-mid) !important;
+}
+
+.p-select:not(.p-disabled).p-focus {
+  border-color: var(--border-focus) !important;
+  box-shadow: var(--shadow-focus) !important;
+}
+
+.p-select.p-disabled {
+  background: #e5e7eb !important;
+  border-color: #d1d5db !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
 }
 
 .p-select .p-select-label {
   padding: 6px 10px !important;
-  font-size: 11px !important;
-  color: var(--text-secondary);
+  font-size: 12px !important;
+  color: var(--text-main);
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+/* Keep the dropdown trigger (chevron) shrunk to the right end */
+.p-select .p-select-dropdown {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 2rem !important;
+  color: var(--text-muted);
+}
+
+.p-select.p-disabled .p-select-label {
+  color: #6b7280 !important;
+}
+
 
 .risk-grid,
 ::ng-deep .risk-grid {
