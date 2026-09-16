@@ -19,7 +19,7 @@
 
 .sidebar-header {
     padding: 1.25rem 1.25rem 1rem;     // was 1.5rem 1.5rem 1.25rem
-    background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%);
+    background: var(--header-bg-blue);
     margin-bottom: 0;
     display: block;
 }

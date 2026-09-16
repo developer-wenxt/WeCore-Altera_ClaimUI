@@ -149,15 +149,15 @@
 }
 
 .risk-grid thead th {
-  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
-  color: #ffffff !important;
-  font-size: 10px;
-  font-weight: 700;
+  background: #f9fafb !important;
+  color: #475467 !important;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.05em;
   text-align: left;
-  padding: 9px 12px;
-  border: none;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eaecf0 !important;
   white-space: nowrap;
 }
 
@@ -331,15 +331,15 @@
 }
 
 .risk-grid thead th {
-  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
-  color: #ffffff !important;
-  font-size: 12px; // CHANGED — was 10px
-  font-weight: 700;
+  background: #f9fafb !important;
+  color: #475467 !important;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.05em;
   text-align: left;
-  padding: 12px 14px; // CHANGED — was 9px 12px
-  border: none;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eaecf0 !important;
   white-space: nowrap;
 }
 
