@@ -9,7 +9,9 @@ import { FieldConfig } from '../models/model';
 
 @Injectable({ providedIn: 'root' })
 export class MenuService {
-  private baseUrl = environment.apiUrl;
+  private get baseUrl(): string {
+    return environment.apiUrl;
+  }
 
   constructor(private http: HttpClient) { }
 
