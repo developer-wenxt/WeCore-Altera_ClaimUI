@@ -14,7 +14,7 @@ import { ClaimListComponent } from '../claim-list/claim-list';
 import { ClaimNotificationListComponent } from '../claim-notification-list/claim-notification-list';
 import { NavbarComponent } from '../../core/components/navbar/navbar.component';
 
-const SSO_ENABLED = false;
+const SSO_ENABLED = true;
 
 @Component({
   selector: 'app-menu',
@@ -95,6 +95,7 @@ export class MenuComponent extends UnSubscriber implements OnInit {
                 this.sessionService.setUserDetails(data || {});
                 if (this.sessionService.getUserDetails()) {
                   this.loadMenuData();
+                  this.router.navigate(['']);
                 }
               },
               error: (error) => {
