@@ -76,8 +76,8 @@
 /* ─── Base ──────────────────────────────────────────────────── */
 body {
   font-family: var(--font-family-base);
-  font-size: 13px;
-  /* bumped ~10% from 12px */
+  font-size: 14px;
+  /* bumped for clarity */
   color: var(--text-main);
   background: var(--bg-page-gradient);
   background-attachment: fixed;
@@ -629,16 +629,15 @@ textarea:focus {
 
 .risk-grid th,
 ::ng-deep .risk-grid .p-datatable-thead>tr>th {
-  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
-  color: #ffffff !important;
+  background: #f9fafb !important;
+  color: #475467 !important;
   text-align: left;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  padding: 9px 12px;
-  border: none;
-  border-bottom: 3px solid var(--header-bg-dark);
+  letter-spacing: 0.05em;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eaecf0 !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
