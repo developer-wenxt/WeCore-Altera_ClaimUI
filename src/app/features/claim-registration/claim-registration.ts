@@ -387,6 +387,7 @@ private processIntmNoSelection(intmNo: string): void {
         const intm = res?.data?.[0] ?? res?.[0];
         if (!intm) return;
 
+        this.formData['CLM_CI_SYS_ID'] = intm.CI_SYS_ID;
         this.formData['CLM_POL_NO']  = intm.CI_POL_NO;
         this.formData['CLM_LOSS_DT'] = intm.CI_LOSS_DT ? new Date(intm.CI_LOSS_DT) : this.formData['CLM_LOSS_DT'];
         this.formData['CLM_EVENT_CODE'] = intm.CI_EVENT_CODE;
@@ -412,6 +413,7 @@ private processIntmNoSelection(intmNo: string): void {
                 const pol = res?.data?.data?.[0] ?? res?.data?.[0] ?? res?.[0];
                 if (!pol) return;
                 
+                this.formData['CLM_POL_SYS_ID'] = pol.POL_SYS_ID;
                 this.lockedByFlow = 'intm';
                 
                 this.formData['CLM_PROD_CODE'] = pol.POL_PROD_CODE;
@@ -658,6 +660,12 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
     payload.CLM_DEPT_CODE = '10';
     payload.CLM_DS_TYPE = 4;
     payload.CLM_CLASS_CODE = sessionStorage.getItem('claimClassCode');
+    if (this.formData['CLM_POL_SYS_ID']) {
+      payload.CLM_POL_SYS_ID = this.formData['CLM_POL_SYS_ID'];
+    }
+    if (this.formData['CLM_CI_SYS_ID']) {
+      payload.CLM_CI_SYS_ID = this.formData['CLM_CI_SYS_ID'];
+    }
 
     const request$ = this.isEdit && this.sysId
       ? this.menuService.updateClaimRegistration(this.sysId, payload)
@@ -736,6 +744,7 @@ this.populateFreshRiskRow(polNo);
           const policy = res?.data?.data?.[0] ?? res?.data?.[0] ?? res?.[0];
           if (!policy) return;
 
+          this.formData['CLM_POL_SYS_ID'] = policy.POL_SYS_ID;
            this.lockedByFlow = 'policy';
 
           this.formData['CLM_CURR_CODE'] = policy.POL_PREM_CURR_CODE;
