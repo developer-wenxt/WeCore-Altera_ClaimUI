@@ -184,6 +184,15 @@ this.formData = this.mapRecordToFormData(record, visibleFields);
          console.log('ADD fields after filter:', this.fields()); 
           this.loading.set(false);
           this.loadLovAndDropdowns(fields);
+
+          const intmNoFromParams = this.route.snapshot.queryParamMap.get('intmNo');
+          if (intmNoFromParams) {
+            this.formData['CLM_INTM_NO'] = intmNoFromParams;
+            // Delay slightly to let LOVs initialize if needed, or call directly
+            setTimeout(() => {
+              this.onIntmNoSelect(intmNoFromParams);
+            });
+          }
         },
         error: (err) => {
           console.error('Error loading claim registration fields:', err);

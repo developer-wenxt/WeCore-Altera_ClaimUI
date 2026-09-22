@@ -251,6 +251,26 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
       });
   }
 
+  onRegisterClick(): void {
+    const intmNo = this.intmNo || this.formData['CI_INTM_NO'];
+    if (!intmNo) return;
+    this.menuService.getClaimRegisterList()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          const match = res.find((r: any) => r.CLASS_CODE === this.classCode);
+          const instCode = match ? match.CLM_INST_CODE : '';
+          sessionStorage.setItem('claimInstCode', instCode);
+          sessionStorage.setItem('claimClassCode', this.classCode);
+          this.router.navigate(['/claim-registration'], { queryParams: { mode: 'add', intmNo: intmNo } });
+        },
+        error: (err) => {
+          console.error('Error loading claim register list:', err);
+          this.router.navigate(['/claim-registration'], { queryParams: { mode: 'add', intmNo: intmNo } });
+        }
+      });
+  }
+
 
   onPolicyNoSelect(polNo: string): void {
   if (!polNo) return;

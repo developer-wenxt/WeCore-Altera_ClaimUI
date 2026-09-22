@@ -90,8 +90,10 @@
       </ng-container>
 
     </form>
-    <div class="form-actions" *ngIf="!loading() && !isReadOnly">
-      <button pButton type="button" label="Submit" class="submit-btn" (click)="saveClaim()">
+    <div class="form-actions" *ngIf="!loading()">
+      <button *ngIf="!isReadOnly" pButton type="button" label="Submit" class="submit-btn" (click)="saveClaim()">
+      </button>
+      <button *ngIf="formData['CI_INTM_NO']" pButton type="button" label="Register" class="submit-btn register-btn" (click)="onRegisterClick()">
       </button>
     </div>
 
