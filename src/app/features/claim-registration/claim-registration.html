@@ -244,4 +244,10 @@
       </tr>
     </tbody>
   </table>
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer-actions">
+      <button pButton label="Close" icon="pi pi-times" class="dialog-close-btn" (click)="closeMoreRiskDialog()"></button>
+      <button pButton label="Save" icon="pi pi-check" class="dialog-save-btn" [disabled]="isReadOnly" (click)="saveAndCloseRiskDialog()"></button>
+    </div>
+  </ng-template>
 </p-dialog>

@@ -1,53 +1,580 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import "primeicons/primeicons.css";
 
 :root {
-  /* Typography */
-  --font-family-base: 'Inter', 'Roboto', sans-serif;
+  /* ── WeCore Altera LIGHT MODE TOKENS ── */
+  /* BRAND */
+  --we-brand-blue: #1A6FD4;
+  --we-brand-blue-hover: #1560B9;
+  --we-brand-navy: #0D1E3D;
+  --we-brand-navy-soft: #1B3262;
 
-  /* ─── Premium Modern Indigo Palette ─────────────────────────────── */
-  --color-primary: #1e1b4b;
-  --color-primary-mid: #6366f1;
-  --color-primary-light: #e0e7ff;
-  --color-accent: #8b5cf6;
-  --color-accent-light: #ede9fe;
+  /* SURFACE */
+  --we-surface-bg: #EEF2FB;
+  --we-surface-card: #FFFFFF;
+  --we-surface-header: #FFFFFF;
+  --we-surface-input: #FFFFFF;
+  --we-surface-hover: #F0F5FF;
+  --we-surface-overlay: #FFFFFF;
+  --we-surface-border: #D4DCF0;
+  --we-surface-divider: #E3E9F5;
 
-  --header-bg-blue: var(--color-accent);
-  --header-bg-dark: #7c3aed;
+  /* TEXT */
+  --we-text-primary: #0D1E3D;
+  --we-text-secondary: #4A5A7A;
+  --we-text-muted: #7A8DAA;
+  --we-text-on-blue: #FFFFFF;
+  --we-text-placeholder: #9AAAC0;
 
-  --text-main: #1e1b4b;
-  --text-secondary: #3730a3;
-  --text-muted: #6b7280;
-  --text-lighter: #9ca3af;
+  /* SEMANTIC */
+  --we-success: #1D9E75;
+  --we-success-bg: #E1F5EE;
+  --we-warning: #BA7517;
+  --we-warning-bg: #FAEEDA;
+  --we-danger: #E24B4A;
+  --we-danger-bg: #FCEBEB;
+  --we-info: #378ADD;
+  --we-info-bg: #E6F1FB;
 
-  --bg-page-gradient: linear-gradient(135deg, #f0f4ff 0%, #eef2ff 100%);
-  --bg-surface: rgba(255, 255, 255, 0.85);
-  --bg-hover: #f8fafc;
-  --bg-icon-default: #e0e7ff;
+  /* BADGE */
+  --we-badge-blue-bg: #DDEAFA;
+  --we-badge-blue-text: #0C447C;
 
-  --border-light: #c7d2fe;
-  --border-focus: #6366f1;
-  --border-hover-accent: #8b5cf6;
+  /* RADIUS */
+  --we-radius-sm: 6px;
+  --we-radius-md: 10px;
+  --we-radius-lg: 16px;
+  --we-radius-xl: 24px;
+  --we-radius-pill: 999px;
 
-  --shadow-card: 0 8px 32px rgba(31, 38, 135, 0.07);
-  --shadow-elevated: 0 12px 40px rgba(31, 38, 135, 0.12);
-  --shadow-focus: 0 0 0 4px rgba(99, 102, 241, 0.2);
+  /* SHADOW */
+  --we-shadow-sm: 0 1px 4px rgba(13, 30, 61, 0.07);
+  --we-shadow-md: 0 4px 16px rgba(13, 30, 61, 0.10);
+  --we-shadow-lg: 0 8px 32px rgba(13, 30, 61, 0.13);
+
+  /* FOCUS RING */
+  --we-focus-ring: 0 0 0 3px rgba(26, 111, 212, 0.22);
+
+  /* FONT */
+  --we-font-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  /* Legacy variables mapped to WeCore Altera tokens */
+  --blue-50: var(--we-surface-hover);
+  --blue-100: var(--we-badge-blue-bg);
+  --blue-200: var(--we-surface-border);
+  --blue-500: var(--we-brand-blue);
+  --blue-600: var(--we-brand-blue);
+  --blue-700: var(--we-brand-blue-hover);
+  --sky: #3d8ee8;
+  --text-900: var(--we-text-primary);
+  --text-700: var(--we-text-secondary);
+  --text-400: var(--we-text-muted);
+  --text-200: var(--we-text-placeholder);
+  --border: var(--we-surface-border);
+
+  /* PrimeNG Token Overrides */
+  --p-primary-color: var(--we-brand-blue);
+  --p-primary-hover-color: var(--we-brand-blue-hover);
+  --p-primary-active-color: var(--we-brand-blue-hover);
+  --p-primary-contrast-color: var(--we-text-on-blue);
+
+  --p-content-background: var(--we-surface-card);
+  --p-content-border-color: var(--we-surface-border);
+  --p-content-hover-background: var(--we-surface-hover);
+
+  --p-text-color: var(--we-text-primary);
+  --p-text-secondary-color: var(--we-text-secondary);
+  --p-text-muted-color: var(--we-text-muted);
+  --p-placeholder-color: var(--we-text-placeholder);
+
+  --p-form-field-background: var(--we-surface-input);
+  --p-form-field-border-color: var(--we-surface-border);
+  --p-form-field-hover-border-color: var(--we-brand-blue);
+  --p-form-field-focus-border-color: var(--we-brand-blue);
+
+  --p-select-background: var(--we-surface-input);
+  --p-select-border-color: var(--we-surface-border);
+  --p-select-hover-border-color: var(--we-brand-blue);
+  --p-select-focus-border-color: var(--we-brand-blue);
+
+  --p-overlay-select-background: var(--we-surface-overlay);
+  --p-overlay-select-border-color: var(--we-surface-border);
+
+  --p-datepicker-background: var(--we-surface-overlay);
+  --p-datepicker-border-color: var(--we-surface-border);
+
+  --p-dialog-background: var(--we-surface-overlay);
+  --p-dialog-border-color: var(--we-surface-border);
+
+  --p-menu-background: var(--we-surface-overlay);
+  --p-menu-border-color: var(--we-surface-border);
+
+  --p-tooltip-background: var(--we-brand-navy);
+  --p-tooltip-color: var(--we-text-on-blue);
+
+  --p-datatable-header-background: var(--we-surface-hover);
+  --p-datatable-row-hover-background: var(--we-surface-hover);
+  --p-datatable-header-cell-background: var(--we-surface-hover);
+
+  --p-focus-ring-color: var(--we-brand-blue);
+  --p-focus-ring-shadow: var(--we-focus-ring);
+
+  /* Legacy project custom color mapping to WeCore tokens */
+  --font-family-base: var(--we-font-sans);
+  --color-primary: var(--we-brand-navy);
+  --color-primary-mid: var(--we-brand-blue);
+  --color-primary-light: var(--we-badge-blue-bg);
+  --color-accent: var(--we-brand-blue);
+  --color-accent-light: var(--we-surface-hover);
+
+  --header-bg-blue: var(--we-brand-blue);
+  --header-bg-dark: var(--we-brand-navy-soft);
+
+  --text-main: var(--we-text-primary);
+  --text-secondary: var(--we-text-secondary);
+  --text-muted: var(--we-text-muted);
+  --text-lighter: var(--we-text-placeholder);
+
+  --bg-page-gradient: var(--we-surface-bg);
+  --bg-surface: var(--we-surface-card);
+  --bg-hover: var(--we-surface-hover);
+  --bg-icon-default: var(--we-badge-blue-bg);
+
+  --border-light: var(--we-surface-border);
+  --border-focus: var(--we-brand-blue);
+  --border-hover-accent: var(--we-brand-blue-hover);
+
+  --shadow-card: var(--we-shadow-sm);
+  --shadow-elevated: var(--we-shadow-md);
+  --shadow-focus: var(--we-focus-ring);
 }
 
-/* NOTE: no html { zoom / transform } — those break position:fixed overlays
-   (p-menu, p-select, p-datepicker, p-dialog). Sizing is reduced directly below. */
+[data-theme="dark"] {
+  /* ── WeCore Altera DARK MODE TOKENS ── */
+  /* BRAND */
+  --we-brand-blue: #3D8EE8;
+  --we-brand-blue-hover: #5AA0EE;
+  --we-brand-navy: #E8EDF8;
+  --we-brand-navy-soft: #B5D4F4;
 
-/* ─── Animations ────────────────────────────────────────────── */
-@keyframes slideInUp {
+  /* SURFACE */
+  --we-surface-bg: #0E1525;
+  --we-surface-card: #162035;
+  --we-surface-header: #111B2E;
+  --we-surface-input: #1A2740;
+  --we-surface-hover: #1E2E47;
+  --we-surface-overlay: #1A2740;
+  --we-surface-border: #263650;
+  --we-surface-divider: #1E2E47;
+
+  /* TEXT */
+  --we-text-primary: #E8EDF8;
+  --we-text-secondary: #8EA8CC;
+  --we-text-muted: #566880;
+  --we-text-on-blue: #FFFFFF;
+  --we-text-placeholder: #4A6080;
+
+  /* SEMANTIC */
+  --we-success: #5DCAA5;
+  --we-success-bg: #0B2D20;
+  --we-warning: #EF9F27;
+  --we-warning-bg: #2A1D07;
+  --we-danger: #F09595;
+  --we-danger-bg: #2D0D0D;
+  --we-info: #85B7EB;
+  --we-info-bg: #0C1D33;
+
+  /* BADGE */
+  --we-badge-blue-bg: #0C2540;
+  --we-badge-blue-text: #85B7EB;
+
+  /* SHADOW */
+  --we-shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.25);
+  --we-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --we-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.45);
+
+  /* FOCUS RING */
+  --we-focus-ring: 0 0 0 3px rgba(61, 142, 232, 0.30);
+
+  /* Legacy project custom color mapping to dark mode */
+  --font-family-base: var(--we-font-sans);
+  --color-primary: var(--we-brand-navy);
+  --color-primary-mid: var(--we-brand-blue);
+  --color-primary-light: var(--we-badge-blue-bg);
+  --color-accent: var(--we-brand-blue);
+  --color-accent-light: var(--we-surface-hover);
+
+  --header-bg-blue: var(--we-brand-blue);
+  --header-bg-dark: var(--we-surface-header);
+
+  --text-main: var(--we-text-primary);
+  --text-secondary: var(--we-text-secondary);
+  --text-muted: var(--we-text-muted);
+  --text-lighter: var(--we-text-placeholder);
+
+  --bg-page-gradient: var(--we-surface-bg);
+  --bg-surface: var(--we-surface-card);
+  --bg-hover: var(--we-surface-hover);
+  --bg-icon-default: var(--we-badge-blue-bg);
+
+  --border-light: var(--we-surface-border);
+  --border-focus: var(--we-brand-blue);
+  --border-hover-accent: var(--we-brand-blue-hover);
+
+  --shadow-card: var(--we-shadow-sm);
+  --shadow-elevated: var(--we-shadow-md);
+  --shadow-focus: var(--we-focus-ring);
+
+  /* ── TAILWIND UTILITY OVERRIDES FOR DARK MODE ── */
+  .bg-white,
+  .bg-gray-100 {
+    background-color: var(--we-surface-card) !important;
+  }
+
+  .bg-slate-50 {
+    background-color: var(--we-surface-bg) !important;
+  }
+
+  .bg-slate-100 {
+    background-color: var(--we-surface-hover) !important;
+  }
+
+  .bg-slate-200 {
+    background-color: var(--we-surface-border) !important;
+  }
+
+  .hover\:bg-slate-50:hover {
+    background-color: var(--we-surface-hover) !important;
+  }
+
+  .text-slate-900,
+  .text-slate-800 {
+    color: var(--we-text-primary) !important;
+  }
+
+  .text-slate-700,
+  .text-slate-600,
+  .text-slate-500,
+  .text-slate-400 {
+    color: var(--we-text-secondary) !important;
+  }
+
+  .border-slate-200,
+  .border-slate-100,
+  .border-slate-300 {
+    border-color: var(--we-surface-border) !important;
+  }
+
+  /* Opacity backgrounds and border overrides */
+  .bg-slate-50\/50,
+  .bg-slate-50\/35,
+  .bg-slate-50\/45,
+  .bg-slate-50\/40 {
+    background-color: var(--we-surface-header) !important;
+  }
+
+  .bg-slate-50\/75,
+  .bg-slate-50\/80 {
+    background-color: var(--we-surface-hover) !important;
+  }
+
+  .hover\:bg-slate-50\/50:hover,
+  .hover\:bg-slate-50\/80:hover {
+    background-color: var(--we-surface-hover) !important;
+  }
+
+  .border-slate-200\/60,
+  .border-slate-200\/80,
+  .border-slate-100\/50,
+  .border-slate-250 {
+    border-color: var(--we-surface-border) !important;
+  }
+
+  /* Backdrop overlay */
+  .absolute.inset-0.bg-slate-50\/50 {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+  }
+
+  /* Form & Input overrides */
+  input,
+  select,
+  textarea,
+  .p-inputtext {
+    background-color: var(--we-surface-input) !important;
+    color: var(--we-text-primary) !important;
+    border-color: var(--we-surface-border) !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder,
+  .p-inputtext::placeholder {
+    color: #6B84A6 !important;
+  }
+
+  /* Disabled inputs and states */
+  input:disabled,
+  select:disabled,
+  textarea:disabled,
+  .p-disabled,
+  .p-disabled * {
+    background-color: var(--we-surface-hover) !important;
+    color: var(--we-text-secondary) !important;
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  /* PrimeNG Icon & component overrides */
+  .p-icon,
+  .p-datepicker-trigger-icon,
+  .p-select-trigger {
+    color: var(--we-text-secondary) !important;
+  }
+
+  .p-datepicker-trigger:hover .p-datepicker-trigger-icon {
+    color: var(--we-brand-blue) !important;
+  }
+
+  .p-datatable-header,
+  .p-datatable-thead>tr>th {
+    background-color: var(--we-surface-hover) !important;
+    color: var(--we-text-primary) !important;
+    border-color: var(--we-surface-border) !important;
+  }
+
+  .p-datatable-tbody>tr {
+    background-color: var(--we-surface-card) !important;
+    color: var(--we-text-primary) !important;
+    border-color: var(--we-surface-border) !important;
+  }
+
+  .policy-list-container tbody tr:hover,
+  .p-datatable-tbody>tr:hover,
+  .p-datatable-row-hover:hover {
+    background-color: var(--we-surface-hover) !important;
+    color: var(--we-text-primary) !important;
+  }
+
+  .policy-list-container .icon-btn,
+  .policy-list-container .page-btn,
+  .policy-list-container .theme-search-input,
+  .policy-list-container .status-dropdown {
+    background-color: var(--we-surface-input) !important;
+    color: var(--we-text-primary) !important;
+    border-color: var(--we-surface-border) !important;
+  }
+
+  .policy-list-container .icon-btn:hover,
+  .policy-list-container .page-btn:hover {
+    background-color: var(--we-surface-hover) !important;
+    color: var(--we-brand-blue) !important;
+  }
+
+  .policy-list-container .custom-p-table .p-datatable-tbody>tr:hover>td,
+  .policy-list-container .custom-p-table .p-datatable-tbody>tr:hover,
+  .policy-list-container .custom-p-table .p-datatable-tbody>tr.p-selectable-row:not(.p-highlight):hover>td {
+    background-color: var(--we-surface-hover) !important;
+  }
+
+  .policy-list-container .custom-paginator {
+    background-color: var(--we-surface-card) !important;
+    border-color: var(--we-surface-border) !important;
+  }
+
+  .policy-list-container .custom-paginator .p-paginator-page,
+  .policy-list-container .custom-paginator .p-paginator-prev,
+  .policy-list-container .custom-paginator .p-paginator-next,
+  .policy-list-container .custom-paginator .p-paginator-first,
+  .policy-list-container .custom-paginator .p-paginator-last {
+    background-color: var(--we-surface-input) !important;
+    color: var(--we-text-primary) !important;
+    border-color: var(--we-surface-border) !important;
+  }
+
+  .policy-list-container .custom-paginator .p-paginator-page:hover,
+  .policy-list-container .custom-paginator .p-paginator-prev:hover,
+  .policy-list-container .custom-paginator .p-paginator-next:hover,
+  .policy-list-container .custom-paginator .p-paginator-page.p-highlight {
+    background-color: var(--we-surface-hover) !important;
+    color: var(--we-brand-blue) !important;
+    border-color: var(--we-brand-blue) !important;
+  }
+
+  /* Policy dialog dark mode overrides */
+  .policy-list-container .pol-dialog {
+    background-color: var(--we-surface-card) !important;
+    border-color: var(--we-surface-border) !important;
+  }
+
+  .policy-list-container .pol-dialog-close {
+    background-color: var(--we-surface-input) !important;
+    border-color: var(--we-surface-border) !important;
+    color: var(--we-text-secondary) !important;
+  }
+
+  .policy-list-container .pol-dialog-close:hover {
+    background-color: var(--we-surface-hover) !important;
+    color: var(--we-brand-blue) !important;
+  }
+
+  .policy-list-container .pol-dialog-icon {
+    background-color: var(--we-brand-blue-hover) !important;
+    color: var(--we-text-on-blue) !important;
+  }
+
+  .policy-list-container .pol-action-card {
+    background-color: var(--we-surface-input) !important;
+    border-color: var(--we-surface-border) !important;
+  }
+
+  .policy-list-container .pol-action-card:hover {
+    background-color: var(--we-surface-hover) !important;
+    border-color: var(--we-brand-blue) !important;
+  }
+
+  .policy-list-container .pol-action-icon.blue {
+    background-color: var(--we-badge-blue-bg) !important;
+    color: var(--we-badge-blue-text) !important;
+  }
+
+  .policy-list-container .pol-action-icon.amber {
+    background-color: var(--we-warning-bg) !important;
+    color: var(--we-warning) !important;
+  }
+
+  .policy-list-container .pol-dialog-cancel {
+    border-color: var(--we-surface-border) !important;
+    color: var(--we-text-secondary) !important;
+  }
+
+  .policy-list-container .pol-dialog-cancel:hover {
+    background-color: var(--we-surface-hover) !important;
+    color: var(--we-text-primary) !important;
+  }
+}
+
+@theme {
+  --color-brand-blue: var(--we-brand-blue);
+  --color-brand-blue-hover: var(--we-brand-blue-hover);
+  --color-brand-navy: var(--we-brand-navy);
+  --color-brand-navy-soft: var(--we-brand-navy-soft);
+
+  --color-surface-bg: var(--we-surface-bg);
+  --color-surface-card: var(--we-surface-card);
+  --color-surface-header: var(--we-surface-header);
+  --color-surface-input: var(--we-surface-input);
+  --color-surface-hover: var(--we-surface-hover);
+  --color-surface-overlay: var(--we-surface-overlay);
+  --color-surface-border: var(--we-surface-border);
+  --color-surface-divider: var(--we-surface-divider);
+
+  --color-text-primary: var(--we-text-primary);
+  --color-text-secondary: var(--we-text-secondary);
+  --color-text-muted: var(--we-text-muted);
+  --color-text-on-blue: var(--we-text-on-blue);
+  --color-text-placeholder: var(--we-text-placeholder);
+
+  --color-success: var(--we-success);
+  --color-success-bg: var(--we-success-bg);
+  --color-warning: var(--we-warning);
+  --color-warning-bg: var(--we-warning-bg);
+  --color-danger: var(--we-danger);
+  --color-danger-bg: var(--we-danger-bg);
+  --color-info: var(--we-info);
+  --color-info-bg: var(--we-info-bg);
+
+  --color-badge-blue-bg: var(--we-badge-blue-bg);
+  --color-badge-blue-text: var(--we-badge-blue-text);
+
+  --radius-sm: var(--we-radius-sm);
+  --radius-md: var(--we-radius-md);
+  --radius-lg: var(--we-radius-lg);
+  --radius-xl: var(--we-radius-xl);
+
+  --shadow-sm: var(--we-shadow-sm);
+  --shadow-md: var(--we-shadow-md);
+  --shadow-lg: var(--we-shadow-lg);
+}
+
+/* *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } */
+html {
+  font-size: 83%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--we-font-sans);
+  background: var(--we-surface-bg);
+  color: var(--we-text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── GLOBAL LAYOUT WRAPPERS ── */
+.page-wrap {
+  min-height: 100vh;
+  padding-top: 54px;
+}
+
+.main-content {
+  padding-top: 54px;
+}
+
+/* ── COMMON UTILITY COMPONENTS ── */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--blue-100);
+  border-top-color: var(--blue-600);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.retry-btn {
+  padding: 10px 24px;
+  background: var(--blue-600);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.retry-btn:hover {
+  background: var(--blue-700);
+}
+
+/* ── GLOBAL ANIMATIONS ── */
+@keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(16px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -61,49 +588,85 @@
   }
 }
 
-@keyframes ripple {
-  0% {
-    transform: scale(1);
-    opacity: 0.4;
-  }
-
-  100% {
-    transform: scale(10);
+@keyframes slideInUp {
+  from {
     opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* ─── Base ──────────────────────────────────────────────────── */
-body {
-  font-family: var(--font-family-base);
-  font-size: 14px;
-  /* bumped for clarity */
-  color: var(--text-main);
-  background: var(--bg-page-gradient);
-  background-attachment: fixed;
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ── INFO CHIPS ── */
+.info-chips {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: var(--we-surface-bg);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--we-surface-border);
+  margin-bottom: 12px;
 }
 
-/* ─── Global Card ───────────────────────────────────────────── */
+.info-chip,
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid var(--we-surface-border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.chip-label {
+  padding: 7px 12px;
+  background: var(--we-surface-hover);
+  color: var(--we-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-size: 10px;
+}
+
+.chip-divider {
+  width: 1.5px;
+  background: var(--we-surface-border);
+  align-self: stretch;
+}
+
+.chip-value {
+  padding: 7px 14px;
+  color: var(--we-text-primary);
+  font-weight: 700;
+  background: var(--we-surface-card);
+}
+
+.chip-value.accent,
+.chip.highlight .chip-value {
+  color: var(--we-brand-blue);
+}
+
+/* ── GLOBAL CARDS & PAGES ── */
 .global-card {
-  background: var(--bg-surface);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 12px;
+  background: var(--we-surface-card);
+  border: 1px solid var(--we-surface-border);
+  border-radius: var(--we-radius-md);
   padding: 1rem;
+  box-shadow: var(--we-shadow-sm);
   transition: all 0.22s ease;
 }
 
 .global-card:hover {
-  border-color: var(--border-hover-accent);
-  box-shadow: var(--shadow-card);
+  border-color: var(--we-brand-blue);
+  box-shadow: var(--we-shadow-md);
   transform: translateY(-2px);
 }
 
-/* ─── Page Level ────────────────────────────────────────────── */
 .form-page {
   padding: 11px 16px;
   background: transparent;
@@ -139,7 +702,7 @@ body {
 .page-header h2 {
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--we-brand-navy);
   margin: 0;
 }
 
@@ -149,12 +712,12 @@ body {
   align-items: center;
 }
 
-/* ─── Buttons ───────────────────────────────────────────────── */
+/* ── BUTTONS ── */
 .back-btn {
-  background: var(--bg-surface) !important;
-  border: 1px solid var(--border-light) !important;
-  color: var(--text-main) !important;
-  border-radius: 18px !important;
+  background: var(--we-surface-card) !important;
+  border: 1px solid var(--we-surface-border) !important;
+  color: var(--we-text-primary) !important;
+  border-radius: var(--we-radius-pill) !important;
   padding: 7px 15px !important;
   font-size: 13px !important;
   cursor: pointer;
@@ -165,27 +728,28 @@ body {
 }
 
 .back-btn:hover {
-  border-color: var(--color-primary-mid) !important;
-  color: var(--color-primary-mid) !important;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+  border-color: var(--we-brand-blue) !important;
+  color: var(--we-brand-blue) !important;
+  background: var(--we-surface-hover) !important;
+  box-shadow: var(--we-shadow-sm);
 }
 
 .primary-btn,
 .submit-btn,
 .add-row-btn {
-  background: linear-gradient(135deg, var(--color-primary-mid) 0%, var(--header-bg-dark) 100%) !important;
+  background: var(--we-brand-blue) !important;
   border: none !important;
-  border-radius: 20px !important;
+  border-radius: var(--we-radius-pill) !important;
   padding: 8px 19px !important;
   font-size: 13px !important;
   font-weight: 600 !important;
-  color: white !important;
+  color: var(--we-text-on-blue) !important;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(26, 111, 212, 0.25);
   position: relative;
   overflow: hidden;
 }
@@ -193,8 +757,8 @@ body {
 .primary-btn:hover,
 .submit-btn:hover,
 .add-row-btn:hover {
-  background: var(--header-bg-dark) !important;
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+  background: var(--we-brand-blue-hover) !important;
+  box-shadow: 0 4px 12px rgba(26, 111, 212, 0.35);
   transform: translateY(-2px);
 }
 
@@ -202,7 +766,7 @@ body {
 .submit-btn:active,
 .add-row-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 2px 4px rgba(26, 111, 212, 0.2);
 }
 
 .submit-btn {
@@ -211,14 +775,45 @@ body {
   padding: 8px 17px !important;
 }
 
+.approve-btn {
+  background: linear-gradient(135deg, var(--we-brand-blue) 0%, var(--we-brand-navy-soft) 100%) !important;
+  border: none !important;
+  border-radius: var(--we-radius-pill) !important;
+  padding: 9px 24px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(26, 111, 212, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.approve-btn:hover {
+  background: var(--we-brand-blue-hover) !important;
+  box-shadow: 0 6px 18px rgba(26, 111, 212, 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.approve-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(26, 111, 212, 0.25) !important;
+}
+
 .icon-btn,
-.view-btn {
+.view-btn,
+.edit-btn {
   width: 31px !important;
   height: 31px !important;
   border-radius: 50% !important;
-  background: var(--bg-surface) !important;
-  border: 1px solid var(--border-light) !important;
-  color: var(--color-primary-mid) !important;
+  background: var(--we-surface-card) !important;
+  border: 1px solid var(--we-surface-border) !important;
+  color: var(--we-brand-blue) !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,30 +824,38 @@ body {
 
 .icon-btn:hover,
 .view-btn:hover {
-  border-color: var(--color-primary-mid) !important;
-  background: var(--color-primary-light) !important;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.12);
+  border-color: var(--we-brand-blue) !important;
+  background: var(--we-surface-hover) !important;
+  box-shadow: var(--we-shadow-sm);
+}
+
+.edit-btn {
+  color: var(--we-success) !important;
+}
+
+.edit-btn:hover {
+  background: var(--we-success-bg) !important;
+  border-color: var(--we-success) !important;
+  box-shadow: var(--we-shadow-sm);
 }
 
 .more-btn {
   background: transparent !important;
   border: none !important;
-  color: var(--color-primary-mid) !important;
+  color: var(--we-brand-blue) !important;
   font-size: 10px !important;
   font-weight: 600 !important;
   padding: 3px 6px !important;
   cursor: pointer;
 }
 
-/* ─── Cards & Layout ────────────────────────────────────────── */
+/* ── TABLE CARD ── */
 .table-card {
-  background: var(--bg-surface);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: var(--we-surface-card);
+  border-radius: var(--we-radius-md);
+  border: 1px solid var(--we-surface-border);
   padding: 16px;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--we-shadow-sm);
   animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   flex: 1;
@@ -261,50 +864,10 @@ body {
 }
 
 .table-card:hover {
-  box-shadow: var(--shadow-elevated);
+  box-shadow: var(--we-shadow-md);
 }
 
-.info-chips {
-  display: flex;
-  gap: 8px;
-  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 8px 11px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
-
-.chip {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 85px;
-}
-
-.chip-label {
-  font-size: 9px;
-  font-weight: 700;
-  color: #cbd5e1;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.chip-value {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-main);
-  background: #ffffff;
-  padding: 5px 9px;
-  border-radius: 7px;
-}
-
-.chip.highlight .chip-value {
-  background: var(--color-accent-light);
-  color: var(--color-primary-mid);
-}
-
-/* ─── Forms & Grids ─────────────────────────────────────────── */
+/* ── FORMS & GRIDS ── */
 .dynamic-form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
@@ -323,21 +886,17 @@ body {
 .form-field label {
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-main);
-  transition: color 0.3s ease;
+  color: var(--we-text-primary);
+  transition: color 0.2s ease;
 }
 
 .form-field:focus-within label {
-  color: var(--color-primary-mid);
+  color: var(--we-brand-blue);
 }
 
-.form-field .required {
-  color: #dc2626;
-  margin-left: 4px;
-}
-
+.form-field .required,
 .required {
-  color: #dc2626;
+  color: var(--we-danger);
   font-weight: 700;
   font-size: 12px;
   margin-left: 4px;
@@ -350,34 +909,51 @@ body {
 .search-wrap input,
 select,
 textarea {
-  border: 1px solid var(--border-light);
-  background: #ffffff;
-  border-radius: 9px;
+  border: 1px solid var(--we-surface-border);
+  background: var(--we-surface-input);
+  border-radius: var(--we-radius-sm);
   padding: 7px 11px;
   font-size: 13px;
   font-weight: 500;
   outline: none;
-  color: var(--text-main);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--we-text-primary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
 }
 
+.form-field input:hover,
+.search-box input:hover,
+.search-wrap input:hover {
+  border-color: var(--we-brand-blue-hover);
+}
+
+.form-field input:focus,
+.search-box input:focus,
+.risk-grid input:focus,
+.search-wrap input:focus,
+select:focus,
+textarea:focus {
+  background: var(--we-surface-input);
+  border-color: var(--we-brand-blue);
+  box-shadow: var(--we-focus-ring);
+  transform: translateY(-1px);
+}
+
 ::ng-deep p-datepicker:not(.p-disabled) input[readonly]:not(:disabled) {
-  background: #f1f5f9 !important;
+  background: var(--we-surface-input) !important;
   cursor: pointer;
 }
 
 ::ng-deep p-datepicker:not(.p-disabled) input[readonly]:not(:disabled):hover {
-  background: #e2e8f0 !important;
-  border-color: #64748b;
+  border-color: var(--we-brand-blue) !important;
 }
 
 ::ng-deep p-datepicker:not(.p-disabled) input[readonly]:not(:disabled):focus {
-  background: #ffffff !important;
-  border-color: var(--color-primary-mid) !important;
-  box-shadow: var(--shadow-focus) !important;
+  border-color: var(--we-brand-blue) !important;
+  box-shadow: var(--we-focus-ring) !important;
 }
 
+/* ── DISABLED STATES ── */
 input:disabled,
 input[readonly]:not(.p-datepicker input),
 select:disabled,
@@ -444,16 +1020,14 @@ textarea[readonly]:focus,
 ::ng-deep .field-disabled:focus-within .p-select,
 ::ng-deep .field-disabled:focus-within .p-datepicker input,
 ::ng-deep .field-disabled:focus-within .p-inputtext {
-  background: #e5e7eb !important;
-  background-color: #e5e7eb !important;
-  color: #374151 !important;
-  border: 1px solid #d1d5db !important;
+  background: var(--we-surface-hover) !important;
+  background-color: var(--we-surface-hover) !important;
+  color: var(--we-text-secondary) !important;
+  border: 1px solid var(--we-surface-border) !important;
   cursor: not-allowed !important;
-  opacity: 1 !important;
+  opacity: 0.75 !important;
   font-weight: 500 !important;
   box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
   transform: none !important;
 }
 
@@ -463,27 +1037,8 @@ textarea[readonly]:focus,
 
 .checkbox-label input[type="checkbox"]:disabled {
   cursor: not-allowed !important;
-  accent-color: #94a3b8 !important;
+  accent-color: var(--we-text-muted) !important;
   opacity: 0.7 !important;
-}
-
-.form-field input:hover,
-.search-box input:hover,
-.search-wrap input:hover {
-  background: var(--bg-surface);
-  border-color: #cbd5e1;
-}
-
-.form-field input:focus,
-.search-box input:focus,
-.risk-grid input:focus,
-.search-wrap input:focus,
-select:focus,
-textarea:focus {
-  background: var(--bg-surface);
-  border-color: var(--color-primary-mid);
-  box-shadow: var(--shadow-focus);
-  transform: translateY(-1px);
 }
 
 .checkbox-field {
@@ -498,7 +1053,7 @@ textarea:focus {
   cursor: pointer;
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-primary-mid);
+  color: var(--we-brand-blue);
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -506,10 +1061,10 @@ textarea:focus {
   height: 13px;
   margin: 0;
   cursor: pointer;
-  accent-color: var(--color-primary-mid);
+  accent-color: var(--we-brand-blue);
 }
 
-/* ─── Toolbars & Search ─────────────────────────────────────── */
+/* ── TOOLBARS & SEARCH ── */
 .claim-toolbar,
 .table-toolbar {
   display: flex;
@@ -535,13 +1090,13 @@ textarea:focus {
 .search-wrap i {
   position: absolute;
   left: 10px;
-  color: var(--text-lighter);
+  color: var(--we-text-placeholder);
   font-size: 11px;
 }
 
 .search-wrap input {
   padding-left: 28px;
-  border-radius: 18px;
+  border-radius: var(--we-radius-pill);
   max-width: 200px;
 }
 
@@ -553,63 +1108,57 @@ textarea:focus {
   max-width: 240px;
 }
 
-/* ─── p-select Dropdown — fix arrow to right end ────────────────────── */
-/* PrimeNG p-select is display:inline-flex by default with:
-   .p-select-label  { flex: 1 1 auto }  — takes all remaining space
-   .p-select-dropdown { flex-shrink: 0 } — fixed width on the right
-   The component already places the arrow on the right internally.
-   Our padding/border overrides below must NOT break that layout. */
+/* ── p-select DROPDOWN OVERRIDES ── */
 .p-select {
   display: inline-flex !important;
   align-items: center !important;
-  border-radius: 8px !important;
-  border: 1px solid var(--border-light) !important;
-  background: #ffffff !important;
+  border-radius: var(--we-radius-sm) !important;
+  border: 1px solid var(--we-surface-border) !important;
+  background: var(--we-surface-input) !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
 }
 
 .p-select:not(.p-disabled):hover {
-  border-color: var(--color-primary-mid) !important;
+  border-color: var(--we-brand-blue) !important;
 }
 
 .p-select:not(.p-disabled).p-focus {
-  border-color: var(--border-focus) !important;
-  box-shadow: var(--shadow-focus) !important;
+  border-color: var(--we-brand-blue) !important;
+  box-shadow: var(--we-focus-ring) !important;
 }
 
 .p-select.p-disabled {
-  background: #e5e7eb !important;
-  border-color: #d1d5db !important;
+  background: var(--we-surface-hover) !important;
+  border-color: var(--we-surface-border) !important;
   cursor: not-allowed !important;
-  opacity: 1 !important;
+  opacity: 0.75 !important;
 }
 
 .p-select .p-select-label {
   padding: 6px 10px !important;
   font-size: 12px !important;
-  color: var(--text-main);
+  color: var(--we-text-primary);
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* Keep the dropdown trigger (chevron) shrunk to the right end */
 .p-select .p-select-dropdown {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
   width: 2rem !important;
-  color: var(--text-muted);
+  color: var(--we-text-secondary);
 }
 
 .p-select.p-disabled .p-select-label {
-  color: #6b7280 !important;
+  color: var(--we-text-muted) !important;
 }
 
-
+/* ── RISK GRID / DATATABLES ── */
 .risk-grid,
 ::ng-deep .risk-grid {
   width: 100%;
@@ -622,22 +1171,22 @@ textarea:focus {
 ::ng-deep p-table.risk-grid,
 ::ng-deep .risk-grid.p-datatable {
   display: block;
-  border-radius: 12px;
+  border-radius: var(--we-radius-md);
   overflow: hidden;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--we-surface-border);
 }
 
 .risk-grid th,
 ::ng-deep .risk-grid .p-datatable-thead>tr>th {
-  background: #f9fafb !important;
-  color: #475467 !important;
+  background: var(--we-surface-hover) !important;
+  color: var(--we-text-primary) !important;
   text-align: left;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 12px 16px;
-  border-bottom: 1px solid #eaecf0 !important;
+  border-bottom: 1px solid var(--we-surface-border) !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -661,9 +1210,9 @@ textarea:focus {
 ::ng-deep .risk-grid .p-datatable-tbody>tr>td {
   padding: 9px 12px;
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--we-text-secondary);
   border: none;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--we-surface-border);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -706,20 +1255,18 @@ textarea:focus {
 
 .risk-grid tbody tr:hover,
 ::ng-deep .risk-grid .p-datatable-tbody>tr:hover {
-  background: var(--color-primary-light);
-  box-shadow: inset 4px 0 0 var(--color-primary-mid);
-  /* NOTE: no transform: scale() here — breaks position:fixed overlays
-     (p-menu / p-select / p-datepicker) when a row containing them is hovered. */
+  background: var(--we-surface-hover) !important;
+  box-shadow: inset 4px 0 0 var(--we-brand-blue);
 }
 
 .risk-grid tbody tr:nth-child(even),
 ::ng-deep .risk-grid .p-datatable-tbody>tr:nth-child(even) {
-  background: #fafaf9;
+  background: var(--we-surface-card);
 }
 
 .risk-grid tbody tr:nth-child(even):hover,
 ::ng-deep .risk-grid .p-datatable-tbody>tr:nth-child(even):hover {
-  background: var(--color-primary-light);
+  background: var(--we-surface-hover) !important;
 }
 
 ::ng-deep .risk-grid .p-paginator {
@@ -732,59 +1279,20 @@ textarea:focus {
   padding: 6px 9px;
 }
 
-/* ─── Action Buttons (eye + pencil) ─────────────────────────── */
-.view-btn,
-.edit-btn {
-  width: 27px !important;
-  height: 27px !important;
-  min-width: 27px !important;
-  border-radius: 50% !important;
-  background: var(--bg-surface) !important;
-  border: 1px solid var(--border-light) !important;
-  padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  vertical-align: middle;
-  margin-right: 3px;
-  transition: all 0.18s ease;
-}
-
-.view-btn {
-  color: #3b82f6 !important;
-}
-
-.view-btn:hover {
-  background: #eff6ff !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.15);
-}
-
-.edit-btn {
-  color: #10b981 !important;
-}
-
-.edit-btn:hover {
-  background: #ecfdf5 !important;
-  border-color: #10b981 !important;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
-}
-
 .table-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 8px;
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--we-text-muted);
 }
 
-/* ─── Badges & States ───────────────────────────────────────── */
+/* ── STATUS BADGES ── */
 .state-msg {
   text-align: center;
   padding: 14px;
-  color: var(--text-muted);
+  color: var(--we-text-muted);
 }
 
 .status-badge {
@@ -816,96 +1324,111 @@ textarea:focus {
   margin: 0;
 }
 
-
 .status-J {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: var(--we-danger-bg);
+  color: var(--we-danger);
 }
 
 .status-R {
-  background: #dcfce7;
-  color: #15803d;
+  background: var(--we-success-bg);
+  color: var(--we-success);
 }
 
 .status-O {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--we-warning-bg);
+  color: var(--we-warning);
 }
 
 .status-C {
-  background: #f1f5f9;
-  color: #64748b;
+  background: var(--we-surface-hover);
+  color: var(--we-text-muted);
 }
 
 .status-RO {
-  background: #ede9fe;
-  color: #6d28d9;
+  background: var(--we-badge-blue-bg);
+  color: var(--we-badge-blue-text);
 }
 
 .status-A {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: var(--we-badge-blue-bg);
+  color: var(--we-brand-blue);
 }
 
-/* ─── PrimeNG Global Overrides — Blue Theme ─────────────────── */
+/* ── PRIMENG GLOBAL OVERRIDES ── */
 ::ng-deep .p-button {
-  background: var(--color-primary-mid) !important;
-  border-color: var(--color-primary-mid) !important;
+  background: var(--we-brand-blue) !important;
+  border-color: var(--we-brand-blue) !important;
   transition: all 0.18s ease;
   font-size: 12px !important;
 }
 
 ::ng-deep .p-button:hover {
-  background: var(--header-bg-dark) !important;
-  border-color: var(--header-bg-dark) !important;
+  background: var(--we-brand-blue-hover) !important;
+  border-color: var(--we-brand-blue-hover) !important;
+}
+
+::ng-deep .risk-grid {
+  --p-datatable-header-cell-background: var(--we-surface-hover) !important;
+  --p-datatable-header-cell-color: var(--we-text-primary) !important;
+  --p-datatable-header-background: var(--we-surface-hover) !important;
+  --p-datatable-header-color: var(--we-text-primary) !important;
+  --p-datatable-header-border-color: var(--we-surface-border) !important;
+}
+
+::ng-deep .p-datatable {
+  --p-datatable-header-cell-background: var(--we-surface-hover) !important;
+  --p-datatable-header-cell-color: var(--we-text-primary) !important;
 }
 
 ::ng-deep .p-datatable .p-datatable-thead>tr>th {
-  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
-  color: #ffffff !important;
-  border: none !important;
-  font-size: 9px;
+  background: var(--we-surface-hover) !important;
+  color: var(--we-text-primary) !important;
+  border-bottom: 1px solid var(--we-surface-border) !important;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  padding: 7px 8px;
+  padding: 8px 10px;
 }
 
 ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
-  border-color: var(--border-light) !important;
-  padding: 6px 8px;
-  font-size: 10px;
+  border-color: var(--we-surface-border) !important;
+  padding: 8px 10px;
+  font-size: 12px;
 }
 
 ::ng-deep .p-datatable .p-datatable-tbody>tr:hover {
-  background: var(--color-primary-light) !important;
+  background: var(--we-surface-hover) !important;
 }
 
 ::ng-deep .p-dialog .p-dialog-header {
-  background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
-  color: #ffffff !important;
-  border-radius: 8px 8px 0 0;
-  padding: 10px 14px !important;
+  background: var(--we-surface-card) !important;
+  color: var(--we-text-primary) !important;
+  border-bottom: 1px solid var(--we-surface-border) !important;
+  border-radius: var(--we-radius-md) var(--we-radius-md) 0 0;
+  padding: 12px 16px !important;
 }
 
 ::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
-  color: #ffffff !important;
+  color: var(--we-text-primary) !important;
   font-weight: 700;
-  font-size: 13px !important;
+  font-size: 14px !important;
 }
 
 ::ng-deep .p-dialog .p-dialog-header-close {
-  color: #ffffff !important;
+  color: var(--we-text-secondary) !important;
 }
 
 ::ng-deep .p-dialog .p-dialog-content {
   font-size: 12px !important;
 }
 
-/* ─── p-menu (row action popup) — compact sizing ────────────── */
 ::ng-deep .p-menu {
   font-size: 13px !important;
   min-width: 160px !important;
+  background: var(--we-surface-overlay) !important;
+  border: 1px solid var(--we-surface-border) !important;
+  box-shadow: var(--we-shadow-md) !important;
 }
 
 ::ng-deep .p-menu .p-menuitem-link {
@@ -917,20 +1440,20 @@ textarea:focus {
   margin-right: 6px !important;
 }
 
-::ng-deep .risk-grid {
-  --p-datatable-header-cell-background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
-  --p-datatable-header-cell-color: #ffffff !important;
-  --p-datatable-header-background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
-  --p-datatable-header-color: #ffffff !important;
-  --p-datatable-header-border-color: var(--header-bg-dark) !important;
+::ng-deep .p-datatable-table-container {
+  border-radius: var(--we-radius-md);
+  overflow: hidden;
 }
 
-::ng-deep .p-datatable {
-  --p-datatable-header-cell-background: linear-gradient(135deg, var(--header-bg-blue) 0%, var(--header-bg-dark) 100%) !important;
-  --p-datatable-header-cell-color: #ffffff !important;
+::ng-deep .p-select-overlay .p-select-option,
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 280px;
 }
 
-/* ─── Responsive Utilities ──────────────────────────────────── */
+/* ── RESPONSIVE UTILITIES ── */
 @media (max-width: 1300px) {
   .dynamic-form-grid {
     grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
@@ -969,7 +1492,7 @@ textarea:focus {
 
   .table-card {
     padding: 10px;
-    border-radius: 8px;
+    border-radius: var(--we-radius-sm);
     overflow: hidden;
   }
 
@@ -1023,57 +1546,499 @@ textarea:focus {
   }
 }
 
-
-::ng-deep .p-datatable-table-container {
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* ─── Premium Approve Button — global (used in Settlement & Accounting) ─── */
-.approve-btn {
-  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%) !important;
-  border: none !important;
-  border-radius: 20px !important;
-  padding: 9px 24px !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  color: #ffffff !important;
-  letter-spacing: 0.3px;
-  cursor: pointer;
-  display: inline-flex;
+/* ── DIALOG FOOTER ACTIONS (More Fields Popups) ── */
+.dialog-footer-actions {
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
-  gap: 6px;
-  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
-  position: relative;
-  overflow: hidden;
+  gap: 10px;
+  padding: 4px 0 0;
 }
 
-.approve-btn:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #6d28d9 100%) !important;
-  box-shadow: 0 8px 22px rgba(99, 102, 241, 0.52) !important;
-  transform: translateY(-2px);
+.dialog-close-btn {
+  background: var(--we-surface-card) !important;
+  border: 1.5px solid var(--we-surface-border) !important;
+  color: var(--we-text-secondary) !important;
+  border-radius: var(--we-radius-pill) !important;
+  padding: 8px 20px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.18s ease;
 }
 
-.approve-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3) !important;
+.dialog-close-btn:hover {
+  background: var(--we-surface-hover) !important;
+  border-color: var(--we-text-secondary) !important;
+  color: var(--we-text-primary) !important;
 }
 
-/* Ripple shimmer on Approve btn */
-.approve-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, transparent 60%);
-  pointer-events: none;
+.dialog-save-btn {
+  background: var(--we-brand-blue) !important;
+  border: none !important;
+  border-radius: var(--we-radius-pill) !important;
+  padding: 8px 20px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 2px 6px rgba(26, 111, 212, 0.25);
 }
 
-/* ─── Dropdown option text truncation (p-select overlay) ─── */
-::ng-deep .p-select-overlay .p-select-option,
-::ng-deep .p-dropdown-panel .p-dropdown-item {
-  white-space: nowrap !important;
+.dialog-save-btn:hover {
+  background: var(--we-brand-blue-hover) !important;
+  box-shadow: 0 4px 12px rgba(26, 111, 212, 0.35);
+  transform: translateY(-1px);
+}
+
+.dialog-save-btn:disabled,
+.dialog-save-btn[disabled] {
+  background: var(--we-surface-hover) !important;
+  color: var(--we-text-muted) !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Fix sticky th positioning issue inside table-card scroll */
+.risk-grid th,
+::ng-deep .risk-grid .p-datatable-thead>tr>th {
+  position: relative !important;
+  top: unset !important;
+  z-index: 1 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WECORE PRIMARY BLUE — GLOBAL BRAND SYSTEM & SHARPENING
+   Applies the menu component primary blue (#1A6FD4 / --we-brand-blue)
+   to all headers (notification, registration, settlement, risk, estimation)
+   and replaces the old indigo/purple in claim list and claim notif list.
+   Sharpens all inputs, tables, cards, chips, and controls.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. COMPONENT HEADERS & TITLES (Menu Primary Blue Header Bar) ── */
+/* Notification, Registration, Risk Details, Settlement, Estimation, Claim List, Notif List */
+html body .page-header,
+html body .claims-header,
+html body .notif-header,
+html body .settlement-header,
+html body .settlement-header1,
+html body .est-header,
+html body .claim-notif-header {
+  background: linear-gradient(135deg, var(--we-brand-blue) 0%, var(--we-brand-navy) 100%) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 10px 18px !important;
+  margin-bottom: 16px !important;
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  position: relative !important;
+  box-shadow: 0 2px 6px rgba(13, 30, 61, 0.15) !important;
+  border: none !important;
+}
+
+/* Header titles inside the primary blue header bar */
+html body .claim-notif-title,
+html body .claim-notif-header h2,
+html body .page-header h2,
+html body .settlement-header h2,
+html body .settlement-header1 h2,
+html body .settlement-title,
+html body .est-header .est-title,
+html body .est-header h2,
+html body .claims-title,
+html body .claims-header h2,
+html body .notif-title,
+html body .notif-header h2 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 0.3px !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Back button inside blue header bar */
+html body .page-header .back-btn,
+html body .claims-header .back-btn,
+html body .notif-header .back-btn,
+html body .est-header .back-btn,
+html body .claim-notif-header .back-btn {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  padding: 6px 14px !important;
+  z-index: 2 !important;
+  transition: all 0.18s ease !important;
+}
+
+html body .page-header .back-btn:hover,
+html body .claims-header .back-btn:hover,
+html body .notif-header .back-btn:hover,
+html body .est-header .back-btn:hover,
+html body .claim-notif-header .back-btn:hover {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Action buttons inside blue header bar (e.g. Accounting, + Add Row, + Add Registration) */
+html body .page-header .primary-btn,
+html body .page-header .add-row-btn,
+html body .claims-header .primary-btn,
+html body .notif-header .primary-btn,
+html body .est-header .add-row-btn {
+  background: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  color: var(--we-brand-blue) !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  padding: 6px 16px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+  z-index: 2 !important;
+  transition: all 0.18s ease !important;
+}
+
+html body .page-header .primary-btn:hover:not(:disabled),
+html body .page-header .add-row-btn:hover:not(:disabled),
+html body .claims-header .primary-btn:hover:not(:disabled),
+html body .notif-header .primary-btn:hover:not(:disabled),
+html body .est-header .add-row-btn:hover:not(:disabled) {
+  background: #f0f5ff !important;
+  color: var(--we-brand-blue-hover) !important;
+  border-color: #f0f5ff !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-1px);
+}
+
+html body .page-header .primary-btn:disabled,
+html body .page-header .add-row-btn:disabled {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* ── 2. TABLE HEADERS (Unified Menu Primary Blue Gradient) ── */
+/* Replaces old indigo/purple (#6366f1, #7c3aed) in claim list & notif list,
+   and unifies risk, estimation, and settlement tables */
+html body .risk-grid th,
+html body .risk-grid thead th,
+html body .risk-grid thead > tr > th,
+html body .claims-table th,
+html body .claims-table .p-datatable-thead > tr > th,
+html body .notif-table th,
+html body .notif-table .p-datatable-thead > tr > th,
+html body app-claim-list .p-datatable .p-datatable-thead > tr > th,
+html body app-claim-list .risk-grid .p-datatable-thead > tr > th,
+html body app-claim-notification-list .p-datatable .p-datatable-thead > tr > th,
+html body app-claim-notification-list .risk-grid .p-datatable-thead > tr > th,
+html body app-claim-registration .risk-grid th,
+html body app-est-details .risk-grid th,
+html body app-settlement-details .risk-grid th {
+  background: linear-gradient(135deg, var(--we-brand-blue) 0%, var(--we-brand-navy) 100%) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid var(--we-brand-blue-hover) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.6px !important;
+  padding: 12px 14px !important;
+  vertical-align: middle !important;
+}
+
+/* Required field asterisk inside blue table headers */
+html body .risk-grid th .required {
+  color: #ffb4b4 !important;
+  font-weight: 800 !important;
+}
+
+/* Sort icons inside blue table headers */
+html body .risk-grid th .p-sortable-column-icon,
+html body .claims-table th .p-sortable-column-icon,
+html body .notif-table th .p-sortable-column-icon {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ── 3. TABLE BODY & ROW SHARPENING ── */
+/* Sharp crisp cell borders */
+html body .risk-grid td,
+html body .claims-table .p-datatable-tbody > tr > td,
+html body .notif-table .p-datatable-tbody > tr > td {
+  border-bottom: 1px solid var(--we-surface-divider) !important;
+  color: var(--we-text-primary) !important;
+  font-size: 13px !important;
+  padding: 10px 14px !important;
+  vertical-align: middle !important;
+}
+
+/* Alternating clean row striping */
+html body .risk-grid tbody tr:nth-child(even),
+html body .claims-table .p-datatable-tbody > tr:nth-child(even),
+html body .notif-table .p-datatable-tbody > tr:nth-child(even) {
+  background: var(--we-surface-bg) !important;
+}
+
+/* Sharp row hover effect with primary blue left accent */
+html body .risk-grid tbody tr:hover,
+html body .claims-table .p-datatable-tbody > tr:hover,
+html body .notif-table .p-datatable-tbody > tr:hover {
+  background: var(--we-surface-hover) !important;
+  box-shadow: inset 3px 0 0 var(--we-brand-blue) !important;
+}
+
+/* ── 4. SHARP TABLE CARDS & CONTAINERS ── */
+html body .table-card,
+html body .risk-table-card,
+html body .global-card {
+  background: var(--we-surface-card) !important;
+  border: 1px solid var(--we-surface-border) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(13, 30, 61, 0.05), 0 1px 2px rgba(13, 30, 61, 0.03) !important;
+}
+
+html body .table-card:hover,
+html body .risk-table-card:hover {
+  border-color: var(--we-brand-blue) !important;
+  box-shadow: 0 4px 12px rgba(26, 111, 212, 0.08) !important;
+}
+
+/* Claim list & notif list table outer border */
+html body .claims-table.p-datatable,
+html body .notif-table.p-datatable {
+  border: 1px solid var(--we-surface-border) !important;
+  border-radius: 8px !important;
   overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 280px;
+  box-shadow: none !important;
+}
+
+/* ── 5. SHARP FORM CONTROLS & INPUTS ── */
+html body .form-field input,
+html body .form-field .p-inputtext,
+html body .form-field .p-select,
+html body .form-field .p-datepicker input,
+html body .risk-grid input,
+html body .risk-grid .p-select,
+html body .risk-grid .p-datepicker input,
+html body .search-wrap input,
+html body .search-box input {
+  border: 1.5px solid var(--we-surface-border) !important;
+  border-radius: 6px !important;
+  background: var(--we-surface-card) !important;
+  color: var(--we-text-primary) !important;
+  font-size: 13px !important;
+  height: 38px !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+/* Crisp focus state */
+html body .form-field input:focus,
+html body .form-field .p-inputtext:focus,
+html body .form-field .p-select.p-focus,
+html body .form-field .p-datepicker input:focus,
+html body .risk-grid input:focus,
+html body .risk-grid .p-select.p-focus,
+html body .risk-grid .p-datepicker input:focus,
+html body .search-wrap input:focus,
+html body .search-box input:focus {
+  border-color: var(--we-brand-blue) !important;
+  box-shadow: 0 0 0 3px rgba(26, 111, 212, 0.18) !important;
+  outline: none !important;
+}
+
+/* Sharp form labels */
+html body .form-field label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--we-text-primary) !important;
+  letter-spacing: 0.15px !important;
+  margin-bottom: 3px !important;
+}
+
+/* ── 6. SHARP BUTTONS (Primary Blue & Secondary) ── */
+/* Primary action buttons */
+html body .primary-btn,
+html body .submit-btn,
+html body .add-row-btn,
+html body .approve-btn,
+html body .dialog-save-btn {
+  background: var(--we-brand-blue) !important;
+  border: 1px solid var(--we-brand-blue) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 1px 3px rgba(26, 111, 212, 0.25) !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+}
+
+html body .primary-btn:hover:not(:disabled),
+html body .submit-btn:hover:not(:disabled),
+html body .add-row-btn:hover:not(:disabled),
+html body .approve-btn:hover:not(:disabled),
+html body .dialog-save-btn:hover:not(:disabled) {
+  background: var(--we-brand-blue-hover) !important;
+  border-color: var(--we-brand-blue-hover) !important;
+  box-shadow: 0 4px 12px rgba(26, 111, 212, 0.35) !important;
+  transform: translateY(-1px);
+}
+
+html body .primary-btn:disabled,
+html body .submit-btn:disabled,
+html body .add-row-btn:disabled,
+html body .dialog-save-btn:disabled {
+  background: var(--we-surface-hover) !important;
+  border-color: var(--we-surface-border) !important;
+  color: var(--we-text-muted) !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Sharp back & close buttons */
+html body .back-btn,
+html body .dialog-close-btn {
+  background: var(--we-surface-card) !important;
+  border: 1.5px solid var(--we-surface-border) !important;
+  color: var(--we-text-secondary) !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 7px 16px !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+}
+
+html body .back-btn:hover,
+html body .dialog-close-btn:hover {
+  background: var(--we-badge-blue-bg) !important;
+  border-color: var(--we-brand-blue) !important;
+  color: var(--we-brand-blue) !important;
+}
+
+/* Sharp table view & edit buttons */
+html body .view-btn,
+html body .edit-btn {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border-radius: 6px !important;
+  background: var(--we-badge-blue-bg) !important;
+  border: 1px solid var(--we-surface-border) !important;
+  color: var(--we-brand-blue) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+html body .view-btn:hover,
+html body .edit-btn:hover {
+  background: var(--we-brand-blue) !important;
+  border-color: var(--we-brand-blue) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+/* ── 7. SHARP INFO CHIPS ── */
+html body .chip {
+  border: 1px solid var(--we-surface-border) !important;
+  border-radius: 6px !important;
+  background: var(--we-surface-card) !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+html body .chip .chip-label {
+  background: var(--we-surface-hover) !important;
+  color: var(--we-text-secondary) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.6px !important;
+  text-transform: uppercase !important;
+  padding: 6px 10px !important;
+  border-right: 1px solid var(--we-surface-border) !important;
+}
+
+html body .chip .chip-value {
+  color: var(--we-text-primary) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 6px 12px !important;
+  background: var(--we-surface-card) !important;
+}
+
+html body .chip.highlight {
+  border-color: var(--we-brand-blue) !important;
+}
+
+html body .chip.highlight .chip-value {
+  color: var(--we-brand-blue) !important;
+}
+
+/* ── 8. SHARP VALUE PILLS & STATUS BADGES ── */
+html body .value-pill,
+html body .risk-grid .value-pill {
+  background: var(--we-badge-blue-bg) !important;
+  color: var(--we-brand-blue) !important;
+  border: 1px solid var(--we-surface-border) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  border-radius: 4px !important;
+  padding: 3px 8px !important;
+}
+
+html body .status-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+  text-transform: uppercase !important;
+}
+
+/* ── 9. SHARP PAGINATOR ── */
+html body .p-paginator {
+  border-top: 1px solid var(--we-surface-border) !important;
+  background: var(--we-surface-card) !important;
+  padding: 10px 16px !important;
+  border-radius: 0 0 8px 8px !important;
+}
+
+html body .p-paginator .p-paginator-page.p-highlight {
+  background: var(--we-brand-blue) !important;
+  color: #ffffff !important;
+  border-color: var(--we-brand-blue) !important;
+  border-radius: 4px !important;
+  font-weight: 700 !important;
+}
+
+/* ── 10. DISABLED & READONLY STATES ── */
+html body .field-disabled input,
+html body .field-disabled .p-inputtext,
+html body .field-disabled .p-select,
+html body .field-disabled .p-datepicker input,
+html body .field-disabled textarea,
+html body input:disabled,
+html body .p-inputtext:disabled {
+  background: #F1F4F9 !important;
+  color: #62728D !important;
+  border: 1px solid #D8E0EC !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
 }

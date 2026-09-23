@@ -181,13 +181,19 @@ this.formData = this.mapRecordToFormData(record, visibleFields);
             dataLossFields.DATA_TYPE = 'D';
           }
          this.fields.set(this.reorderPriorityFields(getVisibleFieldsSorted(fields)));
-         console.log('ADD fields after filter:', this.fields()); 
+
           this.loading.set(false);
           this.loadLovAndDropdowns(fields);
 
           const intmNoFromParams = this.route.snapshot.queryParamMap.get('intmNo');
           if (intmNoFromParams) {
             this.formData['CLM_INTM_NO'] = intmNoFromParams;
+            
+            const current = this.dropdownOptionsMap();
+            if (!current['CLM_INTM_NO']) {
+              this.dropdownOptionsMap.set({ ...current, CLM_INTM_NO: [{ PC_CODE: intmNoFromParams, DESC: intmNoFromParams }] });
+            }
+
             // Delay slightly to let LOVs initialize if needed, or call directly
             setTimeout(() => {
               this.onIntmNoSelect(intmNoFromParams);
@@ -208,6 +214,17 @@ this.formData = this.mapRecordToFormData(record, visibleFields);
   openMoreRiskDialog(): void {
     if (this.activeRowIndex !== null) {
       this.showMoreDialog.set(true);
+    }
+  }
+
+  closeMoreRiskDialog(): void {
+    this.showMoreDialog.set(false);
+  }
+
+  saveAndCloseRiskDialog(): void {
+    if (this.activeRowIndex !== null) {
+      this.saveRiskRow(this.activeRowIndex);
+      this.showMoreDialog.set(false);
     }
   }
 
@@ -596,12 +613,7 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
     const updated: any = {};
     fields.forEach(f => {
 
-      console.log(
-        'Column:', f.COLUMN_NAME,
-        'UPDATE_YN:', f.UPDATE_YN,
-        'ENTERABLE:', f.ENTERABLE,
-        'Editable:', this.isFieldEditable(f)
-      );
+
       let value = record[f.COLUMN_NAME] ?? '';
       if (this.getInputType(f.SOURCE_DESIGN_TYPE, f.DATA_TYPE) === 'date' && value) {
         value = new Date(value);
@@ -635,7 +647,7 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
 
     const now = new Date();
     const payload: any = {};
-    console.log('DS code at load:', sessionStorage.getItem('claimIntmDsCode'));
+
     const dsCode = sessionStorage.getItem('claimIntmDsCode');
      // ADDED
     this.fields().forEach(f => {
@@ -707,7 +719,7 @@ private reorderPriorityFields(fields: FieldConfig[]): FieldConfig[] {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: any) => {
-            console.log('🔥 SAVE RESPONSE:', JSON.stringify(res, null, 2)); // TEMP DEBUG
+
 
           const data = res?.data?.data;
           if (data?.CLM_SYS_ID) {
@@ -772,8 +784,7 @@ this.populateFreshRiskRow(polNo);
           }
 
           const targetAssrCode = String(policy.POL_ASSR_CODE);
-          console.log('targetAssrCode:', targetAssrCode);
-console.log('lovMap CLM_ASSR_CODE:', this.lovMap()['CLM_ASSR_CODE']);
+
           const applyAssrCode = (options: any[]) => {
             const match = options.find(o => String(o.value) === targetAssrCode);
             this.formData['CLM_ASSR_CODE'] = match ? match.value : targetAssrCode;
@@ -946,10 +957,10 @@ openRowMenu(event: Event, menu: any, index: number): void {
   .subscribe({
     next: (res: any) => {
       // Log the raw response so you can confirm the exact path to CLMAP_SYS_ID
-      console.log('SAVE RESPONSE:', JSON.stringify(res, null, 2));
+
 
       const savedId = res?.data?.data?.CLMAP_SYS_ID;
-      console.log('Extracted savedId:', savedId);
+
 
       if (savedId) {
         this.updateRiskRow(index, { CLMAP_SYS_ID: savedId });
@@ -958,7 +969,7 @@ openRowMenu(event: Event, menu: any, index: number): void {
         this.menuService.getRiskDetailsByClaim(savedId)
           .pipe(takeUntil(this.destroy$))
           .subscribe({
-            next: (getRes: any) => console.log('Fetched row:', getRes),
+            next: (getRes: any) => {},
             error: (err: any) => console.error('Error fetching saved risk row', err)
           });
       }

@@ -201,6 +201,18 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
     this.showMoreDialog.set(true);
   }
 
+  closeMoreDialog(): void {
+    this.showMoreDialog.set(false);
+  }
+
+  saveAndCloseMoreDialog(): void {
+    const idx = this.activeRowIndex();
+    if (idx !== null) {
+      this.saveRow(idx);
+      this.showMoreDialog.set(false);
+    }
+  }
+
   saveRow(index: number): void {
     if (this.isViewMode) return; 
     const row = { ...this.gridRows()[index] };
@@ -291,7 +303,7 @@ export class EstDetailsComponent extends UnSubscriber implements OnInit {
                 )
                   .pipe(takeUntil(this.destroy$))
                   .subscribe({
-                    next: () => console.log('Settlement creation triggered successfully'),
+                    next: () => {},
                     error: (err) => console.error('Error triggering settlement creation', err)
                   });
               }

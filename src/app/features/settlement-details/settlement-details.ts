@@ -323,7 +323,7 @@ getDropdownOptions(columnName: string): any[] {
     this.menuService.saveSettlementDetail(row, row.CS_SYS_ID)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => console.log('Settlement row saved successfully'),
+        next: () => {},
         error: (err) => console.error('Error saving settlement row', err)
       });
   }
@@ -331,7 +331,7 @@ getDropdownOptions(columnName: string): any[] {
 
 
   private loadSettlementRows(): void {
-    console.log('loadSettlementRows called, clmapSysId =', this.clmapSysId);
+
     if (!this.clmapSysId) {
       this.loading.set(false);
       return;
@@ -389,7 +389,7 @@ this.gridRows.set([{
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: (res: any) => {
-                console.log('Settlement raw response:', res);
+
 
                 const dataObj = res?.data?.data || {};
                 const sortedKeys = Object.keys(dataObj).sort((a, b) => Number(a) - Number(b));
@@ -528,6 +528,18 @@ addRow(): void {
   openMoreDialog(index: number): void {
     this.activeRowIndex.set(index);
     this.showMoreDialog.set(true);
+  }
+
+  closeMoreDialog(): void {
+    this.showMoreDialog.set(false);
+  }
+
+  saveAndCloseMoreDialog(): void {
+    const idx = this.activeRowIndex();
+    if (idx !== null) {
+      this.saveRow(idx);
+      this.showMoreDialog.set(false);
+    }
   }
 
 

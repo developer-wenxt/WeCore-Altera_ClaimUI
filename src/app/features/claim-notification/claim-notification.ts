@@ -100,16 +100,16 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
         notifModeField.MANDATORY = 1;
       }
           this.fields.set(visible);
-          console.log('DATE FIELDS:', this.fields().filter(f => this.getInputType(f.SOURCE_DESIGN_TYPE, f.DATA_TYPE) === 'date').map(f => f.COLUMN_NAME));
+
           this.loading.set(false);
-          console.log('FIELDS:', this.fields());
+
 
           if ((this.isEdit || this.isReadOnly) && this.intmNo) {
             this.menuService.getClaimIntimationById(this.intmNo)   // CHANGED (already a number now, no need for Number() again)
               .pipe(takeUntil(this.destroy$))
               .subscribe({
                 next: (record) => {
-                  console.log('API response record:', record);
+
                   const updated: any = {};
                   this.fields().forEach(f => {
 
@@ -121,7 +121,7 @@ export class ClaimNotificationComponent extends UnSubscriber implements OnInit {
                     updated[f.COLUMN_NAME] = value;
                   });
                   this.formData = updated;
-                  console.log('formData after mapping:', this.formData);
+
                   this.cdr.detectChanges();
                 },
                 error: (err) => console.error('Error loading claim by id', err)
